@@ -31,7 +31,7 @@ note: should start at lower right corner.
         return False
     def check_if_space_is_valid(self, pos):
         """Check if X and y are within range. and there is nothing there."""
-        if(self.check_if_space_is_on_board(pos.getC(), pos.getR())):
+        if(self.check_if_space_is_on_board(pos.getC(), pos.getR())): 
             for piece in self.game_ref.entity_list:
                 if pos.get_notation()==piece.position.get_notation():
                     return False
