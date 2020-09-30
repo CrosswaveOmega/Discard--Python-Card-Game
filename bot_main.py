@@ -53,4 +53,7 @@ class Main(commands.Cog):
             if channel.id == 749673636280926228:
                 await channel.send("HELLO I AM ME!")
 bot.add_cog(Main())
-bot.run('NzUxMTE2MTkyNDc0OTg4NjU0.X1EZdw.IPJdoy5vGw_B03uJKJGIk5X-VKY')
+configur=ConfigParser()
+configur.read('config.ini')
+print(configur)
+bot.run(configur.get("Default",'cipher'))
