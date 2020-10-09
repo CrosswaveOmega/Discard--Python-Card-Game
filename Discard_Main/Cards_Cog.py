@@ -35,5 +35,5 @@ class CardCog(commands.Cog):
         text=await CustomRetrievalClass().getByID(args[0], bot)
 
         card.apply_custom(text)
-        print(text)
+    #    print(text)
         await channel.send(str(card))
