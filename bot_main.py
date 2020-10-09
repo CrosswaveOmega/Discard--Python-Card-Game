@@ -18,7 +18,6 @@ from configparser import ConfigParser
 
 
 import messageConfirming as messageIOfunctions
-#from chatbotTest import *
 import discord
 
 from discord.ext import commands, tasks
