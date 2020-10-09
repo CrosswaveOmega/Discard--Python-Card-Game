@@ -40,13 +40,13 @@ class CustomBase():  #Wip.
         fields = next(csvreader)
 
         for row in csvreader:
-            print(row)
+            #print(row)
             key=row[0]
             value=row[1]
             if(key=="image-url"):
                 setattr(self)
             if(hasattr(self, key)):
-                print(key)
+                #print(key)
                 setattr(self, key, value)
     def checkForAttribute(self, attr):
         if hasattr(self, attr):
