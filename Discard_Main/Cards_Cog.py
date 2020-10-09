@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import discord
 import operator
 import io
@@ -37,3 +38,44 @@ class CardCog(commands.Cog):
         card.apply_custom(text)
         print(text)
         await channel.send(str(card))
+=======
+import discord
+import operator
+import io
+import json
+import aiohttp
+import asyncio
+import csv
+from discord.ext import commands, tasks
+from discord.utils import find
+from discord import Webhook, AsyncWebhookAdapter
+from .classes.Cards.card import CardRetrievalClass
+
+from .classes.Cards.custom import CustomRetrievalClass
+#from discord.ext.tasks import loop
+
+
+class CardCog(commands.Cog):
+    """Commands for cards."""
+    @commands.command(pass_context=True, aliases=['stampV'])
+    async def stamp(self, ctx, *args):
+        bot=ctx.bot
+        auth=ctx.message.author;
+        channel=ctx.message.channel;
+        leng=len(args)
+
+
+    @commands.command(pass_context=True)
+    async def cardGet(self, ctx, *args): #A very rudimentary card retrieval system.
+        bot=ctx.bot
+        auth=ctx.message.author;
+        channel=ctx.message.channel;
+        card=CardRetrievalClass().getByID(0xFFFFFFFF)
+
+        await channel.send(str(card))
+        text=await CustomRetrievalClass().getByID(args[0], bot)
+
+        card.apply_custom(text)
+        print(text)
+        await channel.send(str(card))
+>>>>>>> 9633e9d3b26884942d418e615dc764ee5884ec0a
