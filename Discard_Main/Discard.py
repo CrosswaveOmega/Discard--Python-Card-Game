@@ -1,5 +1,5 @@
-from classes.main.grid import *
-from classes.main.piece import *
+from .main.grid import *
+from .main.piece import *
 
 #The main game.
 

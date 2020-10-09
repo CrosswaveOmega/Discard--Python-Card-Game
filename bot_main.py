@@ -19,12 +19,15 @@ from configparser import ConfigParser
 
 import messageConfirming as messageIOfunctions
 #from chatbotTest import *
+import discord
 
 from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 #from discord.ext.tasks import loop
 import random
+
+from Discard_Main import Cards_Cog
 
 bot = commands.Bot(command_prefix='>')
 
@@ -53,6 +56,7 @@ class Main(commands.Cog):
             if channel.id == 749673636280926228:
                 await channel.send("HELLO I AM ME!")
 bot.add_cog(Main())
+bot.add_cog(Cards_Cog.CardCog())
 configur=ConfigParser()
 configur.read('config.ini')
 print(configur)
