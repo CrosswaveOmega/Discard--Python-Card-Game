@@ -8,7 +8,7 @@ import csv
 from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
-from .classes.Cards.card import CardRetrievalClass
+from .classes.Cards.cardretrieval import CardRetrievalClass
 
 from .classes.Cards.custom import CustomRetrievalClass
 #from discord.ext.tasks import loop
@@ -29,11 +29,12 @@ class CardCog(commands.Cog):
         bot=ctx.bot
         auth=ctx.message.author;
         channel=ctx.message.channel;
-        card=CardRetrievalClass().getByID(0xFFFFFFFF)
+        card=CardRetrievalClass().getByID(0x000FF)
 
         await channel.send(str(card))
-        text=await CustomRetrievalClass().getByID(args[0], bot)
+        if card!=False:
+            text=await CustomRetrievalClass().getByID(args[0], bot)
 
-        card.apply_custom(text)
-    #    print(text)
-        await channel.send(str(card))
+            card.apply_custom(text)
+        #    print(text)
+            await channel.send(str(card))
