@@ -31,9 +31,18 @@ note: should start at lower right corner.
         return False
     def check_if_space_is_valid(self, pos):
         """Check if X and y are within range. and there is nothing there."""
-        if(self.check_if_space_is_on_board(pos.getC(), pos.getR())):
+        if(self.check_if_space_is_on_board(pos.getC(), pos.getR())): #Is within Range,
             for piece in self.game_ref.entity_list:
-                if pos.get_notation()==piece.position.get_notation():
+                if pos.get_notation()==piece.position.get_notation(): #There is not a creature there.
+                    return False
+            return True
+        return False
+    def check_if_space_is_possibly_valid(self, pos, modx, mody):
+        """Check if X and y are within range. and there is nothing there."""
+        if(self.check_if_space_is_on_board(pos.getC()+modx, pos.getR()+mody)):
+            newpos=pos+Position(modx, mody)
+            for piece in self.game_ref.entity_list:
+                if newpos.get_notation()==piece.position.get_notation():
                     return False
             return True
         return False
@@ -115,15 +124,18 @@ note: should start at lower right corner.
         scopea=moves[1]
         valuea=moves[2]
         scopeb=None
-        valueb=None
+        valueb="0"
         if(len(moves)>=5):
-            print("MORE")
             scopeb=moves[3]
             valueb=moves[4]
         if scopea== "X":
-            print("TBD")
+            newPos=current+Position(int(valuea), int(valueb))  #If scopeb was set, it would be Y
+            if(self.check_if_space_is_possibly_valid(newPos, 0, 0)):
+                list.append(newPos.get_notation())
         if scopea== "Y":
-            print("TBD")
+            newPos=current+Position(int(valueb), int(valuea)) #If scopeb was set, it would be X
+            if(self.check_if_space_is_possibly_valid(newPos, 0, 0)):
+                list.append(newPos.get_notation())
         return list
     def get_all_movements_in_range(self, current, line):
         """Params

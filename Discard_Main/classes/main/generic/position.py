@@ -8,7 +8,7 @@ class Position():
             self.column=x_note
         else:
             self.row=y
-            self.column=x            
+            self.column=x
     def getR(self):
         return self.row
     def getC(self):
@@ -91,7 +91,16 @@ class Position():
             if((self.north_of(other)) or (self.south_of(other)) or (self.east_of(other)) or (self.west_of(other))):
                 return True
         return False
-
+     # adding two objects
+    def __add__(self, other):
+        currX=self.getC()
+        currY=self.getR()
+        return Position(currX+other.getC(), currY+other.getR())
+    # subtracting two objects
+    def __sub__(self, other):
+        currX=self.getC()
+        currY=self.getR()
+        return Position(currX+other.getC(), currY+other.getR())
 
 #Testing.
 

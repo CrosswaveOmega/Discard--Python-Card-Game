@@ -3,8 +3,8 @@
 class move_style:
     """Move Style is stored as a multi-lined string."""
     def __init__(self):
-        def count=1#number of times you can move.
-        """
+        self.count=1#number of times you can move.
+        self.instruction"""
         SAME ROW
         SAME COLUMN
         SAME DIAGONAL
@@ -16,4 +16,4 @@ class move_style:
         WALK X 1 Y -1
         WALK X -1 Y 1
         WALK X -1 Y -1
-        """
+        """ #- how you can move.
