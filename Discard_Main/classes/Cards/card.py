@@ -41,7 +41,10 @@ class CardBase():  #Wip.
 
 class CreatureCard(card.CardBase):
     """docstring for TestCard."""
-    def __init__(self,  ID, name, icon, type, image="None", hp=0, speed=0):
+    def __init__(self,  ID, name, icon, image="None", \
+    hp=0, speed=0, summoncost_r=0, summoncost_b=0, summoncost_g=0, \
+    skill_1=None, skill_2=None, skill_3=None, \
+    movestyle="", movelimit=1):
         self.ID=0x000FF          #• ID- The internal ID of the card.
                             #All cards have this, and they should all be unique.
                             #consists of a five digit hexadecimal number
@@ -53,9 +56,17 @@ class CreatureCard(card.CardBase):
         type="Creature"
         self.hp=hp
         self.speed=speed
+        self.summoncost_r=summoncost_r
+        self.summoncost_b=summoncost_b
+        self.summoncost_g=summoncost_g
 
+        self.skill_1=skill_1
+        self.skill_2=skill_2
+        self.skill_3=skill_3
+
+        self.move_style=movestyle
+        self.move_limit=movelimit
         super().__init__(self.ID,name, icon, type, image)
-        self.arg = arg
 
 
 
