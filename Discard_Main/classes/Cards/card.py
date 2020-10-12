@@ -39,7 +39,23 @@ class CardBase():  #Wip.
 
 
 
+class CreatureCard(card.CardBase):
+    """docstring for TestCard."""
+    def __init__(self,  ID, name, icon, type, image="None", hp=0, speed=0):
+        self.ID=0x000FF          #• ID- The internal ID of the card.
+                            #All cards have this, and they should all be unique.
+                            #consists of a five digit hexadecimal number
+                            #Cards should be referenced by this ID, not their name.
+                            #(00000  to FFFFF, makes maximum of 1,048,576 cards.
+        name="Test Name"
+        icon="<:thonkang:219069250692841473>"
+        image="NA"
+        type="Creature"
+        self.hp=hp
+        self.speed=speed
 
+        super().__init__(self.ID,name, icon, type, image)
+        self.arg = arg
 
 
 

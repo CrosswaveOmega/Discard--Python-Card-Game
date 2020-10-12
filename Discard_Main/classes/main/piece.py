@@ -2,7 +2,7 @@ from .generic.position import Position
 
 class Piece:
     """Bace Class for Creature and Leader pieces
-    # NOTE: Creatures and Leaders will be Classes decended from this. 
+    # NOTE: Creatures and Leaders will be Classes decended from this.
     """
 
     def __init__(self, player, name, hp, speed, move, position_notation):
@@ -30,5 +30,5 @@ class Piece:
 
 #Driver Code.
 if __name__ == "__main__":
-    testPiece=Piece("LO", "MY_NAME", 5,5, "MOVE?", "B3")
+    testPiece=Piece("LO", "MY_NAME", 5,5, "MOVESTYLE GOES HERE?", "B3")
     print(testPiece.position.x_y())

@@ -31,7 +31,7 @@ note: should start at lower right corner.
         return False
     def check_if_space_is_valid(self, pos):
         """Check if X and y are within range. and there is nothing there."""
-        if(self.check_if_space_is_on_board(pos.getC(), pos.getR())): 
+        if(self.check_if_space_is_on_board(pos.getC(), pos.getR())):
             for piece in self.game_ref.entity_list:
                 if pos.get_notation()==piece.position.get_notation():
                     return False
@@ -64,13 +64,85 @@ note: should start at lower right corner.
             else:
                 valid=False
         return list
-    def get_all_in_range(self, current, line):
+    def get_same_movements(self, current, moves):
+        """
+        current-current position
+        moves- line split by space.
+        """
+        list=[]
+        if(len(moves)<2):
+            print("TOO FEW ARGUMENTS.")
+            return None
+        scope=moves[1]
+        limitV=99
+        if(len(moves)>=4):
+            print("MORE")
+            if moves[2]=='LIMIT':
+                print("limitmode")
+                limitV=int(moves[3])
+        if scope== "COLUMN":
+            orig_column=current.getC()
+            orig_row=current.getR()
+            listA=self.check_with_change(orig_column, orig_row, -1, 0, limitV);
+            listB=self.check_with_change(orig_column, orig_row,  1, 0, limitV);
+            for item in listA:
+                list.append(item)
+            for item in listB:
+                list.append(item)
+        if scope== "ROW":
+            orig_column=current.getC()
+            orig_row=current.getR()
+            listA=self.check_with_change(orig_column, orig_row,  0, -1, limitV);
+            listB=self.check_with_change(orig_column, orig_row,  0,  1, limitV);
+            for item in listA:
+                list.append(item)
+            for item in listB:
+                list.append(item)
+        return list
+    def get_hop_movements(self, current, moves):
+        """
+        current-current position
+        moves- line split by space.
+
+        """
+        # ['HOP', 'SCOPE', 'VALUEA', 'SCOPEB', 'VALUEB']
+
+
+        list=[]
+        if(len(moves)<3):
+            print("TOO FEW ARGUMENTS.")
+            return None
+        scopea=moves[1]
+        valuea=moves[2]
+        scopeb=None
+        valueb=None
+        if(len(moves)>=5):
+            print("MORE")
+            scopeb=moves[3]
+            valueb=moves[4]
+        if scopea== "X":
+            print("TBD")
+        if scopea== "Y":
+            print("TBD")
+        return list
+    def get_all_movements_in_range(self, current, line):
+        """Params
+        current-Position object
+        line- A string of the move_pattern info.
+        """
         #line is a string
         moves=line.split(' ')
         print(moves)
         type=moves[0]
         list=[]
-        if type=='SAME':
+        if type=='SAME': #type same
+            # ['SAME', 'SCOPE', LIMIT, VALUE]
+            list=self.get_same_movements(current, moves)
+        if type=='HOP': #type same
+            # ['HOP', 'SCOPE', 'VALUEA', 'SCOPEB', 'VALUEB']
+            list=self.get_hop_movements(current, moves)
+
+        if type=='STEP': #type same
             # ['SAME', 'SCOPE', LIMIT, VALUE]
             if(len(moves)<2):
                 print("TOO FEW ARGUMENTS.")
@@ -91,7 +163,6 @@ note: should start at lower right corner.
                     list.append(item)
                 for item in listB:
                     list.append(item)
-
             if scope== "ROW":
                 orig_column=current.getC()
                 orig_row=current.getR()
