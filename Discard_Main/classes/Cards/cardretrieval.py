@@ -19,6 +19,8 @@ def itermodule(idToFind): #Currently O(n).  there has to be a better way to do t
     return None
 
 class CardRetrievalClass():  #by no means what the final version should use.
+    def setup(self):
+        print("TBD")
     def getByID(self, ID):
         val=itermodule(ID)
         if(val!=None):
