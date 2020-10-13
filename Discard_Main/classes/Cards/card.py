@@ -36,8 +36,32 @@ class CardBase():  #Wip.
             self.icon=custom.icon
         if hasattr(custom, 'type'):
             self.type=custom.type
+"""
 
-
+Skill Types
+   • Action- Activated by the player, during the creatures turn.  Will usually END turn.
+      ‣ Attack- This skill will do some kind of damage to an enemy/enemies, reducing their HP
+      ‣ Support- This skill will have some kind of effect to the player's team
+   • Ability- Activated by the player, during the creatures turn.  Will not end turn, but are toggleable.
+   • Counter- Skill will activate when creature has been attacked.
+   • Reaction- Skill will activate when criteria has been met.
+   • TBD
+"""
+class Skill():
+    #This class is where every skill will decend from.
+    def __init__(self):
+        print("tbd")
+        self.name= "Name" #The name of the skill
+        self.trigger = "command" # How the skill will be activated.  Can be "command" or "auto"
+        self.target = "other" #What the skill will target.  Split into Scope, Amount, and range
+        self.type= "tbd" #The type of skill.
+        self.limit= " tbd" #When the skill can not be used.
+    def doSkill(user, target, game_ref):
+        #What the skill will actually do.
+        #user is the entity using the skill.
+        #target is what the skill is being used on.
+        #Game_ref is a refrence to the Card_Duel's helper class.
+        print("Fill this in.")
 
 class CreatureCard(card.CardBase):
     """docstring for TestCard."""

@@ -34,7 +34,7 @@ note: should start at lower right corner.
     def check_if_space_is_valid(self, pos):
         """Check if X and y are within range. and there is nothing there."""
         if(self.check_if_space_is_on_board(pos.getC(), pos.getR())): #Is within Range,
-            for piece in self.game_ref.entity_list:
+            for piece in self.game_ref.get_entity_list():
                 if pos.get_notation()==piece.position.get_notation(): #There is not a creature there.
                     return False
             return True
@@ -43,7 +43,7 @@ note: should start at lower right corner.
         """Check if X and y are within range. and there is nothing there."""
         if(self.check_if_space_is_on_board(pos.getC()+modx, pos.getR()+mody)):
             newpos=pos+Position(modx, mody)
-            for piece in self.game_ref.entity_list:
+            for piece in self.game_ref.get_entity_list():
                 if newpos.get_notation()==piece.position.get_notation():
                     return False
             return True
@@ -139,6 +139,57 @@ note: should start at lower right corner.
             if(self.check_if_space_is_possibly_valid(newPos, 0, 0)):
                 list.append(newPos.get_notation())
         return list
+    def get_step_movements(self, current, moves):
+        """
+        current-current position
+        moves- line split by space.
+
+        """
+        # ['STEP', 'VALUE']
+        list=[]
+        if(len(moves)<2):
+            print("TOO FEW ARGUMENTS.")
+            return None
+        distance=int(moves[1])
+        current_stack=[]
+
+        modX=0
+        modY=0
+
+        current_stack.append({"pos":current, "distance":distance})
+        while len(current_stack)>0:
+            thisSpot=current_stack.pop()
+            pos=thisSpot["pos"]
+            distance=thisSpot["distance"] - 1
+            modX, modY= 1,0
+            if(self.check_if_space_is_possibly_valid(pos, modX, modY)):
+                newPos=pos+Position(modX, modY)
+                if not (newPos.get_notation() in list):
+                    list.append(newPos.get_notation())
+                    if(distance>0):
+                        current_stack.append({"pos":newPos, "distance":distance})
+            modX, modY= -1,0
+            if(self.check_if_space_is_possibly_valid(pos, modX, modY)):
+                newPos=pos+Position(modX, modY)
+                if not (newPos.get_notation() in list):
+                    list.append(newPos.get_notation())
+                    if(distance>0):
+                        current_stack.append({"pos":newPos, "distance":distance})
+            modX, modY= 0,-1
+            if(self.check_if_space_is_possibly_valid(pos, modX, modY)):
+                newPos=pos+Position(modX, modY)
+                if not (newPos.get_notation() in list):
+                    list.append(newPos.get_notation())
+                    if(distance>0):
+                        current_stack.append({"pos":newPos, "distance":distance})
+            modX, modY= 0,1
+            if(self.check_if_space_is_possibly_valid(pos, modX, modY)):
+                newPos=pos+Position(modX, modY)
+                if not (newPos.get_notation() in list):
+                    list.append(newPos.get_notation())
+                    if(distance>0):
+                        current_stack.append({"pos":newPos, "distance":distance})
+        return list
     def get_all_movements_in_range(self, current, line):
         """Params
         current-Position object
@@ -158,34 +209,7 @@ note: should start at lower right corner.
 
         if type=='STEP': #type same
             # ['SAME', 'SCOPE', LIMIT, VALUE]
-            if(len(moves)<2):
-                print("TOO FEW ARGUMENTS.")
-                return None
-            scope=moves[1]
-            limitV=99
-            if(len(moves)>=4):
-                print("MORE")
-                if moves[2]=='LIMIT':
-                    print("limitmode")
-                    limitV=int(moves[3])
-            if scope== "COLUMN":
-                orig_column=current.getC()
-                orig_row=current.getR()
-                listA=self.check_with_change(orig_column, orig_row, -1, 0, limitV);
-                listB=self.check_with_change(orig_column, orig_row,  1, 0, limitV);
-                for item in listA:
-                    list.append(item)
-                for item in listB:
-                    list.append(item)
-            if scope== "ROW":
-                orig_column=current.getC()
-                orig_row=current.getR()
-                listA=self.check_with_change(orig_column, orig_row,  0, -1, limitV);
-                listB=self.check_with_change(orig_column, orig_row,  0,  1, limitV);
-                for item in listA:
-                    list.append(item)
-                for item in listB:
-                    list.append(item)
+            list=self.get_step_movements(current, moves)
 
         return list
 
@@ -199,7 +223,7 @@ note: should start at lower right corner.
         newgrid= list(map(list, self.grid_array))
 
         numgrid=[]
-        for piece in self.game_ref.entity_list:
+        for piece in self.game_ref.get_entity_list():
             x, y= piece.position.x_y()
             newgrid[y-1][x-1]=piece.name
         for j in range(self.columns):
