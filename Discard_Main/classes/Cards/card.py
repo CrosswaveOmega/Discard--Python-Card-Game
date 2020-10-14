@@ -63,7 +63,7 @@ class Skill():
         #Game_ref is a refrence to the Card_Duel's helper class.
         print("Fill this in.")
 
-class CreatureCard(card.CardBase):
+class CreatureCard(CardBase):
     """docstring for TestCard."""
     def __init__(self,  ID, name, icon, image="None", \
     hp=0, speed=0, summoncost_r=0, summoncost_b=0, summoncost_g=0, \

@@ -29,12 +29,12 @@ class CardCog(commands.Cog):
         bot=ctx.bot
         auth=ctx.message.author;
         channel=ctx.message.channel;
-        card=CardRetrievalClass().getByID(0x000FF)
+        newcard=CardRetrievalClass().getByID(0x000FF)
 
-        await channel.send(str(card))
-        if card!=False:
+        await channel.send(str(newcard))
+        if newcard!=False:
             text=await CustomRetrievalClass().getByID(args[0], bot)
 
-            card.apply_custom(text)
+            newcard.apply_custom(custom=text)
         #    print(text)
-            await channel.send(str(card))
+            await channel.send(str(newcard))
