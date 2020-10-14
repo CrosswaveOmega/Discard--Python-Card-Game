@@ -91,6 +91,8 @@ class CreatureCard(CardBase):
         self.move_style=movestyle
         self.move_limit=movelimit
         super().__init__(self.ID,name, icon, type, image)
+    def __str__(self):
+        return self.icon + "|" + self.name + "|" + self.type + "|"+ self.hp + "|"+ self.speed + "|"+ str(self.ID)
 
 
 
