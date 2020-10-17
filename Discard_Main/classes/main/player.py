@@ -1,5 +1,5 @@
 
-#The player class
+#The player class.  FOR THE GAME.
 class Player:
     def __init__(self, player_type=""):
         self.PlayerType=player_type
