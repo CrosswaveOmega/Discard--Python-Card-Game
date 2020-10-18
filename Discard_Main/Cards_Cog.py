@@ -41,7 +41,7 @@ class CardCog(commands.Cog):
             id=args[0]
             newcard=CardRetrievalClass().getByID(int(id, 16))
 
-            await channel.send(str(newcard))
+        await channel.send(str(newcard))
             if newcard!=False and leng>=2:
                 text=await CustomRetrievalClass().getByID(args[1], bot)
 
