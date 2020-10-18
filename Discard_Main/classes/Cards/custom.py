@@ -23,6 +23,7 @@ class CustomBase():  #Wip.
         self.image_message_id=0    #• Image- Background image the card displays.   Customizable by a user,
         self.type=""      #• Type- The type of card this is.
         if csvText != "none":
+            print("Iterating CSV TABLE")
             self.fromCSV(csvText)
         else:
             self.ID=0          #• ID- The internal ID of the card.  All cards have this unique ID, consisting of a eight digit hexadecimal number
@@ -70,9 +71,12 @@ class CustomRetrievalClass():  #by no means what the final version should use.
         elif self.botstore:
             botToUse=self.botstore
         if botToUse:
+            print("getting id")
             print(configur.get("Default",'bts_server'))
             checkGuild= bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
             custom_channel= checkGuild.get_channel(int(configur.get("Default",'bts_custom'))) #Customs Channel.
+            print(custom_channel)
             message=await custom_channel.fetch_message(int(ID)) #message to get.
+            #print(message.content)
             return CustomBase(csvText=message.content)
         return "CUSTOM NOT FOUND."
