@@ -61,6 +61,7 @@ class Skill():
         #user is the entity using the skill.
         #target is what the skill is being used on.
         #Game_ref is a refrence to the Card_Duel's helper class.
+        #Use a dictionary.
         print("Fill this in.")
 
 class CreatureCard(CardBase):

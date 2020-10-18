@@ -1,5 +1,5 @@
+#from .classes.main import *
 from classes.main import *
-
 #The main game.
 
 class Card_Duel:
