@@ -80,7 +80,7 @@ class UserProfile:
         return self.customs
 
     def add_card(self, card_id):
-        self.cards.append({"card_id":card_id, "custom":})
+        self.cards.append({"card_id":card_id, "custom":None})
     def get_exp(self):
         return self.exp
     def set_exp(self, value):
