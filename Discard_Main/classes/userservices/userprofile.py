@@ -39,13 +39,6 @@ class SingleUserProfile:
                 return file
             else:
                 return None
-        def get_file_from_directory(self, id):
-            filename="userprofile_id_"+str(id)+".json" #filename from json.
-            file= Path(directory + "/"+ filename)
-            if file.exists():#check if this file exists.
-                return file
-            else:
-                return None
         def __str__(self):
             return repr(self) + self.val
     instance = None

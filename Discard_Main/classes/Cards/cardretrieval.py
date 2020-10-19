@@ -10,13 +10,13 @@ from .CardLibrary import cardcluster1
 
 from .card import *
 
-def itermodule(idToFind): #Currently O(n).  there has to be a better way to do this.
-    lista=[m[0] for m in inspect.getmembers(cardcluster1, inspect.isclass) if m[1].__module__ == cardcluster1.__name__]
-    for x in lista:
-        print(x)
-        if vars(getattr(cardcluster1, x))["ID"] == idToFind:
-            return getattr(cardcluster1, x)()
-    return None
+#def itermodule(idToFind): #Currently O(n).  there has to be a better way to do this.
+#    lista=[m[0] for m in inspect.getmembers(cardcluster1, inspect.isclass) if m[1].__module__ == cardcluster1.__name__]
+#    for x in lista:
+#        print(x)
+#        if vars(getattr(cardcluster1, x))["ID"] == idToFind:
+#            return getattr(cardcluster1, x)()
+#    return None
 
 class SingleDictionary:
     class __SingleDictionary: #Singleton Design.  Based on https://python-3-patterns-idioms-test.readthedocs.io/en/latest/Singleton.html
