@@ -65,6 +65,8 @@ class UserProfile:
         self.coins=0
         self.stars=0
 
+        self.decks=[] #Max 99.
+        
         if(dictonary_to_use!=None):
             for i, v in dictonary_to_use.items():
                 if hasattr(self, i):
