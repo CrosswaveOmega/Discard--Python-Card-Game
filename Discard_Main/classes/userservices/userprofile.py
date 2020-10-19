@@ -63,8 +63,9 @@ class SingleUserProfile:
 class UserProfile:
     def __init__(self, user_id, dictonary_to_use=None):
         self.user_id=user_id
-        self.cards=[] #List of ids.
-        self.customs=[] #list of customs.
+        self.cards=[] #List of ids. every entry in list is dictionary of format {"card_id":card_id, "custom":id_of_custom_applied}
+        self.customs=[] #list of customs made by the user.
+        self.cards_customs={} #dictionary.  Key is card Id and
         self.exp=0
         self.level=0
         self.cardcount=0
@@ -78,3 +79,16 @@ class UserProfile:
 
     def to_dictionary(self):
         return vars(self)
+
+    def get_cards(self):
+        return self.cards
+
+    def get_customs(self):
+        return self.customs
+
+    def add_card(self, card_id):
+        self.cards.append({"card_id":card_id, "custom":})
+    def get_exp(self):
+        return self.exp
+    def set_exp(self, value):
+        self.exp=value
