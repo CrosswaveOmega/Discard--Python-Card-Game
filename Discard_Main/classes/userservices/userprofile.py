@@ -23,22 +23,24 @@ class SingleUserProfile:
                 if(file!= None):
                     f= file.open(mode='r');
                     string=f.read();
-                    self.buffer[str(id)]=UserProfile(user_id==id, dictonary_to_use=json.loads(string))
+                    self.buffer[str(id)]=UserProfile(user_id=id, dictonary_to_use=json.loads(string))
                     f.close()
                     print("Should initalize new user profile with the dictonary_to_use param set to the translated contents of file, add that into buffer under user id.")
+                    return self.buffer[str(id)]
                     #Load contents of file into new UserProfile, add that into buffer.
                 else:
-                    self.buffer[str(id)]=UserProfile(user_id==id)
+                    self.buffer[str(id)]=UserProfile(user_id=id)
                     print("Should initalize new default user profile, add that into buffer under user id.")
+                    return self.buffer[str(id)]
                     #Initalize new file.
-        def save_buffer_entry(self, id): #Saves the UserProfile object at id to a file.
+        def save_buffer_entry(self, id): #Saves the UserProfile object at key id in buffer to a file.
             if(self.checkforidinbuffer(id)):
                 filename="userprofile_id_"+str(id)+".json" #filename from json.
                 file= Path(directory + "/"+ filename)
                 f=file.open(mode="w+")
 
                 string_to_write=json.dumps(self.buffer[str(id)].to_dictionary(), sort_keys=True, indent=4)
-                f.write(string_to_write(string_to_write))
+                f.write(string_to_write)
                 f.close()
         def save_all_internal(self): #save everything in buffer.
             for i, v in self.buffer.items():
@@ -46,7 +48,7 @@ class SingleUserProfile:
 
         def checkforidinbuffer(self, id):
             key_to_lookup = str(id)
-            if key_to_lookup in self.internal_Dictionary:
+            if key_to_lookup in self.buffer:
               return True
             else:
               return False
@@ -68,7 +70,8 @@ class SingleUserProfile:
     def getByID(self, id):
         #Initial chekc
         return SingleUserProfile.instance.getIDinternal(id)
-    def saveAll(self, id):
+    def save_all(self):
+        SingleUserProfile.instance.save_all_internal()
 
     def __getattr__(self, name):
         return getattr(self.instance, name)

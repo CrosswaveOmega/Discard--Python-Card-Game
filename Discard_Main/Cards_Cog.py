@@ -11,6 +11,8 @@ from discord import Webhook, AsyncWebhookAdapter
 from .classes.Cards.cardretrieval import CardRetrievalClass
 
 from .classes.Cards.custom import CustomRetrievalClass
+
+from .classes.userservices.userprofile import SingleUserProfile
 #from discord.ext.tasks import loop
 
 
@@ -23,6 +25,26 @@ class CardCog(commands.Cog):
         channel=ctx.message.channel;
         leng=len(args)
 
+    @commands.command()
+    async def add_exp(self, ctx, *args): #A very rudimentary card retrieval system.
+        '''
+        syntax: cardGet [CardId] CustomId]
+        Gets a random genre out of the character-info channel.  Exlcusively for Sakura Beat.
+        [CardId]: The Card ID you want to get.
+        [CustomId]: The CustomId you want to apply to the card.
+
+        '''
+        bot=ctx.bot
+        auth=ctx.message.author;
+        channel=ctx.message.channel;
+        SingleUser=SingleUserProfile("New.")
+        profile=SingleUser.getByID(auth.id)
+        await channel.send("Old EXP="+str(profile.get_exp()))
+        profile.set_exp(profile.get_exp()+10)
+        profile=SingleUser.getByID(auth.id)
+        await channel.send("New EXP="+str(profile.get_exp()))
+        SingleUser.save_all()
+        #await channel.send(str(newcard))
 
     @commands.command(pass_context=True)
     async def cardGet(self, ctx, *args): #A very rudimentary card retrieval system.
@@ -40,8 +62,7 @@ class CardCog(commands.Cog):
         if(leng>=1):
             id=args[0]
             newcard=CardRetrievalClass().getByID(int(id, 16))
-
-        await channel.send(str(newcard))
+            await channel.send(str(newcard))
             if newcard!=False and leng>=2:
                 text=await CustomRetrievalClass().getByID(args[1], bot)
 
