@@ -66,6 +66,11 @@ class CardCog(commands.Cog):
             if newcard!=False and leng>=2:
                 text=await CustomRetrievalClass().getByID(args[1], bot)
 
+                print(text.toCSV())
+
                 newcard.apply_custom(custom=text)
             #    print(text)
                 await channel.send(str(newcard))
+
+                text.name="Daikon 02"
+                await CustomRetrievalClass().updateCustomByID(text, bot)

@@ -1,9 +1,12 @@
 import discord
 import operator
 import csv
+import io
 from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
+
+
 
 from configparser import ConfigParser
 
@@ -13,8 +16,8 @@ configur.read('config.ini')
 
 class CustomBase():  #Wip.
 
-    def __init__(self,  name="none", icon="none", type="none", image="None", csvText="none"):
-        self.ID=0          #• ID- The internal ID of the card.  All cards have this unique ID, consisting of a eight digit hexadecimal number
+    def __init__(self, id=0, name="none", icon="none", type="none", image="None", csvText="none"):
+        self.ID=id          #• ID- The internal ID of the card.  All cards have this unique ID, consisting of a eight digit hexadecimal number
                                 #    Cards should be referenced by this ID, not their name.
                                 #    (00000000  to FFFFFFFF, makes maximum of 4,294,967,296 cards.
         self.name=""      #• Name- The name of the card.  Customizable by a user,
@@ -26,7 +29,7 @@ class CustomBase():  #Wip.
             print("Iterating CSV TABLE")
             self.fromCSV(csvText)
         else:
-            self.ID=0          #• ID- The internal ID of the card.  All cards have this unique ID, consisting of a eight digit hexadecimal number
+            self.ID=id          #• ID- The internal ID of the custom.  All cards have this unique ID, consisting of a eight digit hexadecimal number
                                 #    Cards should be referenced by this ID, not their name.
                                 #    (00000000  to FFFFFFFF, makes maximum of 4,294,967,296 cards.
             self.name=name      #• Name- The name of the card.  Customizable by a user,
@@ -46,9 +49,25 @@ class CustomBase():  #Wip.
             value=row[1]
             if(key=="image-url"):
                 setattr(self)
-            if(hasattr(self, key)):
-                #print(key)
-                setattr(self, key, value)
+            if(key!="ID"):
+                if(hasattr(self, key)):
+                    #print(key)
+                    setattr(self, key, value)
+    def toCSV(self):
+        csv_mode=io.StringIO()
+        fieldnames= ['Key','Value']
+        csvwriter=csv.DictWriter(csv_mode, fieldnames=fieldnames)
+        csvwriter.writeheader()
+
+        dictionary=vars(self)
+        for key, value in dictionary.items(): #formatting.
+            if(key!="ID"):
+                csvwriter.writerow({'Key':key, 'Value':value})
+
+        textValue=csv_mode.getvalue()
+        csv_mode.close()
+        return textValue
+
     def checkForAttribute(self, attr):
         if hasattr(self, attr):
             return True
@@ -64,6 +83,29 @@ class CustomRetrievalClass():  #by no means what the final version should use.
         if bot:
             self.botstore=bot
         self.botstore=None
+    async def updateCustomByID(self, custom, bot):
+        """
+        custom -> Custom Object.
+        bot -> The current Bot.
+        """
+        botToUse=None
+        if(bot):
+            botToUse=bot
+        elif self.botstore:
+            botToUse=self.botstore
+        if botToUse:
+            print("getting id")
+            print(configur.get("Default",'bts_server'))
+            checkGuild= bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
+            custom_channel= checkGuild.get_channel(int(configur.get("Default",'bts_custom'))) #Customs Channel.
+            print(custom_channel)
+            ID=custom.ID
+            print(ID)
+            message=await custom_channel.fetch_message(int(ID)) #message to get.
+            await message.edit(content=custom.toCSV()) #Custom needs to be uploaded by bot.
+            #print(message.content)
+            return CustomBase(csvText=message.content)
+        return "CUSTOM NOT FOUND."
     async def getByID(self, ID, bot):
         botToUse=None
         if(bot):
@@ -78,5 +120,5 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             print(custom_channel)
             message=await custom_channel.fetch_message(int(ID)) #message to get.
             #print(message.content)
-            return CustomBase(csvText=message.content)
+            return CustomBase(id=int(ID), csvText=message.content)
         return "CUSTOM NOT FOUND."

@@ -11,10 +11,7 @@ class SingleUserProfile:
     class __SingleUserProfile: #Singleton Design.  Based on https://python-3-patterns-idioms-test.readthedocs.io/en/latest/Singleton.html
         def __init__(self, arg="P."):
             self.val = arg
-            self.buffer={} #A buffer of all.
-        def setAll(self):
-            #Update for all new cardclusters.
-            print("tbd")
+            self.buffer={} #Every single loaded userprofile
         def getIDinternal(self, id):
             if(self.checkforidinbuffer(id)):
                 return self.buffer[str(id)]

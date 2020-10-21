@@ -14,7 +14,7 @@ def dc(expressionA, expressionB, success_msg="ok", casea_msg="none", caseb_msg="
         #Ok.
     return passA and passB
 #We really need to re-organize everything.
-def custom_image_scaling(scaled_width, scaled_height, offset_x, offset_y):
+def custom_image_scaling(scaled_width, scaled_height, offset_x, offset_y): #Funciton is for scaling a uploaded image
     display_width, display_height=402,  224
 
     display_x, display_y= 21, 63
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     custom_image_scaling(521, 288, 200,0)
 
 
-    
+
     custom_image_scaling(521, 288, -98,0)
     custom_image_scaling(521, 288, 21,0)
     custom_image_scaling(521, 288, -150,0)
