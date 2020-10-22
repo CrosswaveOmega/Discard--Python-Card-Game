@@ -64,14 +64,40 @@ class TestCreature1(card.CreatureCard):
         summoncost_b=2
         summoncost_g=2
         #Defining Skills.
-        skill1=CustomSkill1("Custom Name 1", "trigger", "target", "type", "limit")
+        skill1=CustomSkill1("Custom Name 1", "trigger", "target", "type", "limit", "Type description here.")
+        skill2=CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
+        skill3=CustomSkill3("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
+        #Defining move Style.
+        movestyle="STEP 2"
+        movelimit=9
+
         super().__init__(self.ID, name, icon, image=image, \
         hp=hp, speed=2, summoncost_r=0, summoncost_b=0, summoncost_g=0, \
         skill_1=None, skill_2=None, skill_3=None, \
         movestyle="", movelimit=1)
     class CustomSkill1(card.Skill):#Nested class
         def __init__(self, name="No name set.", trigger="command", target="other", type="tbd", limit="tbd", description="none"): #there's probably a better way to do this.
-            super().__init__(name, trigger, target, type, limit)description
+            super().__init__(name, trigger, target, type, limit, description)
+        def doSkill(self, user, target, game_ref):
+            #What the skill will actually do.
+            #user is the entity using the skill.
+            #target is what the skill is being used on.
+            #Game_ref is a refrence to the Card_Duel's helper class.
+            #Use a dictionary.
+            print("TBD")
+    class CustomSkill2(card.Skill):#Nested class
+        def __init__(self, name="No name set.", trigger="command", target="other", type="tbd", limit="tbd", description="none"): #there's probably a better way to do this.
+            super().__init__(name, trigger, target, type, limit, description)
+        def doSkill(self, user, target, game_ref):
+            #What the skill will actually do.
+            #user is the entity using the skill.
+            #target is what the skill is being used on.
+            #Game_ref is a refrence to the Card_Duel's helper class.
+            #Use a dictionary.
+            print("TBD")
+    class CustomSkill3(card.Skill):#Nested class
+        def __init__(self, name="No name set.", trigger="command", target="other", type="tbd", limit="tbd", description="none"): #there's probably a better way to do this.
+            super().__init__(name, trigger, target, type, limit, description)
         def doSkill(self, user, target, game_ref):
             #What the skill will actually do.
             #user is the entity using the skill.
