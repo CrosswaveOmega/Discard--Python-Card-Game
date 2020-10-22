@@ -66,7 +66,7 @@ class TestCreature1(card.CreatureCard):
         #Defining Skills.
         skill1=CustomSkill1("Custom Name 1", "trigger", "target", "type", "limit", "Type description here.")
         skill2=CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
-        skill3=CustomSkill3("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
+        skill3=CustomSkill3("Custom Name 3", "trigger", "target", "type", "limit", "Type description here.")
         #Defining move Style.
         movestyle="STEP 2"
         movelimit=1
