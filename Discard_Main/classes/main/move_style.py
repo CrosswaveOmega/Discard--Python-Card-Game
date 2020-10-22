@@ -14,6 +14,5 @@ class move_style:
         HOP X -1 Y -2
         STEP 1
         STEP 2
-        STEP X 1 Y 1
-        STEP X -1 Y -1
+
         """ #- how you can move.

@@ -47,6 +47,10 @@ Skill Types
    • Reaction- Skill will activate when criteria has been met.
    • TBD
 """
+
+"""Target Format:
+[Target Range] [Target Scope] [Target Amount] [Target Restrictions]
+"""
 class Skill():
     #This class is where every skill will decend from.
     def __init__(self, name="No name set.", trigger="command", target="other", type="tbd", limit="tbd", description="tbd"):
