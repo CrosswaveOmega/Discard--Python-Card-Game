@@ -49,13 +49,14 @@ Skill Types
 """
 class Skill():
     #This class is where every skill will decend from.
-    def __init__(self):
+    def __init__(self, name="No name set.", trigger="command", target="other", type="tbd", limit="tbd", description="tbd"):
         print("tbd")
-        self.name= "Name" #The name of the skill
-        self.trigger = "command" # How the skill will be activated.  Can be "command" or "auto"
-        self.target = "other" #What the skill will target.  Split into Scope, Amount, and range
-        self.type= "tbd" #The type of skill.
-        self.limit= " tbd" #When the skill can not be used.
+        self.name= name #The name of the skill
+        self.trigger = trigger # How the skill will be activated.  Can be "command" or "auto"
+        self.target = target #What the skill will target.  Split into Scope, Amount, and range
+        self.type= type #The type of skill.
+        self.limit= limit #When the skill can not be used.
+        self.description= description # What the skill will use.
     def doSkill(user, target, game_ref):
         #What the skill will actually do.
         #user is the entity using the skill.
@@ -70,7 +71,7 @@ class CreatureCard(CardBase):
     hp=0, speed=0, summoncost_r=0, summoncost_b=0, summoncost_g=0, \
     skill_1=None, skill_2=None, skill_3=None, \
     movestyle="", movelimit=1):
-        self.ID=0x000FF          #• ID- The internal ID of the card.
+        self.ID=ID          #• ID- The internal ID of the card.
                             #All cards have this, and they should all be unique.
                             #consists of a five digit hexadecimal number
                             #Cards should be referenced by this ID, not their name.
@@ -94,11 +95,3 @@ class CreatureCard(CardBase):
         super().__init__(self.ID,name, icon, type, image)
     def __str__(self):
         return self.icon + "|" + self.name + "|" + self.type + "|"+ self.hp + "|"+ self.speed + "|"+ str(self.ID)
-
-
-
-
-
-#Driver Code.
-if __name__ == "__main__":
-    print(str(CardRetrievalClass().getByID(0xFFFFFFFF)))

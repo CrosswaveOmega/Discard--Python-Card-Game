@@ -18,10 +18,10 @@ from .card import *
 #            return getattr(cardcluster1, x)()
 #    return None
 
-class SingleDictionary:
+class CardRetrievalSingleton:
     class __SingleDictionary: #Singleton Design.  Based on https://python-3-patterns-idioms-test.readthedocs.io/en/latest/Singleton.html
         def __init__(self, arg="P."):
-            self.val = arg
+            self.current_status = arg
             self.internal_Dictionary={}
             self.setAll()
         def setAll(self):
@@ -33,15 +33,15 @@ class SingleDictionary:
                 self.internal_Dictionary[str(id)]=getattr(cardcluster1, x)
                 print(str(id))
         def __str__(self):
-            return repr(self) + self.val
+            return repr(self) + self.current_status
     instance = None
     def __init__(self, arg):  #Internally, it keeps a single instance of the __SingleDictionary class in memory.
-        if not SingleDictionary.instance:
-            SingleDictionary.instance = SingleDictionary.__SingleDictionary(arg)
+        if not CardRetrievalSingleton.instance:
+            CardRetrievalSingleton.instance = CardRetrievalSingleton.__SingleDictionary(arg)
         else:
-            SingleDictionary.instance.val = arg
+            CardRetrievalSingleton.instance.current_status = arg
     def getByID(self, id):
-        return SingleDictionary.instance.internal_Dictionary[str(id)]() #Average case of python dictionary lookup is O(1), worst case is O(n)
+        return CardRetrievalSingleton.instance.internal_Dictionary[str(id)]() #Average case of python dictionary lookup is O(1), worst case is O(n)
     def __getattr__(self, name):
         return getattr(self.instance, name)
 
@@ -50,9 +50,9 @@ class SingleDictionary:
 
 class CardRetrievalClass():  #by no means what the final version should use.
     def setup(self):
-        sa=SingleDictionary("WasSetup")
+        sa=CardRetrievalSingleton("WasSetup") #SA is unused.
     def getByID(self, ID):
-        val=SingleDictionary("Last_Loaded").getByID(ID)
+        val=CardRetrievalSingleton("Last_Loaded").getByID(ID)
         if(val!=None):
             return val
         return False
