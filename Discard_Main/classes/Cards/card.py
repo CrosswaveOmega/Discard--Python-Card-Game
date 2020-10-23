@@ -53,11 +53,11 @@ Skill Types
 """
 class Skill():
     #This class is where every skill will decend from.
-    def __init__(self, name="No name set.", trigger="command", target="Adjacent Enemy x1", type="tbd", limit="tbd", description="tbd"):
+    def __init__(self, name="No name set.", trigger="command", target=("Adjacent", "Enemy", "x1"), type="tbd", limit="tbd", description="tbd"):
         print("tbd")
         self.name= name #The name of the skill
         self.trigger = trigger # How the skill will be activated.  Can be "command" or "auto"
-        self.target = target #What the skill will target.  Split into Type, Distance, Scope, Amount, and Limit.  Stored as dictionary.
+        self.target = Args_To_Target(target) #What the skill will target.  Split into Type, Distance, Scope, Amount, and Limit.  Stored as dictionary.
         self.type= type #The type of skill.
         self.limit= limit #When the skill can not be used.
         self.description= description # What the skill will use.
