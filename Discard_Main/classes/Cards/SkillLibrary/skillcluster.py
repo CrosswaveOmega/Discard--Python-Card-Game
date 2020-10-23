@@ -3,7 +3,7 @@
 from .. import card
 
 class BasicAttack(card.Skill):#Custom Class
-    def __init__(self, name="BasicAttacl", trigger="command", target="other", type="tbd", limit="tbd", description="none"): #there's probably a better way to do this.
+    def __init__(self, name="BasicAttacl", trigger="command", target=("Adjacent", "Enemy", "x1"), type="tbd", limit="tbd", description="none"): #there's probably a better way to do this.
         super().__init__(name, trigger, target, type, limit, description)
     def doSkill(self, user, target, game_ref):
         #What the skill will actually do.
