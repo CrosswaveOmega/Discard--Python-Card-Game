@@ -102,10 +102,41 @@ class UserProfile:
     def get_customs(self):
         return self.customs
 
+    def get_decks(self):
+        return self.decks
+
     def add_card(self, card_id):
-        self.cards.append({"card_id":card_id, "custom":None})
+        if(CardRetrievalClass.getByID(int(card_id, 16)) == False):
+            await channel.send("Card does not exist")
+        else:
+            self.cards.append({"card_id":card_id, "custom":None})
 
     def get_exp(self):
         return self.exp
+
     def set_exp(self, value):
-        self.exp=value
+        self.exp = value
+
+    def set_level(self, value):
+        self.level = value
+
+    def get_level(self):
+        return self.level
+
+    def set_cardcount(self, value):
+        self.cardcount = value
+
+    def get_cardcount(self):
+        return self.cardcount
+
+    def set_coins(self, value):
+        self.coins = value
+
+    def get_coins(self):
+        return self.coins
+
+    def set_stars(self, value):
+        self.stars = value
+
+    def get_stars(self):
+        return self.stars
