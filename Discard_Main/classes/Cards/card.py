@@ -57,7 +57,7 @@ class Skill():
         print("tbd")
         self.name= name #The name of the skill
         self.trigger = trigger # How the skill will be activated.  Can be "command" or "auto"
-        self.target = target #What the skill will target.  Split into Scope, Amount, and range
+        self.target = target #What the skill will target.  Split into Scope, Amount, and range.  Stored as dictionary.
         self.type= type #The type of skill.
         self.limit= limit #When the skill can not be used.
         self.description= description # What the skill will use.
