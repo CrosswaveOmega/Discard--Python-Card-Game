@@ -4,12 +4,35 @@ from tkinter import *
 from PIL import Image, ImageTk, ImageGrab, ImageDraw, ImageFont
 import time
 import textwrap
+
 def make_summon_cost(r,b,g):
     img = Image.open("Discard_Main\classes\imagemakingfunctions\imageres\scost.png")
     width, height = img.size
     background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
     background.paste(img)
     return background
+
+def makeNumber(number):
+    """makes the param :number: into a image"""
+    #turns a integer into a image.
+    sizeX=32 #size of number
+    sizeY=32
+    path="C:\\Users\\xtrea\\OneDrive\\classes\\"
+    path="classes/"
+    img = Image.open("""Discard_Main\classes\imagemakingfunctions\imageres\mario_numbers.png""")
+
+    stringNumber=str(number)
+    background = Image.new('RGBA', (len(stringNumber)*sizeX, sizeY), (0, 0, 0, 0))
+#    background.paste(img)
+    d=ImageDraw.Draw(background)
+    cursor=0
+    for char in stringNumber:
+        x=int(char)
+        startX=x*sizeX
+        crop=img.crop((startX,0,startX+sizeY,sizeY))
+        background.paste(crop,(cursor*sizeX,0))
+        cursor=cursor+1
+    return (background)
 def dc(expressionA, expressionB, success_msg="ok", casea_msg="none", caseb_msg="none"):
     passA, passB=False, False
     if(expressionA):

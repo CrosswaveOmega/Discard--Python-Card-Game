@@ -27,6 +27,20 @@ class CardCog(commands.Cog):
         auth=ctx.message.author;
         channel=ctx.message.channel;
         leng=len(args)
+    @commands.command(pass_context=True)
+    async def numbertoimage(self, ctx, *args):
+            bot=ctx.bot
+            auth=ctx.message.author;
+            channel=ctx.message.channel;
+            leng=len(args)
+            number=None
+            if(leng==1):
+                number=int(args[0])
+            if(number!=None):
+                with io.BytesIO() as image_binary:
+                    makeNumber(number).save(image_binary, 'PNG') #Returns pil object.
+                    image_binary.seek(0)
+                    await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
     @commands.command(pass_context=True, aliases=['cardtest'])
     async def getimage(self, ctx, *args):
         bot=ctx.bot

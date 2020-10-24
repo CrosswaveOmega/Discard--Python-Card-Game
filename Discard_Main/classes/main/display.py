@@ -1,5 +1,11 @@
 #This is a class to help make images.
 
+"""
+
+NOTE: IN THE PROCESS OF DEPRICATING.
+
+
+"""
 
 import math
 
@@ -67,3 +73,4 @@ if __name__ == "__main__":
     imake=Imaging_Class()
     img=imake.makeCardWithHP(555)
     img.save("Card.PNG")
+s
