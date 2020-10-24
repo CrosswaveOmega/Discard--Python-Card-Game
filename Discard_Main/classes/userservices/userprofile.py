@@ -107,7 +107,7 @@ class UserProfile:
 
     def add_card(self, card_id):
         if(CardRetrievalClass.getByID(int(card_id, 16)) == False):
-            await channel.send("Card does not exist")
+            print("Card does not exist")  
         else:
             self.cards.append({"card_id":card_id, "custom":None})
 

@@ -18,7 +18,7 @@ optionsDictionary={
 "limit": ["None"]
 }
 
-def Args_To_Target(args*):
+def Args_To_Target(*args):
     new_dictionary={
     "shape":"", #required
     "dist": 1 ,

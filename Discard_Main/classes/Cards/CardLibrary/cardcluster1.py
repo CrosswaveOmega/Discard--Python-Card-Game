@@ -64,7 +64,7 @@ class TestCreature1(card.CreatureCard):
         summonb=2
         summong=2
         #Defining Skills.
-        skill1=None BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit", "Type description here.", damage=12)
+        skill1=BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit", "Type description here.", damage=12)
         skill2=None #CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
         skill3=None #CustomSkill3("Custom Name 3", "trigger", "target", "type", "limit", "Type description here.")
         #Defining move Style.

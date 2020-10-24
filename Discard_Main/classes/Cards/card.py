@@ -7,7 +7,7 @@ from discord import Webhook, AsyncWebhookAdapter
 
 
 from .CardLibrary.cardcluster1 import *
-from ..main.targeting import *
+from ..main.target_maker import *
 
 
 class CardBase():  #Wip.
@@ -61,6 +61,7 @@ class Skill():
         self.type= type #The type of skill.
         self.limit= limit #When the skill can not be used.
         self.description= description # What the skill will use.
+
     def doSkill(user, target, game_ref):
         #What the skill will actually do.
         #user is the entity using the skill.

@@ -12,13 +12,16 @@ class Piece:
         self.damage=0
         #Current HP= max_hp - damage.
         self.speed=speed
-        self.move_style=move
+        self.move_style=move_style #The multilined text
+        self.move_limit=move_limit
         #Speed is 1-100.
         self.position=Position(notation=position_notation)
     def get_move_options(self, grid): #Wip function.
         """supposed to split move style into list line by line."""
-        print(grid.get_all_movements_in_range(self.position, "STEP 1"))
-        print(grid.get_all_movements_in_range(self.position, "STEP 2"))
+        lines=self.move_style.splitlines()
+        for line in lines():
+            print(grid.get_all_movements_in_range(self.position, line))
+
         # print(grid.get_all_movements_in_range(self.position, "SAME COLUMN"))
         # print(grid.get_all_movements_in_range(self.position, "SAME ROW"))
         # print(grid.get_all_movements_in_range(self.position, "SAME COLUMN LIMIT 1"))
@@ -33,10 +36,11 @@ class Piece:
         self.position=Position(notation=new_position_notation)
     #To Do- String Rep.  Rep will be Icon, Name, and Position
 
-
+class Creature(Piece):
+    """Creature class.  This is what all creatures will be summoned into."""
 
 
 #Driver Code.
 if __name__ == "__main__":
-    testPiece=Piece("LO", "MY_NAME", 5,5, "MOVESTYLE GOES HERE?", "B3")
+    testPiece=Piece("LO", "MY_NAME", 5,5, "STEP 1", "B3")
     print(testPiece.position.x_y())
