@@ -18,7 +18,7 @@ from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
 #from discord.ext.tasks import loop
 
-
+#Primary
 class CardCog(commands.Cog):
     """Commands for cards."""
     @commands.command(pass_context=True, aliases=['stampV'])
@@ -43,6 +43,7 @@ class CardCog(commands.Cog):
                     await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
     @commands.command(pass_context=True, aliases=['cardtest'])
     async def getimage(self, ctx, *args):
+        """Get a image and return it."""
         bot=ctx.bot
         auth=ctx.message.author;
         channel=ctx.message.channel;

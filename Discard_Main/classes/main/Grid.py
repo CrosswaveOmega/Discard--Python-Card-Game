@@ -3,6 +3,14 @@
 from .generic.notationhelp import space_notation_to_value, to_notation, get_letter
 from .generic.position import Position
 LETTERS={"A":1, "B":2, "C":3, "D":4, "E":5, "F":6, "G":7, "H":8, "I":9, "J":10, "K":11, "L":12, "M":13, "N":14, "O":15, "P":16, "Q":17, "R":18, "S":19, "T":20, "U":21, "V":22, "W":23, "X":24, "Y":25, "Z":26}
+
+
+class Card_Duel_Diverter():
+    #The purpose of this class is only to initalize grid without game.
+    def __init__(self):
+        pass
+    def get_entity_list(self):
+        return [] #return empty list.
 class Grid:
     """Where the game will be played.
 
@@ -17,7 +25,10 @@ note: should start at lower right corner.
 
     """
     def __init__(self, rows=5, columns=5, game=None):
-        self.game_ref=game
+        if(game=None):
+            self.game_ref=Card_Duel_Diverter()
+        else:
+            self.game_ref=game
         self.rows=rows
         self.columns=columns
         self.grid_array=[]

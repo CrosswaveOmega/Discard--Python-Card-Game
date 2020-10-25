@@ -1,5 +1,5 @@
-#from .classes.main import *
-from classes.main import *
+from .classes.main import *
+#from classes.main import *
 #The main game.
 
 class Card_Duel:
@@ -31,8 +31,8 @@ class Card_Duel_Helper():
 if __name__ == "__main__":
     duel=Card_Duel()
 
-    testPiece=Piece("LO", "MY_NAME", 5,5, "MOVE?", "B1")
-    testPiece2=Piece("LOE", "OTHER", 5,5, "MOVE?", "D3")
+    testPiece=Piece("LO", "MY_NAME", 5,5, "STEP 1", "B1")
+    testPiece2=Piece("LOE", "OTHER", 5,5, "MOVE", "D3")
     # testPiece3=Piece("LOE", "OTHER5", 5,5, "MOVE?", "A2")
     #
     # duel.add_piece(testPiece2)
@@ -45,9 +45,9 @@ if __name__ == "__main__":
     duel.move_piece(testPiece)
 
     duel.grid.print_grid()
-    duel.add_piece(testPiece2)
-    duel.move_piece(testPiece)
+   # duel.add_piece(testPiece2)
+   # duel.move_piece(testPiece)
 
-    duel.grid.print_grid()
+    #duel.grid.print_grid()
     # duel.grid.print_grid("south")
     # duel.move_piece(testPiece)

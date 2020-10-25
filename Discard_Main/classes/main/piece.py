@@ -5,7 +5,7 @@ class Piece:
     # NOTE: Creatures and Leaders will be Classes decended from this.
     """
 
-    def __init__(self, player, name, hp, speed, move, position_notation):
+    def __init__(self, player, name, hp, speed, move_style, position_notation):
         self.player=player #the player object this piece belongs to.
         self.name=name
         self.max_hp=hp
@@ -13,13 +13,13 @@ class Piece:
         #Current HP= max_hp - damage.
         self.speed=speed
         self.move_style=move_style #The multilined text
-        self.move_limit=move_limit
+        self.move_limit=1
         #Speed is 1-100.
         self.position=Position(notation=position_notation)
     def get_move_options(self, grid): #Wip function.
         """supposed to split move style into list line by line."""
         lines=self.move_style.splitlines()
-        for line in lines():
+        for line in lines:
             print(grid.get_all_movements_in_range(self.position, line))
 
         # print(grid.get_all_movements_in_range(self.position, "SAME COLUMN"))
