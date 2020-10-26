@@ -23,7 +23,7 @@ from .classes.userservices.userprofile import SingleUserProfile
 class CardCog2(commands.Cog):
     """Commands for testing system goes here."""
     @commands.command()
-    async def add_exp_old(self, ctx, *args): #A very rudimentary card retrieval system.
+    async def add_exp_old(self, ctx, *args): #Add card.
         '''
         syntax: cardGet [CardId] CustomId]
         Gets a random genre out of the character-info channel.  Exlcusively for Sakura Beat.

@@ -64,7 +64,6 @@ class Skill():
         self.type= type #The type of skill.
         self.limit= limit #When the skill can not be used.
         self.description= description # What the skill will say it does.
-    def
 
     def doSkill(user, target, game_ref):
         #What the skill will actually do.
