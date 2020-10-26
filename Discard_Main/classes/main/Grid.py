@@ -25,7 +25,7 @@ note: should start at lower right corner.
 
     """
     def __init__(self, rows=5, columns=5, game=None):
-        if(game=None):
+        if(game==None):
             self.game_ref=Card_Duel_Diverter()
         else:
             self.game_ref=game
