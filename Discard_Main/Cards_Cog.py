@@ -18,7 +18,29 @@ from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
 #from discord.ext.tasks import loop
 
-#Primary
+#Primary area with commands.
+
+class CardCog2(commands.Cog):
+    """Commands for testing system goes here."""
+    @commands.command()
+    async def add_exp_old(self, ctx, *args): #A very rudimentary card retrieval system.
+        '''
+        syntax: cardGet [CardId] CustomId]
+        Gets a random genre out of the character-info channel.  Exlcusively for Sakura Beat.
+        [CardId]: The Card ID you want to get.
+        [CustomId]: The CustomId you want to apply to the card.
+        '''
+        bot=ctx.bot
+        auth=ctx.message.author;
+        channel=ctx.message.channel;
+        SingleUser=SingleUserProfile("New.")
+        profile=SingleUser.getByID(auth.id)
+        await channel.send("Old EXP="+str(profile.get_exp()))
+        profile.set_exp(profile.get_exp()+10)
+        profile=SingleUser.getByID(auth.id)
+        await channel.send("New EXP="+str(profile.get_exp()))
+        SingleUser.save_all()
+        #await channel.send(str(newcard))
 class CardCog(commands.Cog):
     """Commands for cards."""
     @commands.command(pass_context=True, aliases=['stampV'])
@@ -53,26 +75,7 @@ class CardCog(commands.Cog):
             image_binary.seek(0)
             await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
 
-    @commands.command()
-    async def add_exp(self, ctx, *args): #A very rudimentary card retrieval system.
-        '''
-        syntax: cardGet [CardId] CustomId]
-        Gets a random genre out of the character-info channel.  Exlcusively for Sakura Beat.
-        [CardId]: The Card ID you want to get.
-        [CustomId]: The CustomId you want to apply to the card.
 
-        '''
-        bot=ctx.bot
-        auth=ctx.message.author;
-        channel=ctx.message.channel;
-        SingleUser=SingleUserProfile("New.")
-        profile=SingleUser.getByID(auth.id)
-        await channel.send("Old EXP="+str(profile.get_exp()))
-        profile.set_exp(profile.get_exp()+10)
-        profile=SingleUser.getByID(auth.id)
-        await channel.send("New EXP="+str(profile.get_exp()))
-        SingleUser.save_all()
-        #await channel.send(str(newcard))
 
     @commands.command(pass_context=True)
     async def cardGet(self, ctx, *args): #A very rudimentary card retrieval system.

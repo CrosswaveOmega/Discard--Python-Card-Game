@@ -28,6 +28,9 @@ import random
 
 from Discard_Main import Cards_Cog
 
+from Discard_Main import Cards_Debug_Cog
+
+
 bot = commands.Bot(command_prefix='>')
 
 async def opening():
@@ -56,6 +59,8 @@ class Main(commands.Cog):
                 await channel.send("HELLO I AM ME!")
 bot.add_cog(Main())
 bot.add_cog(Cards_Cog.CardCog())
+bot.add_cog(Cards_Cog.CardCog2())
+bot.add_cog(Cards_Debug_Cog.DebugCog())
 configur=ConfigParser()
 configur.read('config.ini')
 print(configur)

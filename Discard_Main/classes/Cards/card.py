@@ -37,6 +37,9 @@ class CardBase():  #Wip.
         if hasattr(custom, 'type'):
             self.type=custom.type
 """
+Skill Triggers
+   • Command- Skill Is triggered on command.
+   • Auto- Skill is triggered by some stimuli.
 
 Skill Types
    • Action- Activated by the player, during the creatures turn.  Will usually END turn.
@@ -60,7 +63,8 @@ class Skill():
         self.target = Args_To_Target(target) #What the skill will target.  Split into Type, Distance, Scope, Amount, and Limit.  Stored as dictionary.
         self.type= type #The type of skill.
         self.limit= limit #When the skill can not be used.
-        self.description= description # What the skill will use.
+        self.description= description # What the skill will say it does.
+    def
 
     def doSkill(user, target, game_ref):
         #What the skill will actually do.
