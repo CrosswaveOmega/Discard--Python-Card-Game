@@ -59,7 +59,7 @@ class SingleUserProfile:
         def __str__(self):
             return repr(self) + self.val
     instance = None
-    def __init__(self, arg):  #Internally, it keeps a single instance of the __SingleDictionary class in memory.
+    def __init__(self, arg="None"):  #Internally, it keeps a single instance of the __SingleDictionary class in memory.
         if not SingleUserProfile.instance:
             SingleUserProfile.instance = SingleUserProfile.__SingleUserProfile(arg)
         else:
@@ -107,7 +107,7 @@ class UserProfile:
 
     def add_card(self, card_id):
         if(CardRetrievalClass.getByID(int(card_id, 16)) == False):
-            print("Card does not exist")  
+            print("Card does not exist")
         else:
             self.cards.append({"card_id":card_id, "custom":None})
 

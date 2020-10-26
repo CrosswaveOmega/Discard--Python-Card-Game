@@ -32,6 +32,12 @@ class Piece:
         # print(grid.get_all_movements_in_range(self.position, "HOP Y -1"))
         # print(grid.get_all_movements_in_range(self.position, "HOP Y -1 X -1"))
         # print(grid.get_all_movements_in_range(self.position, "HOP X 1 Y 1"))
+    def add_damage(self, damage_add=0):
+
+        self.damage=self.damage+ damage_add
+
+        print("Add Damage is incomplete.")
+
     def change_position(self, new_position_notation):
         self.position=Position(notation=new_position_notation)
     #To Do- String Rep.  Rep will be Icon, Name, and Position

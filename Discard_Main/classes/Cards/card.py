@@ -60,12 +60,12 @@ class Skill():
         print("tbd")
         self.name= name #The name of the skill
         self.trigger = trigger # How the skill will be activated.  Can be "command" or "auto"
-        self.target = Args_To_Target(target) #What the skill will target.  Split into Type, Distance, Scope, Amount, and Limit.  Stored as dictionary.
+        self.target_value = Args_To_Target(target) #What the skill will target.  Split into Type, Distance, Scope, Amount, and Limit.  Stored as dictionary.
         self.type= type #The type of skill.
         self.limit= limit #When the skill can not be used.
         self.description= description # What the skill will say it does.
 
-    def doSkill(user, target, game_ref):
+    def doSkill(self, user, target, game_ref):
         #What the skill will actually do.
         #user is the entity using the skill.
         #target is what the skill is being used on.

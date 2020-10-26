@@ -5,7 +5,7 @@ import json
 import aiohttp
 import asyncio
 import csv
-
+import datetime
 from PIL import Image, ImageTk, ImageGrab, ImageDraw, ImageFont
 
 from discord.ext import commands, tasks
@@ -63,6 +63,33 @@ class CardCog(commands.Cog):
                     makeNumber(number).save(image_binary, 'PNG') #Returns pil object.
                     image_binary.seek(0)
                     await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
+
+    @commands.command(pass_context=True)
+    async def my_profile(self, ctx, *args):
+        """Returns the User's Profile.""""
+        bot=ctx.bot
+        author=ctx.message.author;
+        channel=ctx.message.channel;
+
+        user_id=author.id
+        leng=len(args)
+        profile=SingleUserProfile("B").getByID(user_id)
+        diction_profile=profile.to_dictionary()
+        number=None
+        embed = discord.Embed(title=author.name, colour=discord.Colour(0xce48e9), description=" I dunno what should be the description.  Stuff I guess.  Makes it look a bit WIIIDER.", timestamp=datetime.datetime.today())
+        embed.set_image(url=author.avatar_url)
+        embed.set_thumbnail(url=author.avatar_url)
+        embed.set_author(name="profile", icon_url=author.avatar_url)
+        embed.set_footer(text="myprofile command", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
+        embed.add_field(name="Coins", value= str(profile.get_coins()), inline=False)
+        embed.add_field(name="Stars", value=str(profile.get_stars()), inline=False)
+#embed.add_field(name="custom", value="Custom was applied.",)
+        embed.add_field(name="Exp", value=str(profile.get_exp()), inline=True)
+        embed.add_field(name="Level", value=str(profile.get_level()), inline=True)
+
+
+        mess=await channel.send(content="", embed=embed)
+
     @commands.command(pass_context=True, aliases=['cardtest'])
     async def getimage(self, ctx, *args):
         """Get a image and return it."""
