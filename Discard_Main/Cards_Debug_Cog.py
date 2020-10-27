@@ -44,7 +44,7 @@ class DebugCog(commands.Cog):
         #await channel.send(str(newcard))
 
     @commands.command()
-    async def add_coins(self, ctx, *arg):
+    async def add_coins(self, ctx, *args):
         #increase the coins in user's account by the amount passed in the argument
         #if no argument is passed, then increase the coins by 4
         bot = ctx.bot
