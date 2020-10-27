@@ -1,10 +1,10 @@
-"""because we need a list of skills to make things easier."""
+
 
 from .. import card
 
 class BasicAttack(card.Skill):#Custom Class
     def __init__(self, name="BasicAttacl", trigger="command", target=("Adjacent", "Enemy", "x1"), type="tbd", limit="tbd", description="none", damage=5, damage_tag=""): #there's probably a better way to do this.
-    """
+        """Init"""
         self.damage=damage #Unique to this skill.
         self.danage_tag=damage_tag #for future functionality.  Just ignore it for now.
         super().__init__(name, trigger, target, type, limit, description)
