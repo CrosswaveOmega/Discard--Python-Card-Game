@@ -105,3 +105,15 @@ class DebugCog(commands.Cog):
             await channel.send("New Level = " + str(profile.get_level()))
             await channel.send("New EXP = " + str(profile.get_exp()))
         SingleUser.save_all()
+
+    @commands.command()
+    async def add_card(self, ctx, *args):
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        profile.add_card(args[0])
+        SingleUser.save_all()
