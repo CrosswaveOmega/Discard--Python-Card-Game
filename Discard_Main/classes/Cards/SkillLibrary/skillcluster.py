@@ -17,6 +17,11 @@ class BasicAttack(card.Skill):#Custom Class
         #Use a dictionary.
 
         warning("INCOMPLETE.")
+        dictionary={} #Initialization of dictionary
+        dictionary["user"]=user
+        dictionary["target"]=target
+        print("This skill should do "+str(self.damage)+ "Damage to everything in the target parameter.")
+        print(self.damage)
 
         dictionary["damage"]=self.damage
         dictionary["tag"]=self.damage_tag
@@ -65,11 +70,13 @@ class BasicShield(card.Skill):
 # This class allows for attacks which are split into multiple parts
 # The idea is that it might be used to attack multiple targets if desired as a part of one total attack sequence.
 class MultiAttack(card.Skill):
-    def __init__(self, name = "MultiAttack", trigger = "command", target = ("Rectilinear", "Enemy", "x3"), type = "attack", limit = "", description = "", damage = 1):
+    def __init__(self, name = "MultiAttack", trigger = "command", target = ("Rectilinear", "Enemy", "x3"), type = "attack", limit = "", description = "", damage = 1, attacks=3, damage_tag=""):
 
         # This is the amount of damage each single attack will do
         # This damage value will occur 3 times during the duration of the MultiAttack
+        self.attacks=attacks
         self.damage = damage
+        self.damage_tag = damage_tag
         super().__init__(name, trigger, target, type, limit, description)
     def doSKill(self, user, target, game_ref):
 
@@ -77,3 +84,19 @@ class MultiAttack(card.Skill):
         # This skill can use some of the functionality of BasicAttack to attack multiple targets, or possibly the same target multiple times.
         # I do not understand how targeting specific enemies works, but this would be the key distinction between a BasicAttack and a MultiAttack.
         # MultiAttack would need to be capable of targeting multiple pieces on the board.
+        warning("INCOMPLETE.")
+        dictionary={} #Initialization of dictionary
+        dictionary["user"]=user
+        dictionary["target"]=target
+        print("This skill should do "+str(self.damage)+ "Damage to everything in the target parameter.")
+        print(self.damage)
+
+        dictionary["damage"]=self.damage
+        dictionary["attacks"]=self.damage
+        dictionary["tag"]=self.damage_tag
+        for entity in dictionary["target"]:
+            print("HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
+            if True: #here, it would check for some kind of effect. for record.
+                for count in range(0, dictionary["attacks"]):
+                    piece.add_damage(dictionary["damage"]) #Deals damage attacks times
+        print("OPERATION HAS BEEN DONE.")
