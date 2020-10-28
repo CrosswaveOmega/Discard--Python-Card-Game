@@ -20,7 +20,11 @@ async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_afte
 
     It takes in a list of choices, and gets the user's input on them.
 
-    If a valid input was not sent, it returns none
+    If a valid input was not sent, it returns None.
+
+    If timeout is specified, it will terminate after 30 seconds.
+
+    
     '''
     bot=ctx.bot
     auth=ctx.message.author;

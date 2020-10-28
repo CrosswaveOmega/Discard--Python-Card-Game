@@ -119,12 +119,37 @@ class CardCog(commands.Cog):
             await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
 
 
+    @commands.command(pass_context=True)
+    async def viewcard(self, ctx, *args): #A very rudimentary card retrieval system.
+        '''
+        syntax: viewcard [CardId]
+        [CardId]: The Card ID you want to get.
+
+        '''
+        bot=ctx.bot
+        auth=ctx.message.author;
+        channel=ctx.message.channel;
+
+        SingleUser = SingleUserProfile("arg")
+        card_id=args[0]
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        result=profile.get_inv_cards_by_id(int(card_id, 16)):
+
+        newcard=CardRetrievalClass().getByID(int(card_id, 16))
+        if(result["custom"]!=None):
+            customtext=await CustomRetrievalClass().getByID(result["custom"], bot)
+            newcard.apply_custom(custom=customtext)
+
+
+        print("NOTE: NEED TO MAKE CARD EMBED FORMAT CLASS IN CARD.PY")
+
+
 
     @commands.command(pass_context=True)
     async def cardGet(self, ctx, *args): #A very rudimentary card retrieval system.
         '''
         syntax: cardGet [CardId] CustomId]
-        Gets a random genre out of the character-info channel.  Exlcusively for Sakura Beat.
         [CardId]: The Card ID you want to get.
         [CustomId]: The CustomId you want to apply to the card.
 

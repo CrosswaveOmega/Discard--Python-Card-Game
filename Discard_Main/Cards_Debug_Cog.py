@@ -115,5 +115,9 @@ class DebugCog(commands.Cog):
 
         user_id = author.id
         profile = SingleUser.getByID(user_id)
-        profile.add_card(args[0])
+        card_id=args[0]
+        if(CardRetrievalClass().getByID(int(card_id, 16)) == False):
+            channel.send("Card does not exist")
+        else:
+            profile.add_card(card_id)
         SingleUser.save_all()

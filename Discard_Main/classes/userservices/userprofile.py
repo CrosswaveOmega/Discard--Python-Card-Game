@@ -7,6 +7,11 @@ from discord import Webhook, AsyncWebhookAdapter
 from pathlib import Path
 import json
 directory="saveData"
+
+
+
+
+
 class SingleUserProfile:
     class __SingleUserProfile: #Singleton Design.  Based on https://python-3-patterns-idioms-test.readthedocs.io/en/latest/Singleton.html
         def __init__(self, arg="P."):
@@ -106,10 +111,15 @@ class UserProfile:
         return self.decks
 
     def add_card(self, card_id):
-        if(CardRetrievalClass.getByID(int(card_id, 16)) == False):
-            print("Card does not exist")
-        else:
-            self.cards.append({"card_id":card_id, "custom":None})
+        self.cards.append({"card_id":card_id, "custom":None})
+
+    def get_inv_cards_by_id(self, card_id):
+        returnList = [] #Duplicates exist.
+        for card_value in self.cards:
+            if card_id == card_value["card_id"]:
+                returnList.append(card_value)
+        return returnList
+
 
     def get_exp(self):
         return self.exp

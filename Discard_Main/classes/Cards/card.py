@@ -36,6 +36,8 @@ class CardBase():  #Wip.
             self.icon=custom.icon
         if hasattr(custom, 'type'):
             self.type=custom.type
+    def to_DiscordEmbed(self):
+        print("TBD")
 """
 Skill Triggers
    • Command- Skill Is triggered on command.
@@ -64,6 +66,10 @@ class Skill():
         self.type= type #The type of skill.
         self.limit= limit #When the skill can not be used.
         self.description= description # What the skill will say it does.
+
+    def __str__(self):
+        print("TBD.")
+        return ""
 
     def doSkill(self, user, target, game_ref):
         #What the skill will actually do.
@@ -101,5 +107,8 @@ class CreatureCard(CardBase):
         self.move_style=movestyle
         self.move_limit=movelimit
         super().__init__(self.ID,name, icon, type, image)
+
     def __str__(self):
         return self.icon + "|" + self.name + "|" + self.type + "|"+ self.hp + "|"+ self.speed + "|"+ str(self.ID)
+    def to_DiscordEmbed(self):
+        print("TBD")
