@@ -12,7 +12,7 @@ from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 from .classes.Cards.cardretrieval import CardRetrievalClass
-
+from .classes.discordhelper.tiebreaker import make_tiebreaker
 from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
@@ -23,24 +23,30 @@ from .classes.userservices.userprofile import SingleUserProfile
 class CardCog2(commands.Cog):
     """Commands for testing system goes here."""
     @commands.command()
-    async def add_exp_old(self, ctx, *args): #Add card.
+    async def tiebreaker(self, ctx, *args): #Add card.
         '''
-        syntax: cardGet [CardId] CustomId]
-        Gets a random genre out of the character-info channel.  Exlcusively for Sakura Beat.
-        [CardId]: The Card ID you want to get.
-        [CustomId]: The CustomId you want to apply to the card.
+        syntax: tiebreaker
+        This function is for testing the Tiebreaker system.
+
+        The tiebreaker system, when presented with a list, will send 
         '''
         bot=ctx.bot
         auth=ctx.message.author;
         channel=ctx.message.channel;
-        SingleUser=SingleUserProfile("New.")
-        profile=SingleUser.getByID(auth.id)
-        await channel.send("Old EXP="+str(profile.get_exp()))
-        profile.set_exp(profile.get_exp()+10)
-        profile=SingleUser.getByID(auth.id)
-        await channel.send("New EXP="+str(profile.get_exp()))
-        SingleUser.save_all()
-        #await channel.send(str(newcard))
+        choices=[
+        ["Case 0","0","<:_0:754494641050615809>"],
+        ["Case 1","1","<:_1:754494641096622153>"],
+        ["Case 2","2","<:_2:754494640752951307>"],
+        ["Case 3","3","<:_3:754494641264394301>"],
+        ["Case 4","4","<:_4:754494641117855792>"],
+        ["Case 5","5","<:_5:754494641084301472>"],
+        ["Case 6","6","<:_6:754494640865935391>"],
+        ["Case 7","7","<:_7:754494640870129712>"],
+        ["Case 8","8","<:_8:754494641151148032>"],
+        ["Case 9","9","<:_9:754494641105272842>"]
+        ]
+        cont=await make_tiebreaker(ctx, choices)
+        await channel.send(cont)
 class CardCog(commands.Cog):
     """Commands for cards."""
     @commands.command(pass_context=True, aliases=['stampV'])
@@ -66,7 +72,7 @@ class CardCog(commands.Cog):
 
     @commands.command(pass_context=True)
     async def my_profile(self, ctx, *args):
-        """Returns the User's Profile.""""
+        """Returns the User's Profile."""
         bot=ctx.bot
         author=ctx.message.author;
         channel=ctx.message.channel;
