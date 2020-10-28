@@ -14,11 +14,13 @@ from discord import Webhook, AsyncWebhookAdapter
 
 
 
-async def make_tiebreaker(ctx, choices, delete_after=False): #Add card.
+async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_after=False, clear_after=False): #Add card.
     '''
     This function's sole purpose is to help with what I call a "tiebreaker."
 
-    It takes in a list of choices, and
+    It takes in a list of choices, and gets the user's input on them.
+
+    If a valid input was not sent, it returns none
     '''
     bot=ctx.bot
     auth=ctx.message.author;
@@ -40,7 +42,10 @@ async def make_tiebreaker(ctx, choices, delete_after=False): #Add card.
     ]
     message_dict={}
     emoji_dict={}
-    message_to_respond_to=await channel.send("Tiebreaker!  Please Respond.")
+
+    message_to_respond_to=message
+    if message==None:
+        message_to_respond_to=await channel.send("Tiebreaker!  Please Respond.")
     for ch in choices:
         message_dict[ch[1]]=ch[0]
         emoji_dict[ch[2]]=ch[0]
@@ -60,22 +65,36 @@ async def make_tiebreaker(ctx, choices, delete_after=False): #Add card.
         result= str(rea.emoji)
         print("REACT.")
         return rea.emoji
-
+    async def timeout(): #Get a reaction.
+        await asyncio.sleep(30.0)
+        return "Timeout..."
     messagetask = asyncio.create_task(getMessage())
     reactiontask = asyncio.create_task(getReaction())
+    timeouttask =asyncio.create_task(timeout())
 
-    done, pending = await asyncio.wait(
-    [messagetask, reactiontask], return_when=asyncio.FIRST_COMPLETED)
+    tasklist=[messagetask, reactiontask]
+    if timeout:
+        tasklist.append(timeouttask)
+    done, pending = await asyncio.wait(tasklist, return_when=asyncio.FIRST_COMPLETED) #there's probably a better way to do this.
     if messagetask in done:
         result=messagetask.result();
         output=message_dict[result];
         reactiontask.cancel();
+        if timeout:
+            timeouttask.cancel();
     if reactiontask in done:
         print("DONE.")
         result=str(reactiontask.result())
         output=emoji_dict[result];
         messagetask.cancel();
-
+        if timeout:
+            timeouttask.cancel();
+    if timeouttask in done:
+        messagetask.cancel();
+        reactiontask.cancel();
+        output=timeouttask.result();
+    if clear_after:
+        await message_to_respond_to.clear_reactions()
     if delete_after:
         await message_to_respond_to.delete()
     return output

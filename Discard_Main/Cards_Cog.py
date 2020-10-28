@@ -28,7 +28,7 @@ class CardCog2(commands.Cog):
         syntax: tiebreaker
         This function is for testing the Tiebreaker system.
 
-        The tiebreaker system, when presented with a list, will send 
+        The tiebreaker system, when presented with a list, will send
         '''
         bot=ctx.bot
         auth=ctx.message.author;
@@ -45,8 +45,18 @@ class CardCog2(commands.Cog):
         ["Case 8","8","<:_8:754494641151148032>"],
         ["Case 9","9","<:_9:754494641105272842>"]
         ]
-        cont=await make_tiebreaker(ctx, choices)
-        await channel.send(cont)
+        message=await channel.send("This is a test of the Reaction+Message based user responce system.  \n Respond to this message with a single number or a reaction.")
+        cont=await make_tiebreaker(ctx, choices, message=message, clear_after=True)
+        if(cont!=None):
+            await channel.send(cont)
+        else:
+            await channel.send("Invalid input.")
+        message=await channel.send("This is a test of the Reaction+Message based user responce system, with a 30 second timeout.  \n Respond to this message with a single number or a reaction.")
+        cont=await make_tiebreaker(ctx, choices, message=message, timeout=True, clear_after=True)
+        if(cont!=None):
+            await channel.send(cont)
+        else:
+            await channel.send("Invalid input.")
 class CardCog(commands.Cog):
     """Commands for cards."""
     @commands.command(pass_context=True, aliases=['stampV'])
