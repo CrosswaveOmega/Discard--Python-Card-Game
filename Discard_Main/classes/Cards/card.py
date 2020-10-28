@@ -23,32 +23,17 @@ class CardBase():  #Wip.
         self.image=image    #• Image- Background image the card displays.   Customizable by a user,
         self.type=type      #• Type- The type of card this is.
 
-    def set_ID(self, ID):
-        self.ID = ID
-
     def get_ID(self):
         return self.ID
-
-    def set_name(self, name):
-        self.name = name
 
     def get_name():
         return self.name
 
-    def set_icon(self, icon):
-        self.icon = icon
-
     def get_icon(self):
         return self.icon
 
-    def set_type(self, type):
-        self.type = type
-
     def get_type(self):
         return self.type
-
-    def set_image(self, image):
-        self.image = image
 
     def get_image(self):
         return self.image
@@ -138,92 +123,47 @@ class CreatureCard(CardBase):
         self.move_limit=movelimit
         super().__init__(self.ID,name, icon, type, image)
 
-    def set_ID(self, ID):
-        self.ID = ID
-
     def get_ID(self):
         return self.ID
-
-    def set_name(self, name):
-        self.name = name
 
     def get_name():
         return self.name
 
-    def set_icon(self, icon):
-        self.icon = icon
-
     def get_icon(self):
         return self.icon
-
-    def set_type(self, type):
-        self.type = type
 
     def get_type(self):
         return self.type
 
-    def set_image(self, image):
-        self.image = image
-
     def get_image(self):
         return self.image
-
-    def set_hp(self, hp):
-        self.hp = hp
 
     def get_hp(self):
         return self.hp
 
-    def set_speed(self, speed):
-        self.speed = speed
-
     def get_speed(self):
         return self.speed
-
-    def set_summoncost_r(self, summoncost_r):
-        self.summoncost_r = summoncost_r
 
     def get_summoncost_r(self):
         return self.summoncost_r
 
-    def set_summoncost_g(self, summoncost_g):
-        self.summoncost_g = summoncost_g
-
     def get_summoncost_g(self):
         return self.summoncost_g
-
-    def set_summoncost_b(self, summoncost_b):
-        self.summoncost_b = summoncost_b
 
     def get_summoncost_b(self):
         return self.summoncost_b
 
-    def set_skill_1(self, skill_1):
-        self.skill_1 = skill_1
-
     def get_skill_1(self):
         return self.skill_1
-
-    def set_skill_2(self, skill_2):
-        self.skill_2 = skill_2
 
     def get_skill_2(self):
         return self.skill_2
 
-    def set_skill_3(self, skill_3):
-        self.skill_3 = skill_3
-
     def get_skill_3(self):
         return self.skill_3
 
-    def set_move_stype(self, move_style):
-        self.move_style = move_style
-
     def get_move_style(self):
         return self.move_style
-
-    def set_move_limit(self, move_limit):
-        self.move_limit = move_limit
 
     def get_move_limit(self):
         return self.move_limit
