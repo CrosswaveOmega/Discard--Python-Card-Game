@@ -177,10 +177,10 @@ class TestCreatureDelta(card.CreatureCard):
 
 class TestCreature2(card.CreatureCard):
     # This is test creature 2, so its ID is 2 for now.
-    ID = 0x00004
+    ID = 0x00002
 
     def __init__(self):
-        self.ID = 0x00004
+        self.ID = 0x00002
         name = "Creature2"
         icon = ""
         image = ""
