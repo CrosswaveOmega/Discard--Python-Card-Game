@@ -1,10 +1,9 @@
-
+"""DEPRICATED.
 
 class move_style:
-    """Move Style is stored as a multi-lined string."""
     def __init__(self):
         self.count=1#number of times you can move.
-        self.instruction"""
+        self.instruction
         SAME ROW
         SAME COLUMN
         SAME DIAGONAL
@@ -15,4 +14,5 @@ class move_style:
         STEP 1
         STEP 2
 
-        """ #- how you can move.
+         #- how you can move.
+"""

@@ -138,8 +138,8 @@ class CardCog(commands.Cog):
 
         newcard=CardRetrievalClass().getByID(int(card_id, 16))
         if(result["custom"]!=None):
-            customtext=await CustomRetrievalClass().getByID(result["custom"], bot)
-            newcard.apply_custom(custom=customtext)
+            customobject=await CustomRetrievalClass().getByID(result["custom"], bot)
+            newcard.apply_custom(custom=customobject)
 
 
         print("NOTE: NEED TO MAKE CARD EMBED FORMAT CLASS IN CARD.PY")

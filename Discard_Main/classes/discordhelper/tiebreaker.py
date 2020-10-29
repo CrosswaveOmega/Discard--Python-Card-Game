@@ -14,6 +14,9 @@ from discord import Webhook, AsyncWebhookAdapter
 
 
 
+async def multimatch(user, tbd):
+    print("")
+
 async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_after=False, clear_after=False): #Add card.
     '''
     This function's sole purpose is to help with what I call a "tiebreaker."
@@ -24,7 +27,7 @@ async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_afte
 
     If timeout is specified, it will terminate after 30 seconds.
 
-    
+
     '''
     bot=ctx.bot
     auth=ctx.message.author;
