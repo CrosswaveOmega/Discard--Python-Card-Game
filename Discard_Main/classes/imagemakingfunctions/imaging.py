@@ -12,6 +12,14 @@ def make_summon_cost(r,b,g):
     background.paste(img)
     return background
 
+def make_card_image(cardimg=None):
+    if(cardimg!=None):
+        img = Image.open(cardimg)
+        width, height = img.size
+        background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+        background.paste(img)
+        return background
+
 def makeNumber(number):
     """makes the param :number: into a image"""
     #turns a integer into a image.

@@ -134,7 +134,7 @@ class CardCog(commands.Cog):
         card_id=args[0]
         user_id = author.id
         profile = SingleUser.getByID(user_id)
-        result=profile.get_inv_cards_by_id(int(card_id, 16)):
+        result=profile.get_inv_cards_by_id(int(card_id, 16))
 
         newcard=CardRetrievalClass().getByID(int(card_id, 16))
         if(result["custom"]!=None):
@@ -145,6 +145,21 @@ class CardCog(commands.Cog):
         print("NOTE: NEED TO MAKE CARD EMBED FORMAT CLASS IN CARD.PY")
 
 
+    @commands.command(pass_context=True)
+    async def addCustomold(self, ctx, *args): #A very rudimentary card retrieval system.
+        '''
+        syntax: cardGet [CardId] CustomId]
+        [CardId]: The Card ID you want to get.
+        [CustomId]: The CustomId you want to apply to the card.
+
+        '''
+        bot=ctx.bot
+        auth=ctx.message.author;
+        channel=ctx.message.channel;
+        leng=len(args)
+
+        cipher=await CustomRetrievalClass().addCustom("TEXT", bot)
+        await channel.send(content=cipher)
 
     @commands.command(pass_context=True)
     async def cardGet(self, ctx, *args): #A very rudimentary card retrieval system.

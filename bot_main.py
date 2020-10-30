@@ -27,6 +27,7 @@ from discord import Webhook, AsyncWebhookAdapter
 import random
 
 from Discard_Main import Cards_Cog
+from Discard_Main import Cards_Custom_Cog
 
 from Discard_Main import Cards_Debug_Cog
 
@@ -61,6 +62,7 @@ bot.add_cog(Main())
 bot.add_cog(Cards_Cog.CardCog())
 bot.add_cog(Cards_Cog.CardCog2())
 bot.add_cog(Cards_Debug_Cog.DebugCog())
+bot.add_cog(Cards_Custom_Cog.CustomsCog())
 configur=ConfigParser()
 configur.read('config.ini')
 print(configur)

@@ -2,9 +2,12 @@ import discord
 import operator
 import csv
 import io
+import random
+import json
 from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
+from pathlib import Path
 
 
 
@@ -14,6 +17,10 @@ from configparser import ConfigParser
 configur=ConfigParser()
 configur.read('config.ini')
 
+
+directory="saveData"
+
+cipher_characters=['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','W','X','Y']
 class CustomBase():  #Wip.
 
     def __init__(self, id=0, name="none", icon="none", type="none", image="None", csvText="none"):
@@ -67,6 +74,9 @@ class CustomBase():  #Wip.
         textValue=csv_mode.getvalue()
         csv_mode.close()
         return textValue
+    def change_display_image(self, image_url, image_message_id):
+        self.image_url=image_url
+        self.image_message_id=image_message_id
 
     def checkForAttribute(self, attr):
         if hasattr(self, attr):
@@ -75,14 +85,123 @@ class CustomBase():  #Wip.
     def __str__(self):
         return self.icon + "|" + self.name + "|" + self.type + "|"+ str(self.ID)
 
+class CustomIDSystem:
+    class __CustomIDSystem: #Singleton Design.  Based on https://python-3-patterns-idioms-test.readthedocs.io/en/latest/Singleton.html
+        def __init__(self, arg="P."):
+            self.val = arg
+            self.custom_dictionary={} #Every single hashfile
+            self.loadFile(1)
+        def loadFile(self, file_id):
+            file=self.get_file_from_directory(1)
+            if(file!= None):
+                f= file.open(mode='r');
+                string=f.read();
+                self.custom_dictionary=json.loads(string)
+                f.close()
+                #Load contents of file into new UserProfile, add that into custom_dictionary.
+            else:
+                self.custom_dictionary={}
+                print("Should initalize new default user profile, add that into custom_dictionary under user id.")
+                self.save_custom_dictionary(1)
 
+        def getCipherInternal(self, cipher_id):
+            if(self.checkforidincustom_dictionary(cipher_id)):
+                return self.custom_dictionary[str(cipher_id)]
+            else: #ID is not in custom_dictionary.
+                return None
+                    #Initalize new file.
+        def save_custom_dictionary(self, file_id): #Saves the UserProfile object at key id in custom_dictionary to a file.
+            #if(self.checkforidincustom_dictionary(id)):
+            filename="customdata_"+str(file_id)+".json" #filename from json.
+            file= Path(directory + "/"+ filename)
+            f=file.open(mode="w+")
 
+            string_to_write=json.dumps(self.custom_dictionary, sort_keys=True, indent=4)
+            f.write(string_to_write)
+            f.close()
+        def save_all_internal(self): #save everything in custom_dictionary.
+            self.save_custom_dictionary(1)
+        def add_cipher_to_dictionary(self, cipher, message_id):
+            self.custom_dictionary[str(cipher)]=message_id
+
+        def checkforidincustom_dictionary(self, id):
+            key_to_lookup = str(id)
+            print(id)
+            print(key_to_lookup)
+            if key_to_lookup in self.custom_dictionary:
+                print("TRUE")
+                return True
+            else:
+              return False
+        def get_file_from_directory(self, file_id):
+            filename="customdata_"+str(file_id)+".json" #filename from json.
+            file= Path(directory + "/"+ filename)
+            if file.exists():#check if this file exists.
+                return file
+            else:
+                return None
+        def __str__(self):
+            return repr(self) + self.val
+    instance = None
+    def __init__(self, arg="None"):  #Internally, it keeps a single instance of the __SingleDictionary class in memory.
+        if not CustomIDSystem.instance:
+            CustomIDSystem.instance = CustomIDSystem.__CustomIDSystem(arg)
+        else:
+            CustomIDSystem.instance.val = arg
+    def cipherIDtoMessageId(self, id):
+        #Initial chekc
+        return CustomIDSystem.instance.getCipherInternal(id)
+
+    def make_new_cipher(self):
+        newCipher=""
+        for i in range(0,6):
+            newCipher=newCipher+random.choice(cipher_characters)
+        return newCipher
+    def add_custom_to_system(self, message_id):
+        newCipher=self.make_new_cipher()
+        CustomIDSystem.instance.add_cipher_to_dictionary(newCipher, message_id)
+        return newCipher
+    def save_all(self):
+        CustomIDSystem.instance.save_all_internal()
+
+    def __getattr__(self, name):
+        return getattr(self.instance, name)
+
+#Make command for a new id style.
 
 class CustomRetrievalClass():  #by no means what the final version should use.
     def __init__(self, bot=None):
         if bot:
             self.botstore=bot
         self.botstore=None
+    async def addCustom(self, custom, bot):
+        """
+        custom -> Custom Object.
+        bot -> The current Bot.
+        """
+        botToUse=None
+        if(bot):
+            botToUse=bot
+        elif self.botstore:
+            botToUse=self.botstore
+        if botToUse:
+            print("getting id")
+            print(configur.get("Default",'bts_server'))
+            checkGuild= bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
+            custom_channel= checkGuild.get_channel(int(configur.get("Default",'bts_custom'))) #Customs Channel.
+            print(custom_channel)
+            #ID=custom.ID
+            #print(ID)
+
+            message=await custom_channel.send(content=" Text") #message to second
+            blank_custom=CustomBase(id=message.id)
+            cipher=CustomIDSystem("Init").add_custom_to_system(message.id)
+            CustomIDSystem("SaveNew").save_all()
+            await message.edit(content=blank_custom.toCSV()) #Custom needs to be uploaded by bot.
+        #    await message.edit(content=custom.toCSV()) #Custom needs to be uploaded by bot.
+            #print(message.content)
+            return cipher
+        return "CUSTOM NOT FOUND."
     async def updateCustomByID(self, custom, bot):
         """
         custom -> Custom Object.
@@ -101,11 +220,13 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             print(custom_channel)
             ID=custom.ID
             print(ID)
-            message=await custom_channel.fetch_message(int(ID)) #message to get.
+            mess_id=CustomIDSystem("start").cipherIDtoMessageId(ID)
+            message=await custom_channel.fetch_message(mess_id) #message to get.
             await message.edit(content=custom.toCSV()) #Custom needs to be uploaded by bot.
             #print(message.content)
             return CustomBase(csvText=message.content)
         return "CUSTOM NOT FOUND."
+
     async def getByID(self, ID, bot):
         botToUse=None
         if(bot):
@@ -118,7 +239,11 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             checkGuild= bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
             custom_channel= checkGuild.get_channel(int(configur.get("Default",'bts_custom'))) #Customs Channel.
             print(custom_channel)
-            message=await custom_channel.fetch_message(int(ID)) #message to get.
+            print(ID)
+            mess_id=CustomIDSystem("start").cipherIDtoMessageId(ID)
+            if(mess_id==None):
+                return "INVALID CUSTOM ID."
+            message=await custom_channel.fetch_message(int(mess_id)) #message to get.
             #print(message.content)
-            return CustomBase(id=int(ID), csvText=message.content)
+            return CustomBase(id=ID, csvText=message.content)
         return "CUSTOM NOT FOUND."
