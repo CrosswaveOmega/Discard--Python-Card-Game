@@ -110,6 +110,9 @@ class UserProfile:
     def get_decks(self):
         return self.decks
 
+    def add_custom(self, cipher_id):
+        #cipher id
+        self.customs.append(cipher_id)
     def add_card(self, card_id):
         self.cards.append({"card_id":card_id, "custom":None})
 

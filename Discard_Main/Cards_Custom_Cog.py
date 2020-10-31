@@ -36,7 +36,7 @@ class CustomsCog(commands.Cog):
 
         '''
         bot=ctx.bot
-        auth=ctx.message.author;
+        author=ctx.message.author;
         channel=ctx.message.channel;
         leng=len(args)
         attachLength=len(ctx.message.attachments)
@@ -59,24 +59,21 @@ class CustomsCog(commands.Cog):
                         custom.change_display_image(url, image_msg.id)
                     await CustomRetrievalClass().updateCustomByID(custom, bot)
 
-    #        img=ImageMaker.makeEvidence(name, desc, mode='upload', imga=fil)
-            # await thisChan.send(content=s, file=discord.File(fil, "test.png"))
-    #        await channel.send(file=discord.File(img))
-    #    cipher=await CustomRetrievalClass().addCustom("TEXT", bot)
-        #await channel.send(content=cipher)
-
     @commands.command(pass_context=True)
-    async def addCustom(self, ctx, *args): #A very rudimentary card retrieval system.
+    async def newCustom(self, ctx, *args): #A very rudimentary card retrieval system.
         '''
-        syntax: cardGet [CardId] CustomId]
-        [CardId]: The Card ID you want to get.
-        [CustomId]: The CustomId you want to apply to the card.
+        syntax: createCustom
 
         '''
         bot=ctx.bot
-        auth=ctx.message.author;
+        author=ctx.message.author;
         channel=ctx.message.channel;
         leng=len(args)
+        SingleUser = SingleUserProfile("arg")
 
+        user_id = .id
+        profile = SingleUser.getByID(user_id)
         cipher=await CustomRetrievalClass().addCustom("TEXT", bot)
         await channel.send(content=cipher)
+        profile.add_custom(cipher) #add cipher to userprofile
+        SingleUser.save_all()
