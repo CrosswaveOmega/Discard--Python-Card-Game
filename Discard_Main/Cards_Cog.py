@@ -234,7 +234,6 @@ class CardCog(commands.Cog):
         if(len(args) == 2):
             deckName = args[0]
             new_deckName = args[1]
-<<<<<<< Updated upstream
             for j in profile.get_decks():
                 if(j.get_deck_name() == new_deckName):
                     await channel.send(str("A deck with that name already exist."))
@@ -244,16 +243,6 @@ class CardCog(commands.Cog):
                     i.set_deck_name(new_deckName)
                     return
             await channel.send(str("The deck does not exist."))
-=======
-            never_found=True
-            for i in profile.get_decks():
-                if(never_found):
-                    if(i.get_deck_name() == deckName):
-                        i.set_deck_name(new_deckName)
-                        never_found=False
-            if(never_found):
-                await channel.send(str("The deck does not exist."))
->>>>>>> Stashed changes
         else:
             await channel.send(str("Please enter the command with the deck name along with a new deck name."))
 
@@ -323,7 +312,7 @@ class CardCog(commands.Cog):
         profile = SingleUser.getByID(user_id)
         if (len(args) == 2):
             deckName = args[0]
-<<<<<<< Updated upstream
+
             card = args[1]
             deck = None
             if (card_multimatch(card) != None): #check if card exist in inventory
@@ -337,16 +326,6 @@ class CardCog(commands.Cog):
                     await channel.send("The card is not in your deck.")
             else:
                 await channel.send("The card is not in your deck.")
-=======
-            new_deckDescription = args[1]
-            for i in profile.get_decks():
-                if(i.get_deck_name() == deckName):
-                    i.set_deck_description(new_deckDescription)
-                    return
-            await channel.send(str("The deck does not exist."))
-        else:
-            await channel.send(str("Please enter the command with the deck name along with a new deck description."))
->>>>>>> Stashed changes
 
 
     @commands.command(pass_context=True)
