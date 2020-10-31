@@ -205,14 +205,16 @@ class CardCog(commands.Cog):
         user_id = author.id
         profile = SingleUser.getByID(user_id)
         if(len(args) == 1):
+            deckName = args[0]
             deck = DeckBuilding()
-            deck.set_deck_name(args[0])
-            profile.add_deck(deck)
-        elif(len(args) == 2):
-            deck = DeckBuilding(args[0], args[1])
+            deck.set_deck_name(deckName)
+            for i in profile.get_decks():
+                if(i.get_deck_name() == deckName):
+                    await cahnnel.send(str("A deck with that name already exist."))
+                    return
             profile.add_deck(deck)
         else:
-            await channel.send(str("Please enter the command with the deck name or the command with the deck name and description."))
+            await channel.send(str("Please enter the command along with a deck name."))
 
     @commands.command(pass_context=True)
     async def renameDeck(self, ctx, *args):
@@ -232,11 +234,15 @@ class CardCog(commands.Cog):
         if (len(args) == 2):
             deckName = args[0]
             new_deckName = args[1]
+            for j in profile.get_decks():
+                if(j.get_deck_name() == new_deckName):
+                    await channel.send(str("A deck with that name already exist."))
+                    return
             for i in profile.get_decks():
                 if(i.get_deck_name() == deckName):
                     i.set_deck_name(new_deckName)
                     return
-            await channel.send(str("The deck does not exist.")
+            await channel.send(str("The deck does not exist."))
         else:
             await channel.send(str("Please enter the command with the deck name along with a new deck name."))
 
@@ -267,7 +273,7 @@ class CardCog(commands.Cog):
 
 
     @commands.command(pass_context=True)
-    async def changeDescription(self, ctx, *args):
+    async def changeDescription(self, ctx, arg1, *, arg2):
         '''
         syntax: changeDescription [Name][New_Deck_Description]
         [Name]: The current name of the deck
@@ -281,25 +287,138 @@ class CardCog(commands.Cog):
 
         user_id = author.id
         profile = SingleUser.getByID(user_id)
-        if (len(args) == 2):
-            deckName = args[0]
-            new_deckDescription = args[1]
-            for i in profile.get_decks():
-                if(i.get_deck_name() == deckName):
-                    i.set_deck_description(new_deckDescription)
-                    return
-            await channel.send(str("The deck does not exist.")
-        else:
-            await channel.send(str("Please enter the command with the deck name along with a new deck description."))
+        deckName = arg1
+        new_deckDescription = arg2
+        for i in profile.get_decks():
+            if(i.get_deck_name() == deckName):
+                i.set_deck_description(new_deckDescription)
+                return
+        await channel.send(str("The deck does not exist."))
 
     @commands.command(pass_context=True)
-    async def addCard(self, ctx, *args):
+    async def addCard(self, ctx, *args): #check if card exist in inventory, args can have custom name, card id, and card name
+        '''
+        syntax: addCard [Name_of_deck][Card in inventory]
+        [Name_of_deck]: The current name of the deck
+        [Card in inventory]: The card you would like to add
+
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        if (len(args) == 2):
+            deckName = args[0]
+            card = args[1]
+            deck = None
+            if (card_multimatch(card) != None): #check if card exist in inventory
+                for i in profile.get_decks():
+                    if(i.get_deck_name() == deckName):
+                        deck = i
+                        break
+                if(deck.inDeck(card_multimatch(card)[0]["card_id"]) == True):
+                    deck.addToDeck(card_multimatch(card)[0]["card_id"]) #to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
+                else:
+                    await channel.send("The card is not in your deck.")
+            else:
+                await channel.send("The card is not in your deck.")
+
 
     @commands.command(pass_context=True)
     async def removeCard(self, ctx, *args):
+        '''
+        syntax: removeCard [Name_of_deck][Card in deck]
+        [Name_of_deck]: The current name of the deck
+        [Card in deck]: The card you would like to remove
+
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        if (len(args) == 2):
+            deckName = args[0]
+            card = args[1]
+            deck = None
+            if(card_multimatch(card) != None):
+                for i in profile.get_decks():
+                    if(i.get_deck_name() == deckName):
+                        deck = i
+                        break
+                if(deck.inDeck(card_multimatch(card)[0]["card_id"]) == True):
+                    deck.removeFromDeck(card_multimatch(card)[0]["card_id"])
+                else:
+                    await channel.send("The card is not in your deck.")
+            else:
+                await channel.send("The card is not in your deck.")
+
 
     @commands.command(pass_context=True)
-    async def multi_add(self, ctx, *args):
+    async def multi_add(self, ctx, arg1, *, arg2):
+        '''
+        syntax: multi_add [Name_of_deck][Card in inventory 1][Card in inventory 2]...[Card in inventory n]
+        [Name_of_deck]: The current name of the deck
+        [Card in inventory]...[Card in inventory n]: The n cards you would like to add to the deck
+
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        deckName = arg1
+        cards = arg2.split()
+        does_not_exist = []
+        deck = None
+        for j in cards:
+            if(card_multimatch(j) == None): #use card_multimatch to check if the cards exist in the inventory
+                does_not_exist.append(j)
+                cards.remove(j)
+        for i in profile.get_decks():
+            if(i.get_deck_name() == deckName):
+                deck = i
+                break
+        deck.addListToDeck(cards)
+        if(len(does_not_exist) != 0):
+            await channel.send("The following cards does not exist in your inventory: {}".format(does_not_exist))
+
 
     @commands.command(pass_context=True)
-    async def multi_remove(self, ctx, *args):
+    async def multi_remove(self, ctx, arg1, *, arg2):
+        '''
+        syntax: multi_remove [Name_of_deck][Card in inventory 1][Card in inventory 2]...[Card in inventory n]
+        [Name_of_deck]: The current name of the deck
+        [Card in inventory]...[Card in inventory n]: The n cards you would like to remove from the deck
+
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        deckName = arg1
+        cards = arg2.split()
+        does_not_exist = []
+        deck = None
+        counter = 0
+        for j in profile.get_decks():
+            if(j.get_deck_name() == deckName):
+                deck = j
+                break
+        for i in cards: #converts all cards regardless of identifier to card_id
+            if(card_multimatch(i) == None):
+                cards.remove(i)
+            else:
+                cards[counter] = card_multimatch(i)[0]["card_id"]
+            counter = counter + 1
+        deck.removeListFromDeck(cards)
