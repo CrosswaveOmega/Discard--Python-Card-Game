@@ -379,7 +379,7 @@ class CardCog(commands.Cog):
         does_not_exist = []
         deck = None
         for j in cards:
-            if(card_multimatch(j) == None): #use card_multimatch to check if the cards exist in the inventory
+            if(card_multimatch(j) == None): #use card_multimatch to check if the cards exist in the inventory, remove if not
                 does_not_exist.append(j)
                 cards.remove(j)
         for i in profile.get_decks():
@@ -415,7 +415,7 @@ class CardCog(commands.Cog):
             if(j.get_deck_name() == deckName):
                 deck = j
                 break
-        for i in cards: #converts all cards regardless of identifier to card_id
+        for i in cards: #converts all cards (regardless of identifier) to card_id
             if(card_multimatch(i) == None):
                 cards.remove(i)
             else:
