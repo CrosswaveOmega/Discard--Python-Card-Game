@@ -26,8 +26,6 @@ class Deck():
     def get_deck_cards(self):
         return self.deck_cards
 
-    #def get_card(self, card_id):
-        #return CardRetrievalClass().getByID(int(card_id, 16))
     def update_customs(self, user_inv):
         #update a deck's card customs.
         #user_inv is the result returned by a userprofile's get_cards() funciton.
@@ -39,6 +37,7 @@ class Deck():
             if (self.deck_cards[i]["inv_key"] == card_value["inv_key"]):
                 return True
         return False
+
     def inDeck(self, card_value):
         #Check if the card_value is in the current deck
 
@@ -65,16 +64,16 @@ class Deck():
                 return
 
     def addListToDeck(self, cards):
-        #[cards] is a list of card_ids
+        #[cards] is a list of inv_keys
         #Add a list of cards to the deck
         for i in cards:
             self.deck_cards.append(i)
 
     def removeListFromDeck(self, cards):
-        #[cards] is a list of card_ids
+        #[cards] is a list of inv_keys
         #Searches the deck for all the cards corresponding to the list passed by the argument and remove them
         counter = 0
         for i in self.deck_cards:
-            if (self.deck_cards[counter]["card_id"] in cards):
-                del self.deck_cards[counter]["card_id"]
+            if (self.deck_cards[counter]["inv_key"] in cards):
+                del self.deck_cards[counter]["inv_key"]
             counter = counter + 1
