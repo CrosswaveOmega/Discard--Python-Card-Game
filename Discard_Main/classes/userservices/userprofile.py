@@ -6,6 +6,8 @@ from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 from pathlib import Path
 import json
+
+from ..Cards.custom import CustomRetrievalClass
 directory="saveData"
 
 
@@ -82,7 +84,7 @@ class SingleUserProfile:
 class UserProfile:
     def __init__(self, user_id, dictonary_to_use=None):
         self.user_id=user_id
-        self.cards=[] #List of ids. every entry in list is dictionary of format {"card_id":card_id, "custom":id_of_custom_applied}
+        self.cards={} #dictionary of ids. every entry in list is dictionary of format {"card_id":card_id, "custom":id_of_custom_applied}
         self.customs=[] #list of customs made by the user.
         #self.cards_customs={} #dictionary.  Key is card Id and
         self.exp=0
@@ -90,6 +92,8 @@ class UserProfile:
         self.cardcount=0
         self.coins=0
         self.stars=0
+
+
 
         self.decks=[] #Max 99.
 
@@ -114,16 +118,37 @@ class UserProfile:
         #cipher id
         self.customs.append(cipher_id)
     def add_card(self, card_id):
-        self.cards.append({"card_id":card_id, "custom":None})
+        current_length=len(self.cards)
+        new_key_name="key"+str(current_length)
+        if new_key_name in self.cards: #
+            current_count=0
+            for key, card_value in self.cards: #find first available spot if keyname is gone
+                if card_id == card_value["card_id"]:
+                    returnList.append(key,card_value)
+                    key_name="key"+str(count)
+                    if not key_name in self.cards:
+                        new_key_name=key_name
+                    count=count + 1
+        self.cards[new_key_name]={"card_id":card_id, "custom":None, "inv_key":new_key_name}
 
     def add_deck(self, deck):
         self.decks.append(deck)
 
     def get_inv_cards_by_id(self, card_id):
-        returnList = [] #Duplicates exist.
-        for card_value in self.cards:
+        returnList = [] #Duplicates exist.  (Returns a tuple with the key_name)
+        for key_name, card_value in self.cards:
             if card_id == card_value["card_id"]:
+                tuple=(key_name,card_value)
                 returnList.append(card_value)
+        return returnList
+    def get_inv_cards_by_custom_name(self, name):
+        returnList = [] #Duplicates exist.  (Returns a tuple with the key_name)
+        for key_name, card_value in self.cards:
+            if(card_value["custom"]!=None):
+                custom_name=CustomRetrievalClass().retrieve_name(card_value["custom"])
+                if name in custom_name:
+                    tuple=(key_name,card_value)
+                    returnList.append(card_value)
         return returnList
 
 

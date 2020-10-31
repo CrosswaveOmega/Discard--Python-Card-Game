@@ -90,46 +90,76 @@ class CustomIDSystem:
         def __init__(self, arg="P."):
             self.val = arg
             self.custom_dictionary={} #Every single hashfile
+            self.custom_names={} #New names.
             self.loadFile(1)
         def loadFile(self, file_id):
             file=self.get_file_from_directory(1)
+            file2=self.get_file_from_directory(2)
             if(file!= None):
                 f= file.open(mode='r');
                 string=f.read();
                 self.custom_dictionary=json.loads(string)
                 f.close()
-                #Load contents of file into new UserProfile, add that into custom_dictionary.
             else:
                 self.custom_dictionary={}
                 print("Should initalize new default user profile, add that into custom_dictionary under user id.")
                 self.save_custom_dictionary(1)
+            if(file2!= None):
+                f= file.open(mode='r');
+                string=f.read();
+                self.custom_names=json.loads(string)
+                f.close()
+            else:
+                self.custom_names={}
+                print("Should initalize new default user profile, add that into custom_dictionary under user id.")
+                self.save_custom_dictionary(2)
 
         def getCipherInternal(self, cipher_id):
             if(self.checkforidincustom_dictionary(cipher_id)):
                 return self.custom_dictionary[str(cipher_id)]
             else: #ID is not in custom_dictionary.
                 return None
+        def getNameInternal(self, cipher_id):
+            if(self.checkforidincustom_names(cipher_id)):
+                return self.custom_names[str(cipher_id)]
+            else: #ID is not in custom_dictionary.
+                return None
+                    #Initalize new file.
                     #Initalize new file.
         def save_custom_dictionary(self, file_id): #Saves the UserProfile object at key id in custom_dictionary to a file.
             #if(self.checkforidincustom_dictionary(id)):
+            """
+            file_id is 1 for custom_dictionary
+            file_id is 2 for custom_names
+            """
             filename="customdata_"+str(file_id)+".json" #filename from json.
+            to_save={}
+            if(file_id==1):
+                to_save=self.custom_dictionary
+            if(file_id==2):
+                to_save=self.custom_names
             file= Path(directory + "/"+ filename)
             f=file.open(mode="w+")
-
-            string_to_write=json.dumps(self.custom_dictionary, sort_keys=True, indent=4)
+            string_to_write=json.dumps(to_save, sort_keys=True, indent=4)
             f.write(string_to_write)
             f.close()
         def save_all_internal(self): #save everything in custom_dictionary.
             self.save_custom_dictionary(1)
+            self.save_custom_dictionary(2)
         def add_cipher_to_dictionary(self, cipher, message_id):
             self.custom_dictionary[str(cipher)]=message_id
+        def update_cipher_name(self, cipher, new_name):
+            self.custom_names[str(cipher)]=new_name
 
         def checkforidincustom_dictionary(self, id):
             key_to_lookup = str(id)
-            print(id)
-            print(key_to_lookup)
             if key_to_lookup in self.custom_dictionary:
-                print("TRUE")
+                return True
+            else:
+              return False
+        def checkforidincustom_names(self, id):
+            key_to_lookup = str(id)
+            if key_to_lookup in self.custom_names:
                 return True
             else:
               return False
@@ -151,6 +181,9 @@ class CustomIDSystem:
     def cipherIDtoMessageId(self, id):
         #Initial chekc
         return CustomIDSystem.instance.getCipherInternal(id)
+    def cipherIDtoName(self, id):
+        #Initial chekc
+        return CustomIDSystem.instance.getCipherInternal(id)
 
     def make_new_cipher(self):
         newCipher=""
@@ -161,6 +194,9 @@ class CustomIDSystem:
         newCipher=self.make_new_cipher()
         CustomIDSystem.instance.add_cipher_to_dictionary(newCipher, message_id)
         return newCipher
+    def update_name(self, cipher, name):
+        CustomIDSystem.instance.update_cipher_name(cipher, name)
+
     def save_all(self):
         CustomIDSystem.instance.save_all_internal()
 
@@ -174,7 +210,8 @@ class CustomRetrievalClass():  #by no means what the final version should use.
         if bot:
             self.botstore=bot
         self.botstore=None
-    async def addCustom(self, custom, bot):
+    async def addCustom(self, new_name, bot):
+        #Adds blank custom.
         """
         custom -> Custom Object.
         bot -> The current Bot.
@@ -194,14 +231,19 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             #print(ID)
 
             message=await custom_channel.send(content=" Text") #message to second
-            blank_custom=CustomBase(id=message.id)
+
+            blank_custom=CustomBase(id=message.id, name=new_name)
             cipher=CustomIDSystem("Init").add_custom_to_system(message.id)
+            CustomIDSystem("Name").update_name(cipher, new_name)
             CustomIDSystem("SaveNew").save_all()
             await message.edit(content=blank_custom.toCSV()) #Custom needs to be uploaded by bot.
         #    await message.edit(content=custom.toCSV()) #Custom needs to be uploaded by bot.
             #print(message.content)
             return cipher
         return "CUSTOM NOT FOUND."
+    async def retrieve_name(self, cipher_id):
+        return_value=CustomIDSystem("Name").cipherIDtoName(cipher_id)
+        return return_value
     async def updateCustomByID(self, custom, bot):
         """
         custom -> Custom Object.
@@ -221,6 +263,9 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             ID=custom.ID
             print(ID)
             mess_id=CustomIDSystem("start").cipherIDtoMessageId(ID)
+            CustomIDSystem("Name").update_name(ID, custom.name)
+
+            CustomIDSystem("SaveNew").save_all()
             message=await custom_channel.fetch_message(mess_id) #message to get.
             await message.edit(content=custom.toCSV()) #Custom needs to be uploaded by bot.
             #print(message.content)

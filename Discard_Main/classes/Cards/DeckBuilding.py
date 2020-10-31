@@ -28,22 +28,39 @@ class Deck():
 
     #def get_card(self, card_id):
         #return CardRetrievalClass().getByID(int(card_id, 16))
-
-    def inDeck(self, card_id):
-        #Check if the card_id is in the current deck
+    def update_customs(self, user_inv):
+        #update a deck's card customs.
+        #user_inv is the result returned by a userprofile's get_cards() funciton.
         for i in range(len(self.deck_cards)):
-            if (self.deck_cards[i]["card_id"] == card_id):
+            #if (self.deck_cards[i]["card_id"] == card_id):
+            key=self.deck_cards[i]["inv_key"]
+            if(user_inv[key]["custom"]!=None):
+                self.deck_cards[i]["custom"]=
+            if (self.deck_cards[i]["inv_key"] == card_value["inv_key"]):
+                return True
+        return False
+    def inDeck(self, card_value):
+        #Check if the card_value is in the current deck
+
+        #Note: Switch to matching based on the inv_key
+        for i in range(len(self.deck_cards)):
+            #if (self.deck_cards[i]["card_id"] == card_id):
+            if (self.deck_cards[i]["inv_key"] == card_value["inv_key"]):
                 return True
         return False
 
-    def addToDeck(self, card_id):
+    def addToDeck(self, card_value):
         #Add card_id along with its custom_id (if available) to the deck
-        self.deck_cards.append({"card_id":card_id, "custom":None})
+        #UPDATE: card_id is replaced with card_value.  It has to add from a user's inventory.
+        self.deck_cards.append(card_value)
 
-    def removeFromDeck(self, card_id):
+    def removeFromDeck(self, card_value):
         #Searches the deck for the card_id for removal and removes it
+        #UPDATE: card_id is replaced with card_value.
+        #UPDATE: WILL USE inv_key instead.
+        #
         for i in range(len(self.deck_cards)):
-            if (self.deck_cards[i]["card_id"] == card_id):
+            if (self.deck_cards[i]["inv_key"] == card_value["inv_key"]):
                 del self.deck_cards[i]
                 return
 
