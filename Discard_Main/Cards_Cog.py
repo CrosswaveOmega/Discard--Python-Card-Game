@@ -12,7 +12,7 @@ from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 from .classes.Cards.cardretrieval import CardRetrievalClass
-from .classes.discordhelper.tiebreaker import make_tiebreaker
+from .classes.discordhelper.tiebreaker import make_tiebreaker, card_multimatch
 from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
@@ -138,7 +138,7 @@ class CardCog(commands.Cog):
         result=profile.get_inv_cards_by_id(int(card_id, 16))
 
         newcard=CardRetrievalClass().getByID(int(card_id, 16))
-        key, card= result[0]
+        card= result[0]
         if(card["custom"]!=None):
             customobject=await CustomRetrievalClass().getByID(card["custom"], bot) #Test
             newcard.apply_custom(custom=customobject)
@@ -191,6 +191,8 @@ class CardCog(commands.Cog):
                 text.name="Daikon 02"
                 await CustomRetrievalClass().updateCustomByID(text, bot)
 
+class DeckCog(commands.Cog):
+    """Commands for deck management."""
     @commands.command(pass_context=True)
     async def createDeck(self, ctx, *args):
         '''
@@ -315,13 +317,18 @@ class CardCog(commands.Cog):
 
             card = args[1]
             deck = None
-            if (card_multimatch(card) != None): #check if card exist in inventory
+            multimatched=card_multimatch(profile, card)
+
+            if (multimatched != None): #check if card exist in player's inventory.
+                cardvalue=multimatched[0]
+                if(len(multimatched)>1):# Tiebreaker is needed here.
+                    print("Place Tiebreaker Here.")#do tiebreaker.
                 for i in profile.get_decks():
                     if(i.get_deck_name() == deckName):
                         deck = i
                         break
-                if(deck.inDeck(card_multimatch(card)[0]["card_id"]) == True):
-                    deck.addToDeck(card_multimatch(card)[0]["card_id"]) #to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
+                if(deck.inDeck(cardvalue) == True):
+                    deck.addToDeck(cardvalue) #to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
                 else:
                     await channel.send("The card is not in your deck.")
             else:
@@ -347,13 +354,17 @@ class CardCog(commands.Cog):
             deckName = args[0]
             card = args[1]
             deck = None
-            if(card_multimatch(card) != None):
+            multimatched=card_multimatch(profile, card)
+            if(multimatched != None):
                 for i in profile.get_decks():
                     if(i.get_deck_name() == deckName):
                         deck = i
                         break
-                if(deck.inDeck(card_multimatch(card)[0]["card_id"]) == True):
-                    deck.removeFromDeck(card_multimatch(card)[0]["card_id"])
+                cardvalue=multimatched[0]
+                if(len(multimatched)>1):# Tiebreaker is needed here.
+                    print("Place Tiebreaker Here.")#do tiebreaker.
+                if(deck.inDeck(cardvalue) == True):
+                    deck.removeFromDeck(cardvalue)
                 else:
                     await channel.send("The card is not in your deck.")
             else:
@@ -380,7 +391,7 @@ class CardCog(commands.Cog):
         does_not_exist = []
         deck = None
         for j in cards:
-            if(card_multimatch(j) == None): #use card_multimatch to check if the cards exist in the inventory
+            if(card_multimatch(profile, j) == None): #use card_multimatch to check if the cards exist in the inventory
                 does_not_exist.append(j)
                 cards.remove(j)
         for i in profile.get_decks():
@@ -417,9 +428,9 @@ class CardCog(commands.Cog):
                 deck = j
                 break
         for i in cards: #converts all cards regardless of identifier to card_id
-            if(card_multimatch(i) == None):
+            if(card_multimatch(profile, i) == None):
                 cards.remove(i)
             else:
-                cards[counter] = card_multimatch(i)[0]["card_id"]
+                cards[counter] = card_multimatch(profile, i)[0]["card_id"]
             counter = counter + 1
         deck.removeListFromDeck(cards)

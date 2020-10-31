@@ -46,7 +46,7 @@ class CustomsCog(commands.Cog):
                 fil=io.BytesIO(byte) #file in attachments.
                 with io.BytesIO() as image_binary:
                     custom=await CustomRetrievalClass().getByID(args[0], bot)
-                        channel.send("Error! {0} not found.".format(args[0])) #EXCEPTION: INVALID CIPHER ID WAS GIVEN.
+                    channel.send("Error! {0} not found.".format(args[0])) #EXCEPTION: INVALID CIPHER ID WAS GIVEN.
                     make_card_image(fil).save(image_binary, 'PNG') #Returns pil object.
                     image_binary.seek(0)
                     checkGuild= bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server

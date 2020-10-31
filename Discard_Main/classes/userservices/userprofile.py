@@ -129,7 +129,7 @@ class UserProfile:
                     if not key_name in self.cards:
                         new_key_name=key_name
                     count=count + 1
-        self.cards[new_key_name]={"card_id":card_id, "custom":None}
+        self.cards[new_key_name]={"card_id":card_id, "custom":None, "inv_key":new_key_name}
 
     def add_deck(self, deck):
         self.decks.append(deck)
@@ -139,7 +139,7 @@ class UserProfile:
         for key_name, card_value in self.cards:
             if card_id == card_value["card_id"]:
                 tuple=(key_name,card_value)
-                returnList.append(tuple)
+                returnList.append(card_value)
         return returnList
     def get_inv_cards_by_custom_name(self, name):
         returnList = [] #Duplicates exist.  (Returns a tuple with the key_name)
@@ -148,7 +148,7 @@ class UserProfile:
                 custom_name=CustomRetrievalClass().retrieve_name(card_value["custom"])
                 if name in custom_name:
                     tuple=(key_name,card_value)
-                    returnList.append(tuple)
+                    returnList.append(card_value)
         return returnList
 
 

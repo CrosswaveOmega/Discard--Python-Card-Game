@@ -14,16 +14,16 @@ from discord import Webhook, AsyncWebhookAdapter
 
 
 
-async def multimatch_userprofile(user, to_match=""):
-    user_id=user.id
-    profile = SingleUser.getByID(user_id)
-    #determine what To match is.
+async def card_multimatch(profile, to_match=""):
+    print("TODO: THIS FUNCTION SHOULD DETERMINE WHICH ELEMENT to_match is.  for now, it will only check if custom_name matches ")
+    list1= profile.get_inv_cards_by_custom_name(to_match)
+    list2= profile.get_inv_cards_by_id(int(to_match, 16))
+    if (len(list1)>=1):
+        return list1
+    elif (len(list2)>=2):
+        return list2
+    return None
 
-    return get_inv_cards_by_custom_name(to_match)
-    cards=profile.get_cards()
-
-
-    print("")
 
 async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_after=False, clear_after=False): #Add card.
     '''

@@ -140,7 +140,7 @@ class CustomIDSystem:
                 to_save=self.custom_names
             file= Path(directory + "/"+ filename)
             f=file.open(mode="w+")
-            string_to_write=json.dumps(, sort_keys=True, indent=4)
+            string_to_write=json.dumps(to_save, sort_keys=True, indent=4)
             f.write(string_to_write)
             f.close()
         def save_all_internal(self): #save everything in custom_dictionary.
@@ -149,7 +149,7 @@ class CustomIDSystem:
         def add_cipher_to_dictionary(self, cipher, message_id):
             self.custom_dictionary[str(cipher)]=message_id
         def update_cipher_name(self, cipher, new_name):
-            self.custom_name[str(cipher)]=new_name
+            self.custom_names[str(cipher)]=new_name
 
         def checkforidincustom_dictionary(self, id):
             key_to_lookup = str(id)
@@ -234,7 +234,7 @@ class CustomRetrievalClass():  #by no means what the final version should use.
 
             blank_custom=CustomBase(id=message.id, name=new_name)
             cipher=CustomIDSystem("Init").add_custom_to_system(message.id)
-            CustomIDSystem("Name").update_name(ID, custom.name)
+            CustomIDSystem("Name").update_name(cipher, new_name)
             CustomIDSystem("SaveNew").save_all()
             await message.edit(content=blank_custom.toCSV()) #Custom needs to be uploaded by bot.
         #    await message.edit(content=custom.toCSV()) #Custom needs to be uploaded by bot.
@@ -262,8 +262,9 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             print(custom_channel)
             ID=custom.ID
             print(ID)
-            CustomIDSystem("Name").update_name(ID, custom.name)
             mess_id=CustomIDSystem("start").cipherIDtoMessageId(ID)
+            CustomIDSystem("Name").update_name(ID, custom.name)
+
             CustomIDSystem("SaveNew").save_all()
             message=await custom_channel.fetch_message(mess_id) #message to get.
             await message.edit(content=custom.toCSV()) #Custom needs to be uploaded by bot.
