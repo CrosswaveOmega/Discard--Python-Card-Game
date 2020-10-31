@@ -116,6 +116,9 @@ class UserProfile:
     def add_card(self, card_id):
         self.cards.append({"card_id":card_id, "custom":None})
 
+    def add_deck(self, deck):
+        self.decks.append(deck)
+
     def get_inv_cards_by_id(self, card_id):
         returnList = [] #Duplicates exist.
         for card_value in self.cards:

@@ -16,6 +16,7 @@ from .classes.discordhelper.tiebreaker import make_tiebreaker
 from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
+from .classes.Cards.DeckBuilding import *
 #from discord.ext.tasks import loop
 
 #Primary area with commands.
@@ -188,3 +189,117 @@ class CardCog(commands.Cog):
 
                 text.name="Daikon 02"
                 await CustomRetrievalClass().updateCustomByID(text, bot)
+
+    @commands.command(pass_context=True)
+    async def createDeck(self, ctx, *args):
+        '''
+        syntax: createDeck [Name]
+        [Name]: The name of the new deck
+
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        if(len(args) == 1):
+            deck = DeckBuilding()
+            deck.set_deck_name(args[0])
+            profile.add_deck(deck)
+        elif(len(args) == 2):
+            deck = DeckBuilding(args[0], args[1])
+            profile.add_deck(deck)
+        else:
+            await channel.send(str("Please enter the command with the deck name or the command with the deck name and description."))
+
+    @commands.command(pass_context=True)
+    async def renameDeck(self, ctx, *args):
+        '''
+        syntax: renameDeck [Name][New_Deck_Name]
+        [Name]: The current name of the deck
+        [New_Deck_Name]: The new name of the deck you would like to change to
+
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        if (len(args) == 2):
+            deckName = args[0]
+            new_deckName = args[1]
+            for i in profile.get_decks():
+                if(i.get_deck_name() == deckName):
+                    i.set_deck_name(new_deckName)
+                    return
+            await channel.send(str("The deck does not exist.")
+        else:
+            await channel.send(str("Please enter the command with the deck name along with a new deck name."))
+
+
+    @commands.command(pass_context=True)
+    async def deleteDeck(self, ctx, *args):
+        '''
+        syntax: deleteDeck [Name]
+        [Name]: The current name of the deck
+
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        if(len(args) == 1):
+            deckName = args[0]
+            for i in profile.get_decks():
+                if(i.get_deck_name() == deckName):
+                    profile.get_decks().remove(i)
+                    break
+            await channel.send(str("The deck does not exist."))
+        else:
+            await channel.send(str("Please enter the command with the deck name."))
+
+
+    @commands.command(pass_context=True)
+    async def changeDescription(self, ctx, *args):
+        '''
+        syntax: changeDescription [Name][New_Deck_Description]
+        [Name]: The current name of the deck
+        [New_Deck_Description]: The new description for the deck you would like to change
+
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        if (len(args) == 2):
+            deckName = args[0]
+            new_deckDescription = args[1]
+            for i in profile.get_decks():
+                if(i.get_deck_name() == deckName):
+                    i.set_deck_description(new_deckDescription)
+                    return
+            await channel.send(str("The deck does not exist.")
+        else:
+            await channel.send(str("Please enter the command with the deck name along with a new deck description."))
+
+    @commands.command(pass_context=True)
+    async def addCard(self, ctx, *args):
+
+    @commands.command(pass_context=True)
+    async def removeCard(self, ctx, *args):
+
+    @commands.command(pass_context=True)
+    async def multi_add(self, ctx, *args):
+
+    @commands.command(pass_context=True)
+    async def multi_remove(self, ctx, *args):
