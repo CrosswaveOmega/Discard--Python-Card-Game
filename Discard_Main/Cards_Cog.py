@@ -327,12 +327,12 @@ class DeckCog(commands.Cog):
                     if(i.get_deck_name() == deckName):
                         deck = i
                         break
-                if(deck.inDeck(cardvalue) == True):
+                if(deck.inDeck(cardvalue) == False):
                     deck.addToDeck(cardvalue) #to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
                 else:
-                    await channel.send("The card is not in your deck.")
+                    await channel.send("This card is  card is already in your deck.")
             else:
-                await channel.send("The card is not in your deck.")
+                await channel.send("This card was not found in your inventory.")
 
 
     @commands.command(pass_context=True)
