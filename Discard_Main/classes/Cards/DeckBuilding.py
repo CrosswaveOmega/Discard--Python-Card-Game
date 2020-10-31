@@ -33,7 +33,7 @@ class Deck():
             #if (self.deck_cards[i]["card_id"] == card_id):
             key=self.deck_cards[i]["inv_key"]
             if(user_inv[key]["custom"]!=None):
-                self.deck_cards[i]["custom"]=
+                self.deck_cards[i]["custom"]=user_inv[key]["custom"]
             if (self.deck_cards[i]["inv_key"] == card_value["inv_key"]):
                 return True
         return False
