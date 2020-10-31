@@ -14,7 +14,15 @@ from discord import Webhook, AsyncWebhookAdapter
 
 
 
-async def multimatch(user, tbd):
+async def multimatch_userprofile(user, to_match=""):
+    user_id=user.id
+    profile = SingleUser.getByID(user_id)
+    #determine what To match is.
+
+    return get_inv_cards_by_custom_name(to_match)
+    cards=profile.get_cards()
+
+
     print("")
 
 async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_after=False, clear_after=False): #Add card.
