@@ -1,6 +1,6 @@
 
 from .. import card
-from ..SkillLibrary import skillcluster
+from ..SkillLibrary.skillcluster import *
 class TestCard(card.CardBase):
     """docstring for TestCard."""
     ID=0x000FF          #• ID- The internal ID of the card.
@@ -64,7 +64,7 @@ class TestCreature1(card.CreatureCard):
         summonb=2
         summong=2
         #Defining Skills.
-        skill1=BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit", "Type description here.", damage=12)
+        skill1=BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type", limit="limit", description="Type description here.", damage=12)
         skill2=None #CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
         skill3=None #CustomSkill3("Custom Name 3", "trigger", "target", "type", "limit", "Type description here.")
         #Defining move Style.
@@ -86,7 +86,7 @@ class TestCreatureAlpha(card.CreatureCard):
         self.ID = 0x0000A
         name = "Alpha"
         icon = ""
-        image = ""
+        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = ""
         hp = 5
         speed = 20
@@ -98,7 +98,7 @@ class TestCreatureAlpha(card.CreatureCard):
 
         #These are the creature's skills
         skill1 = MultiAttack("Multi Attacks", "command", ("Rectilinear", "Enemy", "x3"), "attack", "limit", "description", damage=1, attacks=3, damage_tag="")
-        skill2 = BasicShield("Shield", "command", ("self", "Ally", "x1"), "limit", "description", shield_amount=2)
+        skill2 = BasicShield(name="Shield", shield_amount=2)
         skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description", heal_amount=1)
 
         # This defines the creature's move style
@@ -117,7 +117,7 @@ class TestCreatureBeta(card.CreatureCard):
         self.ID = 0x0000B
         name = "Beta"
         icon = ""
-        image = ""
+        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = ""
         hp = 15
         speed = 4
@@ -151,7 +151,7 @@ class TestCreatureDelta(card.CreatureCard):
         self.ID = 0x0000D
         name = "Delta"
         icon = ""
-        image = ""
+        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = ""
         hp = 9
         speed = 8
@@ -183,7 +183,7 @@ class TestCreature2(card.CreatureCard):
         self.ID = 0x00002
         name = "Creature2"
         icon = ""
-        image = ""
+        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = ""
         hp = 7
         speed = 9
@@ -195,7 +195,7 @@ class TestCreature2(card.CreatureCard):
 
         # These are the creature's skills
         skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit", "Type description here.", damage=6)
-        skill2 = BasicShield("Shield", "command", ("self", "Ally", "x1"), "limit", "description", shield_amount=1)
+        skill2 = BasicShield("Shield", "auto", ("self", "Ally", "x1"), "type", "limit", "description", shield_amount=1)
         skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
                            heal_amount=2)
 
@@ -215,7 +215,7 @@ class TestCreature3(card.CreatureCard):
         self.ID = 0x00003
         name = "creature 3"
         icon = ""
-        image = ""
+        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = ""
         hp = 9
         speed = 8

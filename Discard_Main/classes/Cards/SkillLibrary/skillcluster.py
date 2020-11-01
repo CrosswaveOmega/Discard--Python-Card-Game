@@ -52,7 +52,7 @@ class BasicHeal(card.Skill):
 #This class gives certain creatures the ability to diminish the amount of damage they receive from an attack.
 #The goal with this class was to be general in nature, so that other types of shielding skills can inherit its properties, and they can shield a creature from different types of attacks which the creature might have better defence against.
 class BasicShield(card.Skill):
-    def __init__(self, name = "BasicShield", trigger = "automatic", target=("self", "Ally", "x1"), limit = "", description = "", shield_amount = 1):
+    def __init__(self, name = "BasicShield", trigger = "auto", target=("This","Ally", "x1"), type="ability", limit = "", description = "Reduce Damage From a incoming Attack by a set amount", shield_amount = 1):
 
         #This is the amount of damage reduced from the attack when the shield is activated.
         self.shield_amount = shield_amount

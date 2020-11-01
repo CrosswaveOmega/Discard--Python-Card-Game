@@ -11,7 +11,7 @@ from .generic.position import Position
 "limit": ["Additional Conditions"]
 }
 optionsDictionary={
-"shape": ["Cardinal", "Diagonal", "Omni", "Adjacent", "Rectilinear", "Row", "Column", "Any", "Other"],
+"shape": ["Cardinal", "Diagonal", "Omni", "Adjacent", "Rectilinear", "Row", "Column", "Any", "Other", "This"],
 "dist": "", #jUST A NUMBER
 "scope": ["Enemy", "Ally","Both","Self","Else"],
 "amount":["Single","x1","x2","x3","x4","x5","x6","x7","x8","x9","All"],
@@ -32,7 +32,9 @@ def Args_To_Target(*args):
     distmatch=False
     scopematch=False
     amountmatch=False
+    print(args)
     for element in args:
+        print(element)
         if not shapematch:
             if(element in optionsDictionary["shape"]):
                 new_dictionary["shape"]=element
@@ -46,7 +48,7 @@ def Args_To_Target(*args):
                 new_dictionary["amount"]=element
                 amountmatch=True
         if not distmatch:
-            stringvertotest=string(element)
+            stringvertotest=str(element)
             if(stringvertotest.isnumeric()):
                 new_dictionary["dist"]=int(stringvertotest)
                 distmatch=True

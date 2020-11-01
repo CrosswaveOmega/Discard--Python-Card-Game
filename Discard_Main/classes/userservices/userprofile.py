@@ -113,6 +113,9 @@ class UserProfile:
 
     def get_decks(self):
         return self.decks
+    def apply_custom(self, key, cipher_id):
+        if key in self.cards:
+            self.cards[key]['custom']=cipher_id
 
     def add_custom(self, cipher_id):
         #cipher id
@@ -136,14 +139,15 @@ class UserProfile:
 
     def get_inv_cards_by_id(self, card_id):
         returnList = [] #Duplicates exist.  (Returns a tuple with the key_name)
-        for key_name, card_value in self.cards:
-            if card_id == card_value["card_id"]:
+        for key_name, card_value in self.cards.items():
+            if card_id == int(card_value["card_id"], 16):
                 tuple=(key_name,card_value)
                 returnList.append(card_value)
+        print(json.dumps(returnList))
         return returnList
     def get_inv_cards_by_custom_name(self, name):
         returnList = [] #Duplicates exist.  (Returns a tuple with the key_name)
-        for key_name, card_value in self.cards:
+        for key_name, card_value in self.cards.items():
             if(card_value["custom"]!=None):
                 custom_name=CustomRetrievalClass().retrieve_name(card_value["custom"])
                 if name in custom_name:

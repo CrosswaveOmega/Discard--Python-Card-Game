@@ -54,8 +54,7 @@ class CustomBase():  #Wip.
             #print(row)
             key=row[0]
             value=row[1]
-            if(key=="image-url"):
-                setattr(self)
+            print(key, value)
             if(key!="ID"):
                 if(hasattr(self, key)):
                     #print(key)
@@ -291,4 +290,4 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             message=await custom_channel.fetch_message(int(mess_id)) #message to get.
             #print(message.content)
             return CustomBase(id=ID, csvText=message.content)
-        return "CUSTOM NOT FOUND."
+        return None

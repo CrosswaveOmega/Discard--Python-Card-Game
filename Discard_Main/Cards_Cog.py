@@ -128,7 +128,7 @@ class CardCog(commands.Cog):
 
         '''
         bot=ctx.bot
-        auth=ctx.message.author;
+        author=ctx.message.author;
         channel=ctx.message.channel;
 
         SingleUser = SingleUserProfile("arg")
@@ -142,6 +142,8 @@ class CardCog(commands.Cog):
         if(card["custom"]!=None):
             customobject=await CustomRetrievalClass().getByID(card["custom"], bot) #Test
             newcard.apply_custom(custom=customobject)
+            embed=newcard.to_DiscordEmbed()
+            await channel.send(content="so I'm trying to make the embed below me appear wider.  wiiiiiiiiiiiiiiiiiiiiiiiiider.", embed=embed)
 
 
         print("NOTE: NEED TO MAKE CARD EMBED FORMAT CLASS IN CARD.PY")
