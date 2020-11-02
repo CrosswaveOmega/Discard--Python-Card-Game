@@ -31,7 +31,7 @@ class CustomBase():  #Wip.
         self.icon=""      #• Icon- A emoji that will represent this card, placed before.   Customizable by a user,<:thonkang:219069250692841473>
         self.image_url=""    #• Image- Background image the card displays.   Customizable by a user,
         self.image_message_id=0    #• Image- Background image the card displays.   Customizable by a user,
-        self.type=""      #• Type- The type of card this is.
+        self.subtype=""      #• Type- The type of card this is.
         if csvText != "none":
             print("Iterating CSV TABLE")
             self.fromCSV(csvText)

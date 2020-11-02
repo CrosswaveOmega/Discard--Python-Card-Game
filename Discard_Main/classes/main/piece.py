@@ -19,9 +19,9 @@ class Piece:
     def get_move_options(self, grid): #Wip function.
         """supposed to split move style into list line by line."""
         lines=self.move_style.splitlines()
+        move_options=[]
         for line in lines:
-            print(grid.get_all_movements_in_range(self.position, line))
-
+            move_options.extend(grid.get_all_movements_in_range(self.position, line))
         # print(grid.get_all_movements_in_range(self.position, "SAME COLUMN"))
         # print(grid.get_all_movements_in_range(self.position, "SAME ROW"))
         # print(grid.get_all_movements_in_range(self.position, "SAME COLUMN LIMIT 1"))
@@ -32,6 +32,7 @@ class Piece:
         # print(grid.get_all_movements_in_range(self.position, "HOP Y -1"))
         # print(grid.get_all_movements_in_range(self.position, "HOP Y -1 X -1"))
         # print(grid.get_all_movements_in_range(self.position, "HOP X 1 Y 1"))
+        return move_options
     def add_damage(self, damage_add=0):
 
         self.damage=self.damage+ damage_add

@@ -1,9 +1,9 @@
 from .generic.notationhelp import space_notation_to_value, to_notation, get_letter
 from .generic.position import Position
+from .Grid import Grid
 
 
-
-{
+helpDictionary={
 "shape": "Type of Range",
 "dist":"The Number of Spaces covered.",
 "scope": "The Scope of the target.",
@@ -55,3 +55,47 @@ def Args_To_Target(*args):
         if(element in optionsDictionary["limit"]):
             new_dictionary["limit"].append(element)
     return new_dictionary
+
+def make_move_style_for_content(movestyle_str):
+    def adjust_grid(grid_a, listiterate, emoji):
+        for val in listiterate:
+            x, y= Position(notation=val).x_y()
+            grid_a[y-1][x-1]=emoji
+        return grid_a
+    lines=movestyle_str.splitlines()
+    col=5
+    row=5
+    grid = Grid(row,col)
+    position=Position(notation="C3")
+    SameStyles=[]
+    HopStyles=[]
+    StepStyles=[]
+    for line in lines:
+        moves=line.split(' ')
+        print(moves)
+        type=moves[0]
+        list=[]
+        if type=='SAME': #type same
+            # ['SAME', 'SCOPE', LIMIT, VALUE]
+            SameStyles.extend(grid.get_same_movements(position, moves))
+        if type=='HOP': #type same
+            # ['HOP', 'SCOPE', 'VALUEA', 'SCOPEB', 'VALUEB']
+            HopStyles.extend(grid.get_hop_movements(position, moves))
+        if type=='STEP': #type same
+            # ['SAME', 'SCOPE', LIMIT, VALUE]
+            StepStyles.extend(grid.get_step_movements(position, moves))
+    grid_array=[]
+    for i in range(col):
+        column = []
+        for j in range(row):
+            column.append("⬜")
+        grid_array.append(column)
+    grid_array=adjust_grid(grid_array, SameStyles, "🟥")
+    grid_array=adjust_grid(grid_array, HopStyles, "🟨")
+    grid_array=adjust_grid(grid_array, StepStyles, "🟦")
+    grid_array=adjust_grid(grid_array, ["C3"], "🟩")
+    returnVal=""
+    for re in range(0,row):
+        returnVal=returnVal+(''.join(['{}'.format(item) for item in grid_array[re]]))+"\n"
+    make_string="```"+returnVal+"```"
+    return make_string

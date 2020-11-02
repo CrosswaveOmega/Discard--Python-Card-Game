@@ -11,7 +11,7 @@ class Card_Duel_Diverter():
         pass
     def get_entity_list(self):
         return [] #return empty list.
-class Grid:
+class Grid: #Should we make a generic grid class?
     """Where the game will be played.
 
 note: should start at lower right corner.
@@ -25,10 +25,12 @@ note: should start at lower right corner.
 
     """
     def __init__(self, rows=5, columns=5, game=None):
+        self.gamemode=False
         if(game==None):
-            self.game_ref=Card_Duel_Diverter()
+            self.game_ref=None
         else:
             self.game_ref=game
+            self.gamemode=True
         self.rows=rows
         self.columns=columns
         self.grid_array=[]
@@ -45,24 +47,27 @@ note: should start at lower right corner.
     def check_if_space_is_valid(self, pos):
         """Check if X and y are within range. and there is nothing there."""
         if(self.check_if_space_is_on_board(pos.getC(), pos.getR())): #Is within Range,
-            for piece in self.game_ref.get_entity_list():
-                if pos.get_notation()==piece.position.get_notation(): #There is not a creature there.
-                    return False
+            if(self.gamemode):
+                for piece in self.game_ref.get_entity_list():
+                    if pos.get_notation()==piece.position.get_notation(): #There is not a creature there.
+                        return False
             return True
         return False
     def check_if_space_is_possibly_valid(self, pos, modx, mody):
         """Check if X and y are within range. and there is nothing there."""
         if(self.check_if_space_is_on_board(pos.getC()+modx, pos.getR()+mody)):
             newpos=pos+Position(modx, mody)
-            for piece in self.game_ref.get_entity_list():
-                if newpos.get_notation()==piece.position.get_notation():
-                    return False
+            if(self.gamemode):
+                for piece in self.game_ref.get_entity_list():
+                    if newpos.get_notation()==piece.position.get_notation():
+                        return False
             return True
         return False
     def check_with_change(self,  orig_column, orig_row, changeX, changeY, limit=99):
         """intended for the SAME ROW, SAME COLUMN, SAME DIAGONAL part.
             stop if anything is in the way.
         """
+        #This could simplifed fixed.
         list=[]
         modX=0+changeX
         modY=0+changeY
@@ -75,7 +80,7 @@ note: should start at lower right corner.
             if(self.check_if_space_is_on_board(current_column+modX, current_row+modY)):#Out of bounds check.
                 pos=Position(current_column+modX, current_row+modY)
                 print(pos.get_notation())
-                valid=self.check_if_space_is_valid(pos) #Is there something there check.
+                valid=self.check_if_space_is_valid(pos) #Is there a piece already there check.
                 if valid:
                     list.append(pos.get_notation())
                     modX=modX+changeX
@@ -119,6 +124,21 @@ note: should start at lower right corner.
             for item in listA:
                 list.append(item)
             for item in listB:
+                list.append(item)
+        if scope== "DIAGONAL":
+            orig_column=current.getC()
+            orig_row=current.getR()
+            listA=self.check_with_change(orig_column, orig_row,  1, -1, limitV);
+            listB=self.check_with_change(orig_column, orig_row,  1,  1, limitV);
+            listC=self.check_with_change(orig_column, orig_row,  -1, -1, limitV);
+            listD=self.check_with_change(orig_column, orig_row,  -1,  1, limitV);
+            for item in listA:
+                list.append(item)
+            for item in listB:
+                list.append(item)
+            for item in listC:
+                list.append(item)
+            for item in listD:
                 list.append(item)
         return list
     def get_hop_movements(self, current, moves):
@@ -217,7 +237,6 @@ note: should start at lower right corner.
         if type=='HOP': #type same
             # ['HOP', 'SCOPE', 'VALUEA', 'SCOPEB', 'VALUEB']
             list=self.get_hop_movements(current, moves)
-
         if type=='STEP': #type same
             # ['SAME', 'SCOPE', LIMIT, VALUE]
             list=self.get_step_movements(current, moves)
@@ -234,9 +253,10 @@ note: should start at lower right corner.
         newgrid= list(map(list, self.grid_array))
 
         numgrid=[]
-        for piece in self.game_ref.get_entity_list():
-            x, y= piece.position.x_y()
-            newgrid[y-1][x-1]=piece.name
+        if(self.game_ref!=None):
+            for piece in self.game_ref.get_entity_list():
+                x, y= piece.position.x_y()
+                newgrid[y-1][x-1]=piece.name
         for j in range(self.columns):
             numgrid.append(get_letter(j+1))
     #    newgrid.insert(0, numgrid)

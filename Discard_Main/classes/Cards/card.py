@@ -199,7 +199,7 @@ class CreatureCard(CardBase):
         return self.icon + "|" + self.name + "|" + self.type + "|"+ self.hp + "|"+ self.speed + "|"+ str(self.ID)
 
     def to_DiscordEmbed(self):
-        embed = discord.Embed(title="{icon} {card_name}".format(icon=self.icon, card_name=self.name), colour=discord.Colour(0x7289da), description="HP: <:_9:754494641105272842><:_9:754494641105272842> {hp}  \n ```OKAY SO THING IS, I MAY NEED TO FIND A WAY TO MAKE THIS DESCRIPTION WIDER.  WIIIIIIDER.  MAYBE.  IDK.  I'M TRYING TO STOP THE SKILLS FROM CLUSTERING NEXT TO EACH OTHER.```".format(hp=self.hp))
+        embed = discord.Embed(title="{icon} {card_name}".format(icon=self.icon, card_name=self.name), colour=discord.Colour(0x7289da), description="HP: <:_9:754494641105272842><:_9:754494641105272842> {hp} \n ```we could let users place a description here.```".format(hp=self.hp))
         print(self.image)
         embed.set_image(url="{imgurl}".format(imgurl=self.image))
         embed.set_thumbnail(url="https://cdn.discordapp.com/embed/avatars/0.png")
@@ -207,7 +207,7 @@ class CreatureCard(CardBase):
         #, icon_url="""https://media.discordapp.net/attachments/763800266855415838/771803875946528788/image.png"""
         embed.set_author(name="{CardType}".format(CardType=self.type))
         id_hex=format(self.ID, "05X")
-        embed.set_footer(text="{card_id} - {custom_id}".format(card_id=id_hex, custom_id=self.custom))
+        embed.set_footer(text="Card Id:{card_id} - Custom ID:{custom_id}".format(card_id=id_hex, custom_id=self.custom))
         if(self.skill_1 != None):
             trigger, type, name, target, desc =  self.skill_1.get_text_tuple()
             embed.add_field(name="{trig}{skill_type}: {skill_name}".format(trig=trigger, skill_type=type, skill_name=name), value="***target: {target_string_format}***\n{description}".format(target_string_format=target, description=desc), inline=False)
@@ -218,6 +218,7 @@ class CreatureCard(CardBase):
             trigger, type, name, target, desc =  self.skill_3.get_text_tuple()
             embed.add_field(name="{trig}{skill_type}: {skill_name}".format(trig=trigger, skill_type=type, skill_name=name), value="***target: {target_string_format}***\n{description}".format(target_string_format=target, description=desc), inline=False)
         embed.add_field(name="Speed", value="{speed}".format(speed=self.speed), inline=True)
-        embed.add_field(name="Move Style", value="⬜⬜🟦⬜⬜\n⬜🟦🟦🟦⬜\n🟦🟦🟩🟦🟦\n⬜🟦🟦🟦⬜\n⬜⬜🟦⬜⬜", inline=True)
+        moveString=make_move_style_for_content(self.move_style)
+        embed.add_field(name="Move Style", value=moveString, inline=True)
         embed.add_field(name="Summon_Cost", value="Red= {Red}\nBlue = {Blue}\nGreen= {Green}".format(Red=self.summoncost_r,Blue=self.summoncost_b,Green=self.summoncost_g), inline=True)
         return embed

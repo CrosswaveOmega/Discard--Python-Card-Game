@@ -125,7 +125,7 @@ class CardCog(commands.Cog):
         '''
         syntax: viewcard [CardId]
         [CardId]: The Card ID you want to get.
-
+        Gets the card_id specified out of your inventory
         '''
         bot=ctx.bot
         author=ctx.message.author;
@@ -138,6 +138,7 @@ class CardCog(commands.Cog):
         result=profile.get_inv_cards_by_id(int(card_id, 16))
 
         newcard=CardRetrievalClass().getByID(int(card_id, 16))
+        warn("Viewcard command.  Ideally, this will return multiple cards if the user has a duplicate.  Not now though.")
         card= result[0]
         if(card["custom"]!=None):
             customobject=await CustomRetrievalClass().getByID(card["custom"], bot) #Test
