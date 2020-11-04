@@ -56,3 +56,9 @@ class CardRetrievalClass():  #by no means what the final version should use.
         if(val!=None):
             return val
         return False
+    def getAllID(self):
+        list = []
+        for name, obj in inspect.getmembers(cardcluster1):
+            if inspect.isclass(obj):
+                list.append(obj.ID)
+        return list
