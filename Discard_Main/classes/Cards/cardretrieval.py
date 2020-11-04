@@ -42,6 +42,12 @@ class CardRetrievalSingleton:
             CardRetrievalSingleton.instance.current_status = arg
     def getByID(self, id):
         return CardRetrievalSingleton.instance.internal_Dictionary[str(id)]() #Average case of python dictionary lookup is O(1), worst case is O(n)
+    def getAllCards(self):
+        list=[]
+        for id, value in CardRetrievalSingleton.instance.internal_Dictionary.items():
+            print(id)
+            list.append(value())
+        return list
     def __getattr__(self, name):
         return getattr(self.instance, name)
 
@@ -56,9 +62,10 @@ class CardRetrievalClass():  #by no means what the final version should use.
         if(val!=None):
             return val
         return False
-    def getAllID(self):
-        list = []
-        for name, obj in inspect.getmembers(cardcluster1):
-            if inspect.isclass(obj):
-                list.append(obj.ID)
-        return list
+    def getAllCards(self):
+        #list = []
+        #for name, obj in inspect.getmembers(cardcluster1):
+        #    if inspect.isclass(obj):
+        #        list.append(getByID(obj.ID))
+        print("Starting...")
+        return CardRetrievalSingleton("GetAllCards").getAllCards()

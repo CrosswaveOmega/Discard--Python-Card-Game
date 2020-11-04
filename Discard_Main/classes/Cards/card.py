@@ -40,7 +40,11 @@ class CardBase():  #Wip.
         return self.image
 
     def __str__(self):
-        return self.icon + "|" + self.name + "|" + self.type + "|"+ str(self.ID)
+        #r, b, g = self.make_compact_summon_cost()
+        id_hex=format(self.ID, "05X")
+        line1="{}|`{:20}`|`{}-{}`".format(self.icon, self.name, id_hex, self.custom)
+        return line1
+        #return self.icon + "|" + self.name + "|" + self.type + "|"+ str(self.ID)
 
     def apply_custom(self, custom):
         """Change the set values found in custom."""
@@ -70,6 +74,7 @@ Skill Types
    • Ability- Activated by the player, during the creatures turn.  Will not end turn, but are toggleable.
    • Counter- Skill will activate when creature has been attacked.
    • Reaction- Skill will activate when criteria has been met.
+   • Passive- Skill is automatically active.
    • TBD
 """
 
@@ -123,7 +128,7 @@ class Skill():
 
 class CreatureCard(CardBase):
     """docstring for TestCard."""
-    def __init__(self,  ID, name="Default Name", icon="Default_Icon", image="https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png", \
+    def __init__(self,  ID, name="Default Name", icon="🐻", image="https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png", \
     hp=0, speed=0, summoncost_r=0, summoncost_b=0, summoncost_g=0, \
     skill_1=None, skill_2=None, skill_3=None, \
     movestyle="", movelimit=1):
@@ -148,7 +153,7 @@ class CreatureCard(CardBase):
 
         self.move_style=movestyle
         self.move_limit=movelimit
-        super().__init__(self.ID,name, icon, type, image)
+        super().__init__(self.ID, name, icon, type, image)
 
     def get_ID(self):
         return self.ID
@@ -192,11 +197,55 @@ class CreatureCard(CardBase):
     def get_move_style(self):
         return self.move_style
 
+    def make_compact_summon_cost(self):
+
+
+        g_array=["<:Summon_G_1:773564264823652393>",
+        "<:Summon_G_2:773564265286205450>",
+        "<:Summon_G_3:773564265079635999>",
+        "<:Summon_G_4:773564265252519986>",
+        "<:Summon_G_5:773564265226960896>"]
+
+        r_array=["<:Summon_R_1:773564265201139712>",
+        "<:Summon_R_2:773564265214115871>",
+        "<:Summon_R_3:773564265193799710>",
+        "<:Summon_R_4:773564264857862175>",
+        "<:Summon_R_5:773564265273622559>"]
+
+        b_array=["<:Summon_B_1:773564265117777960>",
+        "<:Summon_B_2:773564265131016203>",
+        "<:Summon_B_3:773564265230762024>",
+        "<:Summon_B_4:773564265202188388>",
+        "<:Summon_B_5:773564265184755712>"]
+
+        red_res="🔳"
+        blue_res="🔳"
+        green_res="🔳"
+        if(self.summoncost_r>0):
+            red_res=r_array[self.summoncost_r-1]
+        if(self.summoncost_b>0):
+            blue_res=b_array[self.summoncost_b-1]
+        if(self.summoncost_g>0):
+            green_res=g_array[self.summoncost_g-1]
+        return red_res, blue_res, green_res
+
+
+
+
+
     def get_move_limit(self):
         return self.move_limit
 
     def __str__(self):
-        return self.icon + "|" + self.name + "|" + self.type + "|"+ self.hp + "|"+ self.speed + "|"+ str(self.ID)
+        #'{:10}|'.format(item)
+        r, b, g = self.make_compact_summon_cost()
+        id_hex=format(self.ID, "05X")
+        custom=""
+        if (self.custom!=""):
+            custom="-`"+self.custom+"`"
+        line1="{}|`{:32}`|`HP:{:4}`|`SPD:{:3}`|{}{}{}|`{}` {}".format(self.icon, self.name, self.hp, self.speed, r, b, g, id_hex, custom)
+        return line1
+        #return self.icon + "|" + self.name + "|" + self.type + "|"+ self.hp + "|"+ self.speed + "|"+ str(self.ID)
 
     def to_DiscordEmbed(self):
         embed = discord.Embed(title="{icon} {card_name}".format(icon=self.icon, card_name=self.name), colour=discord.Colour(0x7289da), description="HP: <:_9:754494641105272842><:_9:754494641105272842> {hp} \n ```we could let users place a description here.```".format(hp=self.hp))

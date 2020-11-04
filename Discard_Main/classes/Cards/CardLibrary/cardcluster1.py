@@ -15,7 +15,7 @@ class TestCard(card.CardBase):
                             #Cards should be referenced by this ID, not their name.
                             #(00000  to FFFFF, makes maximum of 1,048,576 cards.
         name="Test Name"
-        icon="<:thonkang:219069250692841473>"
+        icon="🎴"
         image="NA"
         type="None"
         super().__init__(self.ID,name, icon, type, image)
@@ -35,7 +35,7 @@ class TestCard2(card.CardBase):
                             #Cards should be referenced by this ID, not their name.
                             #(00000  to FFFFF, makes maximum of 1,048,576 cards.
         name="Test Name 2"
-        icon="<:thonkang:219069250692841473>"
+        icon="🎴"
         image="NA"
         type="None"
         super().__init__(self.ID,name, icon, type, image)
@@ -53,8 +53,8 @@ class TestCreature1(card.CreatureCard):
                             #consists of a five digit hexadecimal number
                             #Cards should be referenced by this ID, not their name.
                             #(00000  to FFFFF, makes maximum of 1,048,576 cards.
-        name="Test Name 2"
-        icon="<:thonkang:219069250692841473>"
+        name="Test Name For A Creature"
+        icon="🐻"
         image="NA"
         type="None"
         hp=10
@@ -85,7 +85,7 @@ class TestCreatureAlpha(card.CreatureCard):
     def __init__(self):
         self.ID = 0x0000A
         name = "Alpha"
-        icon = ""
+        icon = "🐻"
         image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = ""
         hp = 5
@@ -116,7 +116,7 @@ class TestCreatureBeta(card.CreatureCard):
     def __init__(self):
         self.ID = 0x0000B
         name = "Beta"
-        icon = ""
+        icon = "🐻"
         image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = ""
         hp = 15
@@ -150,7 +150,7 @@ class TestCreatureDelta(card.CreatureCard):
     def __init__(self):
         self.ID = 0x0000D
         name = "Delta"
-        icon = ""
+        icon = "🐻"
         image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = ""
         hp = 9
@@ -182,7 +182,7 @@ class TestCreature2(card.CreatureCard):
     def __init__(self):
         self.ID = 0x00002
         name = "Creature2"
-        icon = ""
+        icon = "🐻"
         image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = ""
         hp = 7
@@ -214,7 +214,7 @@ class TestCreature3(card.CreatureCard):
     def __init__(self):
         self.ID = 0x00003
         name = "creature 3"
-        icon = ""
+        icon = "🐻"
         image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = ""
         hp = 9

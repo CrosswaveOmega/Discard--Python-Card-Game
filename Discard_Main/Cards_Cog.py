@@ -144,7 +144,7 @@ class CardCog(commands.Cog):
             customobject=await CustomRetrievalClass().getByID(card["custom"], bot) #Test
             newcard.apply_custom(custom=customobject)
             embed=newcard.to_DiscordEmbed()
-            await channel.send(content="so I'm trying to make the embed below me appear wider.  wiiiiiiiiiiiiiiiiiiiiiiiiider.", embed=embed)
+            await channel.send(content=str(newcard), embed=embed)
 
 
         print("NOTE: NEED TO MAKE CARD EMBED FORMAT CLASS IN CARD.PY")
@@ -165,7 +165,23 @@ class CardCog(commands.Cog):
 
         cipher=await CustomRetrievalClass().addCustom("TEXT", bot)
         await channel.send(content=cipher)
+    @commands.command(pass_context=True)
+    async def carddex(self, ctx, *args): #A very rudimentary card retrieval system.
+        '''
+        syntax: carddex
 
+        Returns a list of every single card in the game.
+        '''
+        bot=ctx.bot
+        auth=ctx.message.author;
+        channel=ctx.message.channel;
+        leng=len(args)
+        param1=0
+        if(leng>=1):
+            param1=args[0]
+        newcardlist=CardRetrievalClass().getAllCards()
+        for card in newcardlist:
+            await channel.send(str(card))
     @commands.command(pass_context=True)
     async def cardGet(self, ctx, *args): #A very rudimentary card retrieval system.
         '''
