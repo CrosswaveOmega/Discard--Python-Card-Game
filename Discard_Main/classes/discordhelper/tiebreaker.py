@@ -11,18 +11,86 @@ from PIL import Image, ImageTk, ImageGrab, ImageDraw, ImageFont
 from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
+from ..Cards.cardretrieval import CardRetrievalClass
+from ..Cards.custom import CustomRetrievalClass
+def card_multimatch_with_type(profile, to_match="", match_by_custom_name=True, match_by_card_id=True, match_by_custom_id=True):
+    """
+    returns: type of match, match result
+    """
+    print("TODO: THIS FUNCTION SHOULD DETERMINE WHICH KIND OF ELEMENT to_match is.")
+    list1= profile.get_inv_cards_by_custom_name(str(to_match)) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
+    list2= profile.get_inv_cards_by_id(int(to_match, 16)) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
+    custom= profile.check_customs_by_id(str(to_match)) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
+    if (len(list1)>=1 and match_by_custom_name):
+        return "custom_name", list1
+    elif (len(list2)>=1 and match_by_card_id):
+        print(list2)
+        return "card_id", list2
+    elif custom!=None and match_by_custom_id:
+        return "custom_id", custom
+    return "No_Match_Found", None
 
-
-
-async def card_multimatch(profile, to_match=""):
-    print("TODO: THIS FUNCTION SHOULD DETERMINE WHICH ELEMENT to_match is.  for now, it will only check if custom_name matches ")
-    list1= profile.get_inv_cards_by_custom_name(to_match)
-    list2= profile.get_inv_cards_by_id(int(to_match, 16))
-    if (len(list1)>=1):
+async def card_multimatch(profile, to_match="", match_by_custom_name=True, match_by_card_id=True, match_by_custom_id=True):
+    print("TODO: THIS FUNCTION SHOULD DETERMINE WHICH ELEMENT to_match is.  for now, it will only check if custom_name matches or if card_id matches")
+    list1= profile.get_inv_cards_by_custom_name(to_match) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
+    list2= profile.get_inv_cards_by_id(int(to_match, 16)) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
+    custom= profile.check_customs_by_id(to_match) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
+    if (len(list1)>=1 and match_by_custom_name):
         return list1
-    elif (len(list2)>=2):
+    elif (len(list2)>=1 and match_by_card_id):
         return list2
+    elif custom!=None:
+        return custom
     return None
+
+async def make_tiebreaker_with_inventory_entries(ctx, inventory_entries):
+    # choices=[
+    # ["Case 0","0","<:_0:754494641050615809>"],
+    # ["Case 1","1","<:_1:754494641096622153>"],
+    # ["Case 2","2","<:_2:754494640752951307>"],
+    # ["Case 3","3","<:_3:754494641264394301>"],
+    # ["Case 4","4","<:_4:754494641117855792>"],
+    # ["Case 5","5","<:_5:754494641084301472>"],
+    # ["Case 6","6","<:_6:754494640865935391>"],
+    # ["Case 7","7","<:_7:754494640870129712>"],
+    # ["Case 8","8","<:_8:754494641151148032>"],
+    # ["Case 9","9","<:_9:754494641105272842>"]
+    # ]
+    emoji_list=[
+    "<:_0:754494641050615809>",
+    "<:_1:754494641096622153>",
+    "<:_2:754494640752951307>",
+    "<:_3:754494641264394301>",
+    "<:_4:754494641117855792>",
+    "<:_5:754494641084301472>",
+    "<:_6:754494640865935391>",
+    "<:_7:754494640870129712>",
+    "<:_8:754494641151148032>",
+    "<:_9:754494641105272842>"
+    ]
+    choices=[]
+    defchoice=["exit","back", '🔙']
+    choices.append(defchoice)
+    current_count=0
+    message=""
+    ##In hindsight, not the best way to impliment this.
+    message=message+"{}:{}".format(defchoice[2], str(defchoice[0]))
+    for i in inventory_entries:
+        print(i)
+        choice=[i,str(current_count), emoji_list[current_count]]
+        choices.append(choice)
+        newcard=CardRetrievalClass().getByID(int(i["card_id"], 16))
+        if(i["custom"]!=None):
+            customobject=await CustomRetrievalClass().getByID(i["custom"], ctx.bot) #Test
+            newcard.apply_custom(custom=customobject)
+        line="{}{}".format(emoji_list[current_count], str(newcard))
+        message=message+"\n"+line
+        current_count=current_count+1
+    message_to_respond_to=await ctx.channel.send(content=message+"\nTiebreaker!  Please Respond.")
+    cont=await make_tiebreaker(ctx, choices, message=message_to_respond_to, clear_after=True)
+    return cont
+
+
 
 
 async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_after=False, clear_after=False): #Add card.

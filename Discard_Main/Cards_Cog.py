@@ -139,12 +139,12 @@ class CardCog(commands.Cog):
 
         newcard=CardRetrievalClass().getByID(int(card_id, 16))
         print("\n Viewcard command.  Ideally, this will return multiple cards if the user has a duplicate.  Not now though. \n")
-        card= result[0]
-        if(card["custom"]!=None):
-            customobject=await CustomRetrievalClass().getByID(card["custom"], bot) #Test
-            newcard.apply_custom(custom=customobject)
-            embed=newcard.to_DiscordEmbed()
-            await channel.send(content=str(newcard), embed=embed)
+        for card in result:
+            if(card["custom"]!=None):
+                customobject=await CustomRetrievalClass().getByID(card["custom"], bot) #Test
+                newcard.apply_custom(custom=customobject)
+                embed=newcard.to_DiscordEmbed()
+                await channel.send(content=str(newcard), embed=embed)
 
 
         print("NOTE: NEED TO MAKE CARD EMBED FORMAT CLASS IN CARD.PY")
