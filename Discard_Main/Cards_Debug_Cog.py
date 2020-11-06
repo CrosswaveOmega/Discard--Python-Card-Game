@@ -23,6 +23,12 @@ from .classes.userservices.userprofile import SingleUserProfile
 class DebugCog(commands.Cog):
     """Commands for testing the system goes here."""
     @commands.command()
+    async def resync_names(self, ctx, *args): #A example command.
+        """Command to fix names."""
+        await CustomRetrievalClass().update_names(ctx.bot)
+        await ctx.channel.send("Sync Completed")
+
+    @commands.command()
     async def add_exp(self, ctx, *args): #A example command.
         '''
         syntax: add_exp
