@@ -464,10 +464,13 @@ class DeckCog(commands.Cog):
         user_id = author.id
         profile = SingleUser.getByID(user_id)
         list = []
-        for card in profile.get_cards():
+        for key, card in profile.get_cards().items():
             newCard = CardRetrievalClass().getByID(int(card["card_id"], 16))
             if(card["custom"] != None):
                 custom = await CustomRetrievalClass().getByID(card["custom"], bot)
                 newCard.apply_custom(custom)
                 list.append(newCard)
-        await channel.send(list)
+        message_content=""
+        for i in list:
+            message_content=message_content+str(i)+"\n"
+        await channel.send(content=message_content)

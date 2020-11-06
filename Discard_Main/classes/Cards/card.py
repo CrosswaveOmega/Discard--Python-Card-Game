@@ -54,7 +54,8 @@ class CardBase():  #Wip.
         if hasattr(custom, 'name'):
             self.name=custom.name
         if hasattr(custom, 'icon'):
-            self.icon=custom.icon
+            if(custom.icon!="none"):
+                self.icon=custom.icon
         if hasattr(custom, 'image_url'):
             if(custom.image_url!="" or custom.image_url!="None"):
                 self.image=custom.image_url
