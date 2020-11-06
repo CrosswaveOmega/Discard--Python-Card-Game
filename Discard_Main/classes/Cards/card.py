@@ -49,6 +49,9 @@ class CardBase():  #Wip.
     def apply_custom(self, custom):
         """Change the set values found in custom."""
         print("Applying Custom")
+        if custom==None:
+            print("...nevermind, there is no custom.")
+            return None
         print(custom.image_url)
         self.custom=custom.ID
         if hasattr(custom, 'name'):
