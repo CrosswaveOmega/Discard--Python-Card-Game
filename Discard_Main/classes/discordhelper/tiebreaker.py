@@ -17,7 +17,7 @@ def card_multimatch_with_type(profile, to_match="", match_by_custom_name=True, m
     """
     returns: type of match, match result
     """
-    print("TODO: THIS FUNCTION SHOULD DETERMINE WHICH KIND OF ELEMENT to_match is.")
+    print("TODO: ADD MATCH BY INV KEY.")
     list1= profile.get_inv_cards_by_custom_name(str(to_match)) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
     list2= profile.get_inv_cards_by_id(int(to_match, 16)) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
     custom= profile.check_customs_by_id(str(to_match)) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}

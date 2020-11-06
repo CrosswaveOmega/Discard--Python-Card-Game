@@ -201,7 +201,7 @@ class CardCog(commands.Cog):
             if newcard!=False and leng>=2:
                 text=await CustomRetrievalClass().getByID(args[1], bot)
 
-                print(text.toCSV())
+            #    print(text.toCSV())
 
                 newcard.apply_custom(custom=text)
             #    print(text)
