@@ -30,7 +30,7 @@ def card_multimatch_with_type(profile, to_match="", match_by_custom_name=True, m
         return "custom_id", custom
     return "No_Match_Found", None
 
-async def card_multimatch(profile, to_match="", match_by_custom_name=True, match_by_card_id=True, match_by_custom_id=True):
+def card_multimatch(profile, to_match="", match_by_custom_name=True, match_by_card_id=True, match_by_custom_id=True):
     print("TODO: THIS FUNCTION SHOULD DETERMINE WHICH ELEMENT to_match is.  for now, it will only check if custom_name matches or if card_id matches")
     list1= profile.get_inv_cards_by_custom_name(to_match) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
     list2= profile.get_inv_cards_by_id(int(to_match, 16)) #returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}

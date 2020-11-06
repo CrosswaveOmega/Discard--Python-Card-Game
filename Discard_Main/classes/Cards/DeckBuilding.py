@@ -4,7 +4,7 @@ from .card import *
 
 class Deck():
 
-    def __init__(self, deck_name, deck_description):
+    def __init__(self, deck_name="Brand new deck", deck_description="Enter a description for this deck."):
         self.deck_name = deck_name
         self.deck_description = deck_description
 

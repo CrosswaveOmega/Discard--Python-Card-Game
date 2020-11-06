@@ -228,7 +228,7 @@ class DeckCog(commands.Cog):
         profile = SingleUser.getByID(user_id)
         if(len(args) == 1):
             deckName = args[0]
-            deck = DeckBuilding()
+            deck = Deck()
             deck.set_deck_name(deckName)
             for i in profile.get_decks():
                 if(i.get_deck_name() == deckName):
@@ -469,8 +469,11 @@ class DeckCog(commands.Cog):
             if(card["custom"] != None):
                 custom = await CustomRetrievalClass().getByID(card["custom"], bot)
                 newCard.apply_custom(custom)
-                list.append(newCard)
+            list.append(newCard)
         message_content=""
         for i in list:
             message_content=message_content+str(i)+"\n"
-        await channel.send(content=message_content)
+        if(len(list)==0):
+            await channel.send("NO CARDS IN INVENTORY.")
+        else:
+            await channel.send(content=message_content)

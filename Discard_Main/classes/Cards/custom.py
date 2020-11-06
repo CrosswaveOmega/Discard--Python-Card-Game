@@ -23,7 +23,7 @@ directory="saveData"
 cipher_characters=['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','W','X','Y']
 class CustomBase():  #Wip.
 
-    def __init__(self, id=0, name="None", icon=None, type=None, image=None, csvText="none"):
+    def __init__(self, id=0, name="None", icon="none", type=None, image=None, csvText="none"):
         self.ID=id          #• ID- The internal ID of the card.  All cards have this unique ID, consisting of a eight digit hexadecimal number
                                 #    Cards should be referenced by this ID, not their name.
                                 #    (00000000  to FFFFFFFF, makes maximum of 4,294,967,296 cards.
