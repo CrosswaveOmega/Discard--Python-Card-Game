@@ -41,13 +41,32 @@ async def custom_id_from_match(ctx, profile, data_to_match):
             return None
         else:
             if(inventory_entry["custom"]==None):
-                await ctx.invoke(bot.get_command('newCustom'), "Temporary Name", inventory_entry["inv_key"]) #Makes new custom, and applys it to the key_id
+                #Makes new custom, and applys it to the key_id
+                await ctx.invoke(bot.get_command('newCustom'), "Temporary Name", inventory_entry["inv_key"])
                 custom_id=profile.get_inventory_entry_by_key(inventory_entry["inv_key"])["custom"]
             else:
                 custom_id=profile.get_inventory_entry_by_key(inventory_entry["inv_key"])["custom"]
     elif(type_of_match=="custom_id"):
         return matched_data
     return custom_id
+async def inv_key_from_match(ctx, profile, data_to_match):
+    bot=ctx.bot
+    author=ctx.message.author;
+    channel=ctx.message.channel;
+    inv_key=None
+    type_of_match, matched_data=card_multimatch_with_type(profile, data_to_match, match_by_custom_id=False)
+    if(type_of_match=="custom_name" or type_of_match=="card_id"):
+        print(type_of_match, matched_data)
+        inventory_entry=await make_tiebreaker_with_inventory_entries(ctx, matched_data)
+        #matched Data is list.
+        if(inventory_entry=="timeout"):
+            channel.send("Timeout, terminating task.")
+            return None
+        if(inventory_entry=="exit"):
+            return None
+        else:
+            inv_key=inventory_entry["inv_key"]
+    return inv_key
 class CustomsCog(commands.Cog):
 
 
@@ -75,7 +94,7 @@ class CustomsCog(commands.Cog):
         await channel.send(content=cipher)
         profile.add_custom(cipher) #add cipher to userprofile
         if key_id!=None: #key_id is optional.
-            await ctx.invoke(bot.get_command('ApplyCustom'), key_id, cipher)
+            await ctx.invoke(bot.get_command('ApplyCustomWithInvKey'), key_id, cipher)
 
         SingleUser.save_all()
 
@@ -178,11 +197,48 @@ class CustomsCog(commands.Cog):
                         print("url")
                         custom.change_display_image(url, image_msg.id)
                     await CustomRetrievalClass().updateCustomByID(custom, bot)
+    @commands.command(pass_context=True)
+    async def applyCustom(self, ctx, *args): #A very rudimentary card retrieval system.
+        '''
+        syntax: applyCustom "[inventory_identifier]" "custom_id"
+        Applies a customization to a card in your inventory.
+        '''
+        bot=ctx.bot
+        author=ctx.message.author;
+        channel=ctx.message.channel;
+        leng=len(args)
+        data_to_match=None
+        custom=None
+        if(leng>=1):
+            data_to_match=args[0]
+        if(leng>=2):
+            custom=args[1]
+        if (data_to_match!=None and custom !=None):
+            SingleUser = SingleUserProfile("arg")
+
+            user_id = author.id
+            profile = SingleUser.getByID(user_id)
+            key=await inv_key_from_match(ctx, profile, data_to_match)
+            if(key!=None):
+                #invokes the OTHER command
+                await ctx.invoke(bot.get_command('ApplyCustomWithInvKey'), key, custom)
+                profile.apply_custom(key, custom)
+                #cipher=await CustomRetrievalClass().addCustom(set_name, bot)
+                #await channel.send(content=cipher)
+                #profile.add_custom(cipher) #add cipher to userprofile
+                SingleUser.save_all()
+                await channel.send("Applied Customization successfully updated.")
+            else:
+                await channel.send("Key Not found.")
+
+            await channel.send("updated")
+        else:
+            await channel.send("INVALID KEY OR CUSTOMID.")
 
     @commands.command(pass_context=True)
-    async def ApplyCustom(self, ctx, *args): #A very rudimentary card retrieval system.
+    async def ApplyCustomWithInvKey(self, ctx, *args): #A very rudimentary card retrieval system.
         '''
-        syntax: ApplyCustom "inv_key" "custom_id"
+        syntax: ApplyCustomWithInvKey "inv_key" "custom_id"
         Applies a customization to a card in your inventory.
         '''
         bot=ctx.bot
@@ -200,11 +256,40 @@ class CustomsCog(commands.Cog):
 
             user_id = author.id
             profile = SingleUser.getByID(user_id)
+
             profile.apply_custom(key, custom)
             #cipher=await CustomRetrievalClass().addCustom(set_name, bot)
             #await channel.send(content=cipher)
             #profile.add_custom(cipher) #add cipher to userprofile
             SingleUser.save_all()
             await channel.send("updated")
+        else:
+            await channel.send("INVALID KEY OR CUSTOMID.")
+    @commands.command(pass_context=True)
+    async def copyCustom(self, ctx, *args): #A very rudimentary card retrieval system.
+        '''
+        syntax: copyCustom "custom_id"
+        Makes a copy of the custom.
+        '''
+        bot=ctx.bot
+        author=ctx.message.author;
+        channel=ctx.message.channel;
+        leng=len(args)
+        custom=None
+        if(leng>=1):
+            custom=args[0]
+        if(custom !=None):
+            SingleUser = SingleUserProfile("arg")
+            user_id = author.id
+            profile = SingleUser.getByID(user_id)
+            custom=await CustomRetrievalClass().getByID(args[0], bot)
+            if(custom!=None):
+                cipher=await CustomRetrievalClass().cloneCustom(custom, bot)
+                await channel.send(content=cipher)
+                profile.add_custom(cipher) #add cipher to userprofile
+                SingleUser.save_all()
+                await channel.send("clone has been successful")
+            else:
+                await channel.send("invalid custom id.")
         else:
             await channel.send("INVALID KEY OR CUSTOMID.")

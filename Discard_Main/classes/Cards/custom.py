@@ -22,7 +22,7 @@ directory="saveData"
 
 cipher_characters=['0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','J','K','L','M','N','P','Q','R','S','T','U','W','X','Y']
 class CustomBase():  #Wip.
-
+    """The class customs are derived from."""
     def __init__(self, id=0, name="None", icon="none", type=None, image=None, csvText="none"):
         self.ID=id          #• ID- The internal ID of the card.  All cards have this unique ID, consisting of a eight digit hexadecimal number
                                 #    Cards should be referenced by this ID, not their name.
@@ -43,7 +43,7 @@ class CustomBase():  #Wip.
             self.icon=icon      #• Icon- A emoji that will represent this card, placed before.   Customizable by a user,<:thonkang:219069250692841473>
             self.image_message_id=0
             self.image_url=image    #• Image- Background image the card displays.   Customizable by a user,
-            self.type=type      #• Type- The type of card this is.
+            self.subtype=type      #• Type- The type of card this is.
     def fromCSV(self, csvText):
         lines = csvText.splitlines()
         csvreader = csv.reader(lines, delimiter=',')
@@ -123,6 +123,11 @@ class CustomIDSystem:
                 return self.custom_names[str(cipher_id)]
             else: #ID is not in custom_dictionary.
                 return None
+        def get_list_of_all_ciphers(self):
+            list=[]
+            for i, v in self.custom_dictionary.items():
+                list.append(i)
+            return list
                     #Initalize new file.
                     #Initalize new file.
         def save_custom_dictionary(self, file_id): #Saves the UserProfile object at key id in custom_dictionary to a file.
@@ -162,6 +167,8 @@ class CustomIDSystem:
                 return True
             else:
               return False
+        def get_number_of_all_custom_ids(self):
+            return len(self.custom_dictionary)
         def get_file_from_directory(self, file_id):
             filename="customdata_"+str(file_id)+".json" #filename from json.
             file= Path(directory + "/"+ filename)
@@ -182,12 +189,20 @@ class CustomIDSystem:
         return CustomIDSystem.instance.getCipherInternal(id)
     def cipherIDtoName(self, id):
         #Initial chekc
-        return CustomIDSystem.instance.getCipherInternal(id)
+        return CustomIDSystem.instance.getNameInternal(id)
 
     def make_new_cipher(self):
+        #we will need to change this algorithm up sometime.
         newCipher=""
-        for i in range(0,6):
-            newCipher=newCipher+random.choice(cipher_characters)
+        #every new cipher needs to be unique.
+        same_check=True
+        chance_of_repeat=float(CustomIDSystem.instance.get_number_of_all_custom_ids()/1073741824.0) * 100.0
+        print("Chance of repeated CustomId is ", str(chance_of_repeat))
+        while same_check:
+            same_check=False
+            for i in range(0,6):
+                newCipher=newCipher+random.choice(cipher_characters)
+            same_check=CustomIDSystem.instance.checkforidincustom_dictionary(newCipher)
         return newCipher
     def add_custom_to_system(self, message_id):
         newCipher=self.make_new_cipher()
@@ -195,7 +210,8 @@ class CustomIDSystem:
         return newCipher
     def update_name(self, cipher, name):
         CustomIDSystem.instance.update_cipher_name(cipher, name)
-
+    def get_all_ciphers(self):
+        return CustomIDSystem.instance.get_list_of_all_ciphers()
     def save_all(self):
         CustomIDSystem.instance.save_all_internal()
 
@@ -210,7 +226,7 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             self.botstore=bot
         self.botstore=None
     async def addCustom(self, new_name, bot):
-        #Adds blank custom.
+        #Adds blank custom, returns the new cipher id.
         """
         custom -> Custom Object.
         bot -> The current Bot.
@@ -226,25 +242,43 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             checkGuild= bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
             custom_channel= checkGuild.get_channel(int(configur.get("Default",'bts_custom'))) #Customs Channel.
             print(custom_channel)
-            #ID=custom.ID
-            #print(ID)
+
 
             message=await custom_channel.send(content=" Text") #message to second
-
             blank_custom=CustomBase(id=message.id, name=new_name)
             cipher=CustomIDSystem("Init").add_custom_to_system(message.id)
             CustomIDSystem("Name").update_name(cipher, new_name)
             CustomIDSystem("SaveNew").save_all()
-            await message.edit(content=blank_custom.toCSV()) #Custom needs to be uploaded by bot.
-        #    await message.edit(content=custom.toCSV()) #Custom needs to be uploaded by bot.
-            #print(message.content)
+            await message.edit(content=blank_custom.toCSV())
+             #Custom needs to be uploaded by bot.
+
             return cipher
         return "CUSTOM NOT FOUND."
+
     def retrieve_name(self, cipher_id):
+        #quickly retrieve the name
         return_value=CustomIDSystem("Name").cipherIDtoName(cipher_id)
         return return_value
+
+    async def resync_names(self, bot):
+        """This command is for debugging."""
+        custom_id_list=CustomIDSystem("Name").get_all_ciphers()
+        for ID in custom_id_list:
+            mess_id=CustomIDSystem("start").cipherIDtoMessageId(ID)
+            if(mess_id==None):
+                return "INVALID CUSTOM ID."
+            checkGuild= bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
+            custom_channel= checkGuild.get_channel(int(configur.get("Default",'bts_custom'))) #Customs Channel.
+            message=await custom_channel.fetch_message(int(mess_id)) #message to get.
+
+            custom=CustomBase(id=ID, csvText=message.content)
+            CustomIDSystem("Name").update_name(ID, custom.name)
+            CustomIDSystem("SaveNew").save_all()
+
+
     async def updateCustomByID(self, custom, bot):
         """
+        update a custom uploaded to discord.
         custom -> Custom Object.
         bot -> The current Bot.
         """
@@ -261,6 +295,7 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             print(custom_channel)
             ID=custom.ID
             print(ID)
+            print(custom)
             mess_id=CustomIDSystem("start").cipherIDtoMessageId(ID)
             CustomIDSystem("Name").update_name(ID, custom.name)
 
@@ -272,6 +307,10 @@ class CustomRetrievalClass():  #by no means what the final version should use.
         return "CUSTOM NOT FOUND."
 
     async def getByID(self, ID, bot):
+        """Retrieve a cipher by the ID.
+        custom -> Custom Object.
+        bot -> The current Bot.
+        """
         botToUse=None
         if(bot):
             botToUse=bot
@@ -290,4 +329,30 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             message=await custom_channel.fetch_message(int(mess_id)) #message to get.
             #print(message.content)
             return CustomBase(id=ID, csvText=message.content)
+        return None
+    async def cloneCustom(self, custom_to_clone, bot):
+        """clone a custom ID.
+        custom -> Custom Object.
+        bot -> The current Bot.
+        """
+        botToUse=None
+        if(bot):
+            botToUse=bot
+        elif self.botstore:
+            botToUse=self.botstore
+        if botToUse:
+
+            checkGuild= bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
+            custom_channel= checkGuild.get_channel(int(configur.get("Default",'bts_custom'))) #Customs Channel.
+
+            new_name=custom_to_clone.name + "- Copy"
+            message=await custom_channel.send(content=" Text") #message to second
+            blank_custom=CustomBase(id=message.id, name=new_name)
+            cipher=CustomIDSystem("Init").add_custom_to_system(message.id)
+            CustomIDSystem("Name").update_name(cipher, new_name)
+            await message.edit(content=custom_to_clone.toCSV())
+            CustomIDSystem("SaveNew").save_all()
+
+            return cipher
+
         return None
