@@ -10,6 +10,8 @@ from discord import Webhook, AsyncWebhookAdapter
 from pathlib import Path
 
 
+"""We should reduce reliance on the BTS server."""
+
 
 from configparser import ConfigParser
 
@@ -104,7 +106,7 @@ class CustomIDSystem:
                 print("Should initalize new default user profile, add that into custom_dictionary under user id.")
                 self.save_custom_dictionary(1)
             if(file2!= None):
-                f= file.open(mode='r');
+                f= file2.open(mode='r');
                 string=f.read();
                 self.custom_names=json.loads(string)
                 f.close()
@@ -346,7 +348,9 @@ class CustomRetrievalClass():  #by no means what the final version should use.
             custom_channel= checkGuild.get_channel(int(configur.get("Default",'bts_custom'))) #Customs Channel.
 
             new_name=custom_to_clone.name + "- Copy"
+
             message=await custom_channel.send(content=" Text") #message to second
+
             blank_custom=CustomBase(id=message.id, name=new_name)
             cipher=CustomIDSystem("Init").add_custom_to_system(message.id)
             CustomIDSystem("Name").update_name(cipher, new_name)

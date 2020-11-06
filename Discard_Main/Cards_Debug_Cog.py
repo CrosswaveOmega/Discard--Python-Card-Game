@@ -25,9 +25,15 @@ class DebugCog(commands.Cog):
     @commands.command()
     async def resync_names(self, ctx, *args): #A example command.
         """Command to fix names."""
-        await CustomRetrievalClass().update_names(ctx.bot)
+        await CustomRetrievalClass().resync_names(ctx.bot)
         await ctx.channel.send("Sync Completed")
-
+    @commands.command()
+    async def save(self, ctx, *args): #A example command.
+        """Command to ensure user data is saved."""
+        editmess=await ctx.channel.send("Saving All Data...")
+        SingleUser = SingleUserProfile("arg")
+        SingleUser.save_all()
+        await editmess.edit(content="Saving All Data...\n ...Save Completed")
     @commands.command()
     async def add_exp(self, ctx, *args): #A example command.
         '''

@@ -8,6 +8,8 @@ from pathlib import Path
 import json
 
 from ..Cards.custom import CustomRetrievalClass
+from ..Cards.cardretrieval import CardRetrievalClass
+
 directory="saveData"
 
 
@@ -89,7 +91,7 @@ class UserProfile:
         #self.cards_customs={} #dictionary.  Key is card Id and
         self.exp=0
         self.level=0
-        self.cardcount=0
+        #self.cardcount=0 #irrelivant.
         self.coins=0
         self.stars=0
 
@@ -178,11 +180,18 @@ class UserProfile:
     def get_level(self):
         return self.level
 
-    def set_cardcount(self, value):
-        self.cardcount = value
+#    def set_cardcount(self, value):
+#        self.cardcount = value
 
     def get_cardcount(self):
-        return self.cardcount
+        return len(self.cards)
+
+    def get_customcount(self):
+        return len(self.customs)
+
+    def get_deckcount(self):
+        return len(self.decks)
+
 
     def set_coins(self, value):
         self.coins = value
@@ -195,3 +204,26 @@ class UserProfile:
 
     def get_stars(self):
         return self.stars
+
+    def card_name_list(self, custget=None):
+        #returns a small list of card names.
+        returnList = [] #Duplicates exist.  (Returns a tuple with the key_name)
+        cards=CardRetrievalClass()
+        for key_name, card_value in self.cards.items():
+            card=cards.getByID(int(card_value["card_id"], 16))
+            string=card.get_name()
+            if(card_value["custom"]!=None):
+                custom_name=CustomRetrievalClass().retrieve_name(card_value["custom"])
+                string="'{}'".format(custom_name)
+            returnList.append(string)
+        return returnList
+
+    def custom_id_list(self, custget=None):
+        #returns a small list of card names.
+        returnList = [] #Duplicates exist.  (Returns a tuple with the key_name)
+    #    cards=CardRetrievalClass()
+        for cid in self.customs:
+            #card=cards.getByID(int(card_value["card_id"], 16))
+            string=str(cid)
+            returnList.append(string)
+        return returnList

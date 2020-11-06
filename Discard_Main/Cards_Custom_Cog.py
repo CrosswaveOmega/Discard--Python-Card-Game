@@ -49,7 +49,9 @@ async def custom_id_from_match(ctx, profile, data_to_match):
     elif(type_of_match=="custom_id"):
         return matched_data
     return custom_id
+
 async def inv_key_from_match(ctx, profile, data_to_match):
+    "returns inventory key from a match"
     bot=ctx.bot
     author=ctx.message.author;
     channel=ctx.message.channel;
@@ -293,3 +295,14 @@ class CustomsCog(commands.Cog):
                 await channel.send("invalid custom id.")
         else:
             await channel.send("INVALID KEY OR CUSTOMID.")
+    @commands.command(pass_context=True)
+    async def deleteCustom(self, ctx, *args): #A very rudimentary card retrieval system.
+        '''
+        syntax: deleteCustom "custom_id"
+        deletes a custom
+        '''
+        bot=ctx.bot
+        author=ctx.message.author;
+        channel=ctx.message.channel;
+        await channel.send("Delete custom comming soon.")
+        print("TO BE DONE.")

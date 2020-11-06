@@ -27,7 +27,7 @@ class CardBase():  #Wip.
     def get_ID(self):
         return self.ID
 
-    def get_name():
+    def get_name(self):
         return self.name
 
     def get_icon(self):
@@ -38,7 +38,6 @@ class CardBase():  #Wip.
 
     def get_image(self):
         return self.image
-
     def __str__(self):
         #r, b, g = self.make_compact_summon_cost()
         id_hex=format(self.ID, "05X")
@@ -162,7 +161,7 @@ class CreatureCard(CardBase):
     def get_ID(self):
         return self.ID
 
-    def get_name():
+    def get_name(self):
         return self.name
 
     def get_icon(self):
@@ -232,9 +231,6 @@ class CreatureCard(CardBase):
         if(self.summoncost_g>0):
             green_res=g_array[self.summoncost_g-1]
         return red_res, blue_res, green_res
-
-
-
 
 
     def get_move_limit(self):

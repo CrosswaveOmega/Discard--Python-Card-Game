@@ -17,6 +17,10 @@ class Deck():
     def get_deck_name(self):
         return self.deck_name
 
+    def get_shorthand_rep(self):
+        returnString="[{}|{}]".format(self.deck_name, len(self.deck_cards))
+        return returnString
+        
     def set_deck_description(self, deck_description):
         self.deck_description = deck_description
 
