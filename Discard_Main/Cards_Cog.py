@@ -453,3 +453,21 @@ class DeckCog(commands.Cog):
                 cards[counter] = card_multimatch(profile, i)[0]["card_id"]
             counter = counter + 1
         deck.removeListFromDeck(cards)
+
+    @commands.command(pass_context=True)
+    async def inventory(self, ctx):
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        list = []
+        for card in profile.get_cards():
+            newCard = CardRetrievalClass().getByID(int(card["card_id"], 16))
+            if(card["custom"] != None):
+                custom = await CustomRetrievalClass().getByID(card["custom"], bot)
+                newCard.apply_custom(custom)
+                list.append(newCard)
+        await channel.send(list)
