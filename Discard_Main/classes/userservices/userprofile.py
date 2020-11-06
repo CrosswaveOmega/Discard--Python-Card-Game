@@ -116,7 +116,6 @@ class UserProfile:
     def apply_custom(self, key, cipher_id):
         if key in self.cards:
             self.cards[key]['custom']=cipher_id
-
     def add_custom(self, cipher_id):
         #cipher id
         self.customs.append(cipher_id)
@@ -133,16 +132,21 @@ class UserProfile:
                         new_key_name=key_name
                     count=count + 1
         self.cards[new_key_name]={"card_id":card_id, "custom":None, "inv_key":new_key_name}
-
+    def get_inventory_entry_by_key(self, key):
+        return self.cards[key]
     def add_deck(self, deck):
         self.decks.append(deck)
-
+    def check_customs_by_id(self, custom):
+        if (custom in self.customs):
+            return custom
+        return None
     def get_inv_cards_by_id(self, card_id):
-        returnList = [] #Duplicates exist.  (Returns a tuple with the key_name)
+        returnList = [] #Duplicates exist.  (Returns the dictonary value.)
         for key_name, card_value in self.cards.items():
             if card_id == int(card_value["card_id"], 16):
                 tuple=(key_name,card_value)
                 returnList.append(card_value)
+        print("Getting Return List")
         print(json.dumps(returnList))
         return returnList
     def get_inv_cards_by_custom_name(self, name):
@@ -150,8 +154,7 @@ class UserProfile:
         for key_name, card_value in self.cards.items():
             if(card_value["custom"]!=None):
                 custom_name=CustomRetrievalClass().retrieve_name(card_value["custom"])
-                if name in custom_name:
-                    tuple=(key_name,card_value)
+                if(custom_name==name):
                     returnList.append(card_value)
         return returnList
 

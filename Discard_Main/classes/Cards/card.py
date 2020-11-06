@@ -56,7 +56,7 @@ class CardBase():  #Wip.
         if hasattr(custom, 'icon'):
             self.icon=custom.icon
         if hasattr(custom, 'image_url'):
-            if(custom.image_url!=""):
+            if(custom.image_url!="" or custom.image_url!="None"):
                 self.image=custom.image_url
         if hasattr(custom, 'type'):
             self.type=custom.type
@@ -249,8 +249,9 @@ class CreatureCard(CardBase):
 
     def to_DiscordEmbed(self):
         embed = discord.Embed(title="{icon} {card_name}".format(icon=self.icon, card_name=self.name), colour=discord.Colour(0x7289da), description="HP: <:_9:754494641105272842><:_9:754494641105272842> {hp} \n ```we could let users place a description here.```".format(hp=self.hp))
-        print(self.image)
-        embed.set_image(url="{imgurl}".format(imgurl=self.image))
+        print("Image",self.image)
+        if(self.image!=None and self.image!="None"):
+            embed.set_image(url="{imgurl}".format(imgurl=self.image))
         embed.set_thumbnail(url="https://cdn.discordapp.com/embed/avatars/0.png")
 
         #, icon_url="""https://media.discordapp.net/attachments/763800266855415838/771803875946528788/image.png"""
