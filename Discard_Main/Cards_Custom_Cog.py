@@ -50,42 +50,6 @@ async def custom_id_from_match(ctx, profile, data_to_match):
     return custom_id
 class CustomsCog(commands.Cog):
 
-    @commands.command(pass_context=True)
-    async def changeDisplayImage(self, ctx, *args): #A very rudimentary card retrieval system.
-        '''
-        syntax: upload_image CustomId
-        [CustomId]: The CustomId you want to change the image of.
-
-        This command must accompany a attached image file.
-
-        '''
-        bot=ctx.bot
-        author=ctx.message.author;
-        channel=ctx.message.channel;
-        leng=len(args)
-        attachLength=len(ctx.message.attachments)
-        print(attachLength)
-        if (leng>=1 and attachLength>0):
-            for attach in ctx.message.attachments:
-                byte=await attach.read();
-                fil=io.BytesIO(byte) #file in attachments.
-                with io.BytesIO() as image_binary:
-                    custom=await CustomRetrievalClass().getByID(args[0], bot)
-                    if custom==None:
-                        await channel.send("Error! {0} not found.".format(args[0])) #EXCEPTION: INVALID CIPHER ID WAS GIVEN.+
-                    print("Going for it.")
-                    make_card_image(fil).save(image_binary, 'PNG') #Returns pil object.
-                    image_binary.seek(0)
-                    checkGuild= bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
-                    custom_channel= checkGuild.get_channel(int(configur.get("Default",'bts_card_image_channel'))) #Customs Channel.
-                    image_msg=await custom_channel.send(file=discord.File(fp=image_binary, filename='image.png'))
-
-                    url="p"
-                    for attach in image_msg.attachments:
-                        url=attach.url
-                        print("url")
-                        custom.change_display_image(url, image_msg.id)
-                    await CustomRetrievalClass().updateCustomByID(custom, bot)
 
     @commands.command(pass_context=True)
     async def newCustom(self, ctx, *args): #A very rudimentary card retrieval system.
@@ -150,8 +114,10 @@ class CustomsCog(commands.Cog):
     @commands.command(pass_context=True)
     async def changeDisplayIcon(self, ctx, *args):
         '''
-        syntax: changeDisplayIcon cipher_id "New Icon(EMOJI)"
-
+        syntax: changeDisplayIcon  [card identifier] [new icon (must be emoji)]
+        Changes the icon of a card in your inventory or a custom you have created.
+        [card_identifier] - can be custom_id, card_id, custom_name, or card_name
+        [new icon] - the new icon of the card.  Must be a emoji.
         '''
         bot=ctx.bot
         author=ctx.message.author;
@@ -170,12 +136,49 @@ class CustomsCog(commands.Cog):
             custom_id=await custom_id_from_match(ctx, profile, data_to_match)
             if(custom_id==None):
                 channel.send("Custom Id Not Found.")
-                return 
+                return
             custom=await CustomRetrievalClass().getByID(custom_id, bot)
             custom.icon=new_icon
             SingleUser.save_all()
             await CustomRetrievalClass().updateCustomByID(custom, bot)
             await channel.send("Name Updated.")
+    @commands.command(pass_context=True)
+    async def changeDisplayImage(self, ctx, *args): #A very rudimentary card retrieval system.
+        '''
+        syntax: upload_image CustomId
+        [CustomId]: The CustomId you want to change the image of.
+
+        This command must accompany a attached image file.
+
+        '''
+        bot=ctx.bot
+        author=ctx.message.author;
+        channel=ctx.message.channel;
+        leng=len(args)
+        attachLength=len(ctx.message.attachments)
+        print(attachLength)
+        if (leng>=1 and attachLength>0):
+            for attach in ctx.message.attachments:
+                byte=await attach.read();
+                fil=io.BytesIO(byte) #file in attachments.
+                with io.BytesIO() as image_binary:
+                    custom=await CustomRetrievalClass().getByID(args[0], bot)
+                    if custom==None:
+                        await channel.send("Error! {0} not found.".format(args[0])) #EXCEPTION: INVALID CIPHER ID WAS GIVEN.+
+                    print("Going for it.")
+                    make_card_image(fil).save(image_binary, 'PNG') #Returns pil object.
+                    image_binary.seek(0)
+                    checkGuild= bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
+                    custom_channel= checkGuild.get_channel(int(configur.get("Default",'bts_card_image_channel'))) #Customs Channel.
+                    image_msg=await custom_channel.send(file=discord.File(fp=image_binary, filename='image.png'))
+
+                    url="p"
+                    for attach in image_msg.attachments:
+                        url=attach.url
+                        print("url")
+                        custom.change_display_image(url, image_msg.id)
+                    await CustomRetrievalClass().updateCustomByID(custom, bot)
+
     @commands.command(pass_context=True)
     async def ApplyCustom(self, ctx, *args): #A very rudimentary card retrieval system.
         '''
