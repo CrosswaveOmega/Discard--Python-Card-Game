@@ -232,7 +232,7 @@ class DeckCog(commands.Cog):
             deck.set_deck_name(deckName)
             for i in profile.get_decks():
                 if(i.get_deck_name() == deckName):
-                    await cahnnel.send(str("A deck with that name already exist."))
+                    await channel.send(str("A deck with that name already exist."))
                     return
             profile.add_deck(deck)
         else:
@@ -294,7 +294,7 @@ class DeckCog(commands.Cog):
 
 
     @commands.command(pass_context=True)
-    async def changeDescription(self, ctx, arg1, *, arg2):
+    async def changeDeckDescription(self, ctx, arg1, *, arg2):
         '''
         syntax: changeDescription [Name][New_Deck_Description]
         [Name]: The current name of the deck
@@ -317,7 +317,7 @@ class DeckCog(commands.Cog):
         await channel.send(str("The deck does not exist."))
 
     @commands.command(pass_context=True)
-    async def addCard(self, ctx, *args): #check if card exist in inventory, args can have custom name, card id, and card name
+    async def addCardToDeck(self, ctx, *args): #check if card exist in inventory, args can have custom name, card id, and card name
         '''
         syntax: addCard [Name_of_deck][Card in inventory]
         [Name_of_deck]: The current name of the deck
@@ -355,7 +355,7 @@ class DeckCog(commands.Cog):
 
 
     @commands.command(pass_context=True)
-    async def removeCard(self, ctx, *args):
+    async def removeCardFromDeck(self, ctx, *args):
         '''
         syntax: removeCard [Name_of_deck][Card in deck]
         [Name_of_deck]: The current name of the deck
@@ -391,7 +391,7 @@ class DeckCog(commands.Cog):
 
 
     @commands.command(pass_context=True)
-    async def multi_add(self, ctx, arg1, *, arg2):
+    async def multiAddToDeck(self, ctx, arg1, *, arg2):
         '''
         syntax: multi_add [Name_of_deck][Card in inventory 1][Card in inventory 2]...[Card in inventory n]
         [Name_of_deck]: The current name of the deck
@@ -423,7 +423,7 @@ class DeckCog(commands.Cog):
 
 
     @commands.command(pass_context=True)
-    async def multi_remove(self, ctx, arg1, *, arg2):
+    async def multiRemoveFromDeck(self, ctx, arg1, *, arg2):
         '''
         syntax: multi_remove [Name_of_deck][Card in inventory 1][Card in inventory 2]...[Card in inventory n]
         [Name_of_deck]: The current name of the deck
@@ -453,6 +453,69 @@ class DeckCog(commands.Cog):
                 cards[counter] = card_multimatch(profile, i)[0]["card_id"]
             counter = counter + 1
         deck.removeListFromDeck(cards)
+
+    @commands.command(pass_context=True)
+    async def viewAllDecks(self, ctx):
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        list = []
+        for i in profile.get_decks():
+            list.append(i.get_deck_name())
+        message_content=""
+        for j in list:
+            message_content=message_content+str(j)+"\n"
+        if(len(list)==0):
+            await channel.send("NO DECKS IN USER PROFILE.")
+        else:
+            await channel.send(content=message_content)
+
+    @commands.command(pass_context=True)
+    async def viewDescription(self, ctx, arg):
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        deckName = arg
+        for i in profile.get_decks():
+            if(i.get_deck_name() == deckName):
+                await channel.send(str(i.get_deck_description()))
+                return
+
+    @commands.command(pass_context=True)
+    async def viewCardsInDeck(self, ctx, arg):
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        deckName = arg
+        deck = None
+        list = []
+        for i in profile.get_decks():
+            if(i.get_deck_name() == deckName):
+                deck = i
+                break
+        for card in deck.get_deck_cards():
+            card = CardRetrievalClass().getByID(int(card["card_id"], 16))
+            list.append(card)
+        message_content=""
+        for j in list:
+            message_content=message_content+str(j)+"\n"
+        if(len(list)==0):
+            await channel.send("NO CARDS IN DECK.")
+        else:
+            await channel.send(content=message_content)
+
 
     @commands.command(pass_context=True)
     async def inventory(self, ctx):
