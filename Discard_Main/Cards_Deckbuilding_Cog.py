@@ -46,6 +46,7 @@ class DeckCog(commands.Cog):
                 if(i.get_deck_name() == deckName):
                     await channel.send(str("A deck with that name already exist."))
                     return
+            print(str(deck))
             profile.add_deck(deck)
         else:
             await channel.send(str("Please enter the command along with a deck name."))

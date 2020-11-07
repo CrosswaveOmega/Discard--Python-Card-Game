@@ -22,16 +22,6 @@ class Piece:
         move_options=[]
         for line in lines:
             move_options.extend(grid.get_all_movements_in_range(self.position, line))
-        # print(grid.get_all_movements_in_range(self.position, "SAME COLUMN"))
-        # print(grid.get_all_movements_in_range(self.position, "SAME ROW"))
-        # print(grid.get_all_movements_in_range(self.position, "SAME COLUMN LIMIT 1"))
-        # print(grid.get_all_movements_in_range(self.position, "SAME ROW LIMIT 1"))
-        # print(grid.get_all_movements_in_range(self.position, "HOP X 1"))
-        # print(grid.get_all_movements_in_range(self.position, "HOP Y 1"))
-        # print(grid.get_all_movements_in_range(self.position, "HOP X -1"))
-        # print(grid.get_all_movements_in_range(self.position, "HOP Y -1"))
-        # print(grid.get_all_movements_in_range(self.position, "HOP Y -1 X -1"))
-        # print(grid.get_all_movements_in_range(self.position, "HOP X 1 Y 1"))
         return move_options
     def add_damage(self, damage_add=0):
 
@@ -46,7 +36,8 @@ class Piece:
 class Creature(Piece):
     """Creature class.  This is what all creatures will be summoned into."""
 
-
+class Leader(Piece):
+    """Leader class.  This is the avatar of the players."""
 #Driver Code.
 if __name__ == "__main__":
     testPiece=Piece("LO", "MY_NAME", 5,5, "STEP 1", "B3")

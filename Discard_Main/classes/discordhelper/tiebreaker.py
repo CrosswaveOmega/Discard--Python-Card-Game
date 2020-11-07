@@ -93,7 +93,7 @@ async def make_tiebreaker_with_inventory_entries(ctx, inventory_entries):
 
 
 
-async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_after=False, clear_after=False): #Add card.
+async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False, clear_after=False, ignore_message=False): #Add card.
     '''
     This function's sole purpose is to help with what I call a "tiebreaker."
 
@@ -129,10 +129,16 @@ async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_afte
     message_to_respond_to=message
     if message==None:
         message_to_respond_to=await channel.send("Tiebreaker!  Please Respond.")
+
+    reactions=message.reactions
+    currentReactions= [str(rea.emoji) for rea in reactions]
     for ch in choices:
         message_dict[ch[1]]=ch[0]
         emoji_dict[ch[2]]=ch[0]
-        await message_to_respond_to.add_reaction(ch[2])
+        if not (ch[2] in currentReactions):
+            await message_to_respond_to.add_reaction(ch[2])
+        else:
+            await message_to_respond_to.remove_reaction(ch[2], auth)
 
     def check(m):
         return m.author == auth and m.channel == channel
@@ -141,23 +147,35 @@ async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_afte
 
     async def getMessage():
         msg=await bot.wait_for('message', check=check)
-        print("Message ");
+        #print("Message ");
         return msg.content
     async def getReaction(): #Get a reaction.
         rea, user=await bot.wait_for('reaction_add', check=checkReaction)
         result= str(rea.emoji)
-        print("REACT.")
-        return rea.emoji
+        #print("REACT.")
+        return result
     async def timeout(): #Get a reaction.
-        await asyncio.sleep(30.0)
-        return "Timeout..."
+        await asyncio.sleep(15.0)
+        return "timeout"
     messagetask = asyncio.create_task(getMessage())
     reactiontask = asyncio.create_task(getReaction())
     timeouttask =asyncio.create_task(timeout())
-
     tasklist=[messagetask, reactiontask]
-    if timeout:
+    if ignore_message:
+        tasklist=[reactiontask]
+    if timeout_enable:
+        #print(timeout_enable)
         tasklist.append(timeouttask)
+    cont=message_to_respond_to.content
+    embed=None
+    if(len(message_to_respond_to.embeds)>0):
+        embed=message_to_respond_to.embeds[0]
+
+    #<a:stopwatch:774741008495542284>
+    #<a:stopwatch_15:774741008793337856>
+
+    cont=cont+ "<a:stopwatch_15:774741008793337856>"
+    await message_to_respond_to.edit(content=cont, embed=embed)
     done, pending = await asyncio.wait(tasklist, return_when=asyncio.FIRST_COMPLETED) #there's probably a better way to do this.
     if messagetask in done:
         result=messagetask.result();
@@ -166,9 +184,11 @@ async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_afte
         if timeout:
             timeouttask.cancel();
     if reactiontask in done:
-        print("DONE.")
+        #print("DONE.")
         result=str(reactiontask.result())
         output=emoji_dict[result];
+        if(remove_after):
+            await message_to_respond_to.remove_reaction(result, auth)
         messagetask.cancel();
         if timeout:
             timeouttask.cancel();
@@ -176,6 +196,7 @@ async def make_tiebreaker(ctx, choices, message=None, timeout=False, delete_afte
         messagetask.cancel();
         reactiontask.cancel();
         output=timeouttask.result();
+
     if clear_after:
         await message_to_respond_to.clear_reactions()
     if delete_after:

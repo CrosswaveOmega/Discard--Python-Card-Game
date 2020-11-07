@@ -4,12 +4,15 @@ from .card import *
 import json
 
 class Deck():
-
-    def __init__(self, deck_name="Brand new deck", deck_description="Enter a description for this deck."):
+    def __init__(self, deck_name="Brand new deck", deck_description="Enter a description for this deck.", dictionary=None):
         self.deck_name = deck_name
         self.deck_description = deck_description
-
         self.deck_cards = []
+
+        if(dictionary!=None): #initalizing from dictionary
+            for i, v in dictionary.items():
+                if hasattr(self, i):
+                    setattr(self, i, v)
 
     #Setters and Getters
     def set_deck_name(self, deck_name):
@@ -83,5 +86,12 @@ class Deck():
                 del self.deck_cards[counter]["inv_key"]
             counter = counter + 1
 
+    def to_dictionary(self):
+        return vars(self)
+
     def toJson(self):
         return json.dumps(self, default = lambda o: o.__dict__, sort_keys = True, indent = 4)
+    def __str__(self):
+        #String representation for loading.
+        string="{},{},{}".format(self.deck_name, self.deck_description, len(self.deck_cards))
+        return string

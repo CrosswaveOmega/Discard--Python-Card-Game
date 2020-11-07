@@ -13,6 +13,7 @@ from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 from .classes.Cards.cardretrieval import CardRetrievalClass
 from .classes.discordhelper.tiebreaker import make_tiebreaker, card_multimatch
+from .classes.discordhelper.pagesystem import *
 from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
@@ -20,9 +21,22 @@ from .classes.Cards.DeckBuilding import *
 #from discord.ext.tasks import loop
 
 #Primary area with commands.
+#3
+#<a:stopwatch:774734913298497537>
+#<a:stopwatch_15:774735267465920542>
 
 class CardCog2(commands.Cog):
     """Commands for testing system goes here."""
+    @commands.command()
+    async def pagetest(self, ctx, *args): #Add card.
+        '''
+        syntax: pagetest
+        This function is for testing the page system.
+        '''
+        bot=ctx.bot
+        auth=ctx.message.author;
+        channel=ctx.message.channel;
+        await pages(ctx, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
     @commands.command()
     async def tiebreaker(self, ctx, *args): #Add card.
         '''
@@ -53,7 +67,7 @@ class CardCog2(commands.Cog):
         else:
             await channel.send("Invalid input.")
         message=await channel.send("This is a test of the Reaction+Message based user responce system, with a 30 second timeout.  \n Respond to this message with a single number or a reaction.")
-        cont=await make_tiebreaker(ctx, choices, message=message, timeout=True, clear_after=True)
+        cont=await make_tiebreaker(ctx, choices, message=message, timeout_enable=True, clear_after=True)
         if(cont!=None):
             await channel.send(cont)
         else:
@@ -95,14 +109,17 @@ class CardCog(commands.Cog):
             if(card["custom"] != None):
                 custom = await CustomRetrievalClass().getByID(card["custom"], bot)
                 newCard.apply_custom(custom)
-            list.append(newCard)
+            list.append(str(newCard))
         message_content=""
-        for i in list:
-            message_content=message_content+str(i)+"\n"
+
+        #for i in list:
+        #    message_content=message_content+str(i)+"\n"
+
         if(len(list)==0):
             await channel.send("NO CARDS IN INVENTORY.")
         else:
-            await channel.send(content=message_content)
+            await pages(ctx, list)
+            #await channel.send(content=message_content)
 
     @commands.command(pass_context=True)
     async def my_profile(self, ctx, *args):
@@ -223,8 +240,10 @@ class CardCog(commands.Cog):
         if(leng>=1):
             param1=args[0]
         newcardlist=CardRetrievalClass().getAllCards()
-        for card in newcardlist:
-            await channel.send(str(card))
+        list=[str(card) for card in newcardlist]
+        await pages(ctx,list)
+        #for card in newcardlist:
+        #    await channel.send(str(card))
     @commands.command(pass_context=True)
     async def cardGet(self, ctx, *args): #A very rudimentary card retrieval system.
         '''

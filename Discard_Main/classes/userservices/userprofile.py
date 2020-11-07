@@ -9,6 +9,7 @@ import json
 
 from ..Cards.custom import CustomRetrievalClass
 from ..Cards.cardretrieval import CardRetrievalClass
+from ..Cards.DeckBuilding import Deck
 
 directory="saveData"
 
@@ -29,9 +30,9 @@ class SingleUserProfile:
                 if(file!= None):
                     f= file.open(mode='r');
                     string=f.read();
-                    self.buffer[str(id)]=UserProfile(user_id=id, dictonary_to_use=json.loads(string))
+                    self.buffer[str(id)]=UserProfile(user_id=id, dictionary_to_use=json.loads(string))
                     f.close()
-                    print("Should initalize new user profile with the dictonary_to_use param set to the translated contents of file, add that into buffer under user id.")
+                    print("Should initalize new user profile with the dictionary_to_use param set to the translated contents of file, add that into buffer under user id.")
                     return self.buffer[str(id)]
                     #Load contents of file into new UserProfile, add that into buffer.
                 else:
@@ -84,9 +85,11 @@ class SingleUserProfile:
 
 
 class UserProfile:
-    def __init__(self, user_id, dictonary_to_use=None):
+    def __init__(self, user_id, dictionary_to_use=None):
         self.user_id=user_id
-        self.cards={} #dictionary of ids. every entry in list is dictionary of format {"card_id":card_id, "custom":id_of_custom_applied}
+        self.cards={} #dictionary of ids. every entry in dictionary is dictionary of format
+        #{"card_id":card_id, "custom":id_of_custom_applied, "inv_key":new_key_name}
+        #new_key_name is the key.
         self.customs=[] #list of customs made by the user.
         #self.cards_customs={} #dictionary.  Key is card Id and
         self.exp=0
@@ -94,18 +97,25 @@ class UserProfile:
         #self.cardcount=0 #irrelivant.
         self.coins=0
         self.stars=0
-
-
-
         self.decks=[] #Max 99.
+        #To do: Work out saving/loading for decks.
 
-        if(dictonary_to_use!=None):
-            for i, v in dictonary_to_use.items():
+        if(dictionary_to_use!=None):
+            for i, v in dictionary_to_use.items():
                 if hasattr(self, i):
-                    setattr(self, i, v)
+                    if(i=="decks"):
+                        for deck_lookup in v:
+                            self.decks.append(Deck(dictionary=deck_lookup))
+                    else:
+                        setattr(self, i, v)
 
     def to_dictionary(self):
-        return vars(self)
+        dictionary=vars(self).copy()
+        new_deck_list=[]
+        for deck in dictionary["decks"]:
+            new_deck_list.append(deck.to_dictionary())
+        dictionary["decks"]=new_deck_list
+        return dictionary
 
     def get_cards(self):
         return self.cards
@@ -114,6 +124,7 @@ class UserProfile:
         return self.customs
 
     def get_decks(self):
+        print(self.decks)
         return self.decks
 
     def apply_custom(self, key, cipher_id):
@@ -142,7 +153,10 @@ class UserProfile:
         return self.cards[key]
 
     def add_deck(self, deck):
+        print(str(deck))
+        print(self.decks)
         self.decks.append(deck)
+        print(self.decks)
 
     def check_customs_by_id(self, custom):
         if (custom in self.customs):
@@ -150,7 +164,7 @@ class UserProfile:
         return None
 
     def get_inv_cards_by_id(self, card_id):
-        returnList = [] #Duplicates exist.  (Returns the dictonary value.)
+        returnList = [] #Duplicates exist.  (Returns the dictionary value.)
         for key_name, card_value in self.cards.items():
             if card_id == int(card_value["card_id"], 16):
                 tuple=(key_name,card_value)
