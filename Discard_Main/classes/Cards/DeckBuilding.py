@@ -1,6 +1,7 @@
 from .CardLibrary import cardcluster1
 from .cardretrieval import *
 from .card import *
+import json
 
 class Deck():
 
@@ -20,7 +21,7 @@ class Deck():
     def get_shorthand_rep(self):
         returnString="[{}|{}]".format(self.deck_name, len(self.deck_cards))
         return returnString
-        
+
     def set_deck_description(self, deck_description):
         self.deck_description = deck_description
 
@@ -81,3 +82,6 @@ class Deck():
             if (self.deck_cards[counter]["inv_key"] in cards):
                 del self.deck_cards[counter]["inv_key"]
             counter = counter + 1
+
+    def toJson(self):
+        return json.dumps(self, default = lambda o: o.__dict__, sort_keys = True, indent = 4)
