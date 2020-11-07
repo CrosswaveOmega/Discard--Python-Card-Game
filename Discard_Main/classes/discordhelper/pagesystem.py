@@ -36,8 +36,8 @@ async def pages(ctx, display=[], perpage=5):
         choices=[]
         defchoice=["exit","", '⏹️']
         choices.append(defchoice)
-        choices.append(["last","", '🔙'])
-        choices.append(["next","", '🔜'])
+        choices.append(["back","", '◀️'])
+        choices.append(["next","", '▶️'])
         result=await make_tiebreaker(ctx, choices, message=message, timeout_enable=True, ignore_message=True, remove_after=True)
         if(result=='timeout' or result=='exit'):
             #WILL TERMINATE.
@@ -49,7 +49,7 @@ async def pages(ctx, display=[], perpage=5):
             spot=spot+perpage
             if(spot)>len(display):
                 spot=spot-perpage
-        if result=="last":
+        if result=="back ":
             spot=spot-perpage
             if spot < 0:
                 spot=0
