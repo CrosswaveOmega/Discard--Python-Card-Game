@@ -299,6 +299,7 @@ if __name__ == "__main__":
     testGrid=Grid()
     print(testGrid.return_grid())
     testGrid.print_grid()
+    testGrid.print_grid(orientation='south')
     print(testGrid.return_grid())
 
     testGrid.set_space_value("D5", "LQP")

@@ -14,20 +14,27 @@ from discord import Webhook, AsyncWebhookAdapter
 
 from .tiebreaker import *
 
-async def pages(ctx, display=[], perpage=5):
+async def pages(ctx, display=[], perpage=5, header="new", content="new"):
 
     #seems self explanitory
     spot=0
     running=True
-    emb=discord.Embed(title="New", colour=discord.Colour(0x7289da), description="name")
-
+    length=len(display)
+    largest_spot=((length-1)//perpage)*perpage
+    maxpages=((length-1)//perpage)+1
+    emb=discord.Embed(title=header, colour=discord.Colour(0x7289da), description=content)
+    page=(spot//perpage)+1
+    emb.set_author(name=" Page {}/{}, {} total".format(page, maxpages, length))
 #<a:stopwatch:774737394594218035>
 #<a:stopwatch_15:774737457371152396>
 
     message=await ctx.channel.send(content="active", embed=emb)
     while running:
-        emb=discord.Embed(title="New", colour=discord.Colour(0x7289da), description="Description")
-        numberlist=["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
+        page=(spot//perpage)+1
+
+        emb=discord.Embed(title=header, colour=discord.Colour(0x7289da), description=content)
+        emb.set_author(name=" Page {}/{}, {} total".format(page, maxpages, length))
+        numberlist=["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
         c=0
         for i in display[spot:spot+perpage]:
             emb.add_field(name=str(numberlist[c]), value=i, inline=False)
@@ -36,8 +43,12 @@ async def pages(ctx, display=[], perpage=5):
         choices=[]
         defchoice=["exit","", '⏹️']
         choices.append(defchoice)
+        choices.append(["first","", '⏮️'])
         choices.append(["back","", '◀️'])
         choices.append(["next","", '▶️'])
+        choices.append(["last","", '⏭️'])
+        #for i in range(0,c):
+        #    choices.append([str(i),"", numberlist[i]])
         result=await make_tiebreaker(ctx, choices, message=message, timeout_enable=True, ignore_message=True, remove_after=True)
         if(result=='timeout' or result=='exit'):
             #WILL TERMINATE.
@@ -47,9 +58,13 @@ async def pages(ctx, display=[], perpage=5):
 
         if result=="next":
             spot=spot+perpage
-            if(spot)>len(display):
+            if(spot)>=length:
                 spot=spot-perpage
-        if result=="back ":
+        if result=="back":
             spot=spot-perpage
             if spot < 0:
                 spot=0
+        if result=="first":
+            spot=0
+        if result=="last":
+            spot=largest_spot

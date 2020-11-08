@@ -20,11 +20,9 @@ from .classes.userservices.userprofile import SingleUserProfile
 from .classes.Cards.DeckBuilding import *
 #from discord.ext.tasks import loop
 
-#Primary area with commands.
-#3
-#<a:stopwatch:774734913298497537>
-#<a:stopwatch_15:774735267465920542>
 
+    #<a:stopwatch:774741008495542284>
+    #<a:stopwatch_15:774741008793337856>
 class CardCog2(commands.Cog):
     """Commands for testing system goes here."""
     @commands.command()
@@ -36,7 +34,17 @@ class CardCog2(commands.Cog):
         bot=ctx.bot
         auth=ctx.message.author;
         channel=ctx.message.channel;
-        await pages(ctx, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
+        await pages(ctx, [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], 7, header="Test of pages, ", content="This is some content")
+    @commands.command()
+    async def stopwatches(self, ctx, *args): #Add card.
+        '''
+        syntax: pagetest
+        This function is for testing the page system.
+        '''
+        bot=ctx.bot
+        auth=ctx.message.author;
+        channel=ctx.message.channel;
+        await ctx.channel.send("<a:stopwatch:774741008495542284>\n <a:stopwatch_15:774741008793337856>")
     @commands.command()
     async def tiebreaker(self, ctx, *args): #Add card.
         '''
@@ -122,7 +130,7 @@ class CardCog(commands.Cog):
             #await channel.send(content=message_content)
 
     @commands.command(pass_context=True)
-    async def my_profile(self, ctx, *args):
+    async def myprofile(self, ctx, *args):
         """Returns the User's Profile."""
         bot=ctx.bot
         author=ctx.message.author;
@@ -134,7 +142,7 @@ class CardCog(commands.Cog):
         diction_profile=profile.to_dictionary()
         number=None
         embed = discord.Embed(title="Card Profile", colour=discord.Colour(0xce48e9), description=" I dunno what should be the description.  Stuff I guess.  Makes it look a bit WIIIDER.", timestamp=datetime.datetime.now())
-        #embed.set_image(url=author.avatar_url)
+        embed.set_image(url=author.avatar_url)
         #embed.set_thumbnail(url=author.avatar_url)
         personal_retrieval=CustomRetrievalClass(bot)
 
@@ -205,6 +213,9 @@ class CardCog(commands.Cog):
                 newcard.apply_custom(custom=customobject)
                 embed=newcard.to_DiscordEmbed()
                 await channel.send(content=str(newcard), embed=embed)
+        if(len(result)==0):
+            embed=newcard.to_DiscordEmbed()
+            await channel.send(content=str(newcard), embed=embed)
 
 
         print("NOTE: NEED TO MAKE CARD EMBED FORMAT CLASS IN CARD.PY")
@@ -241,7 +252,7 @@ class CardCog(commands.Cog):
             param1=args[0]
         newcardlist=CardRetrievalClass().getAllCards()
         list=[str(card) for card in newcardlist]
-        await pages(ctx,list)
+        await pages(ctx,list, header="Carddex", content="Below: Every Card Currently in the game.", perpage=10)
         #for card in newcardlist:
         #    await channel.send(str(card))
     @commands.command(pass_context=True)

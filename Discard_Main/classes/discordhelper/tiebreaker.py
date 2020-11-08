@@ -93,7 +93,7 @@ async def make_tiebreaker_with_inventory_entries(ctx, inventory_entries):
 
 
 
-async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False, clear_after=False, ignore_message=False): #Add card.
+async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False, clear_after=False, ignore_message=False, ignore_reaction=False): #Add card.
     '''
     This function's sole purpose is to help with what I call a "tiebreaker."
 
@@ -101,7 +101,7 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
 
     If a valid input was not sent, it returns None.
 
-    If timeout is specified, it will terminate after 30 seconds.
+    If timeout is specified, it will terminate after 15 or 30 seconds.
 
 
     '''
@@ -126,12 +126,20 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
     message_dict={}
     emoji_dict={}
 
+    def Diff(li1, li2): #for calculating set difference.
+        return (list(list(set(li1)-set(li2)) + list(set(li2)-set(li1))))
+
     message_to_respond_to=message
     if message==None:
         message_to_respond_to=await channel.send("Tiebreaker!  Please Respond.")
 
-    reactions=message.reactions
+    fetchedmessage=await channel.fetch_message(message_to_respond_to.id)
+    reactions=fetchedmessage.reactions
+    #print(reactions)
     currentReactions= [str(rea.emoji) for rea in reactions]
+    #print(currentReactions)
+    #Make dictionaryies
+    these_reactions=[]
     for ch in choices:
         message_dict[ch[1]]=ch[0]
         emoji_dict[ch[2]]=ch[0]
@@ -139,6 +147,7 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
             await message_to_respond_to.add_reaction(ch[2])
         else:
             await message_to_respond_to.remove_reaction(ch[2], auth)
+
 
     def check(m):
         return m.author == auth and m.channel == channel
@@ -154,12 +163,13 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
         result= str(rea.emoji)
         #print("REACT.")
         return result
-    async def timeout(): #Get a reaction.
-        await asyncio.sleep(15.0)
+    async def timeoutfunction(): #Get a reaction.
+        await asyncio.sleep(30.0)
         return "timeout"
+
     messagetask = asyncio.create_task(getMessage())
     reactiontask = asyncio.create_task(getReaction())
-    timeouttask =asyncio.create_task(timeout())
+    timeouttask =asyncio.create_task(timeoutfunction())
     tasklist=[messagetask, reactiontask]
     if ignore_message:
         tasklist=[reactiontask]
@@ -174,23 +184,31 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
     #<a:stopwatch:774741008495542284>
     #<a:stopwatch_15:774741008793337856>
 
-    cont=cont+ "<a:stopwatch_15:774741008793337856>"
+    cont=cont+ "<a:stopwatch:774741008495542284>"
     await message_to_respond_to.edit(content=cont, embed=embed)
     done, pending = await asyncio.wait(tasklist, return_when=asyncio.FIRST_COMPLETED) #there's probably a better way to do this.
     if messagetask in done:
         result=messagetask.result();
-        output=message_dict[result];
+        if(result in message_dict):
+            output=message_dict[result];
+        else:
+            print("Invalid Message")
+            output = "invalidmessage"
         reactiontask.cancel();
-        if timeout:
+        if timeout_enable:
             timeouttask.cancel();
     if reactiontask in done:
         #print("DONE.")
         result=str(reactiontask.result())
-        output=emoji_dict[result];
+        if(result in emoji_dict):
+            output=emoji_dict[result];
+        else:
+            print("Invalid Reaction")
+            output="invalidreaction"
         if(remove_after):
             await message_to_respond_to.remove_reaction(result, auth)
         messagetask.cancel();
-        if timeout:
+        if timeout_enable:
             timeouttask.cancel();
     if timeouttask in done:
         messagetask.cancel();
