@@ -5,7 +5,7 @@ class Piece:
     # NOTE: Creatures and Leaders will be Classes decended from this.
     """
 
-    def __init__(self, player, name, hp, speed, move_style, position_notation):
+    def __init__(self, player, name, hp, speed, move_style, position):
         self.player=player #the player object this piece belongs to.
         self.name=name
         self.max_hp=hp
@@ -15,7 +15,7 @@ class Piece:
         self.move_style=move_style #The multilined text
         self.move_limit=1
         #Speed is 1-100.
-        self.position=Position(notation=position_notation)
+        self.position=position
     def get_move_options(self, grid): #Wip function.
         """supposed to split move style into list line by line."""
         lines=self.move_style.splitlines()
@@ -23,10 +23,14 @@ class Piece:
         for line in lines:
             move_options.extend(grid.get_all_movements_in_range(self.position, line))
         return move_options
+
+    def get_hp(self):
+        hp = self.max_hp - self.damage
+        return hp
+
     def add_damage(self, damage_add=0):
 
         self.damage=self.damage+ damage_add
-
         print("Add Damage is incomplete.")
 
     def change_position(self, new_position_notation):
@@ -38,7 +42,19 @@ class Creature(Piece):
 
 class Leader(Piece):
     """Leader class.  This is the avatar of the players."""
+    """Through the leader, the players will do most actions."""
+    def __init__(self, player, name, position_notation):
+        self.player=player #the player object this piece belongs to.
+        self.name=name
+        #Current HP= max_hp - damage.
+        speed=50
+        move_style="STEP 1" #The multilined text
+        move_limit=1
+        #Speed is 1-100.
+        position=Position(notation=position_notation)
+        super().__init__(player=player, name=name, hp=20, speed=speed, move_style=move_style, move_limit=1, position=position)
 #Driver Code.
 if __name__ == "__main__":
-    testPiece=Piece("LO", "MY_NAME", 5,5, "STEP 1", "B3")
-    print(testPiece.position.x_y())
+    print("MAIN.")
+    #testPiece=Piece("LO", "MY_NAME", 5,5, "STEP 1", "B3")
+    #print(testPiece.position.x_y())

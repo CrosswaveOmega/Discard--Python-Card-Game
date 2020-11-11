@@ -46,5 +46,4 @@ class CardCogBattle(commands.Cog):
 
         #Make Card_Duel class
 
-
         #Start Card_Duel
