@@ -93,6 +93,7 @@ async def make_tiebreaker_with_inventory_entries(ctx, inventory_entries):
 
 
 
+
 async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False, clear_after=False, ignore_message=False, ignore_reaction=False): #Add card.
     '''
     This function's sole purpose is to help with what I call a "tiebreaker."
@@ -183,8 +184,8 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
 
     #<a:stopwatch:774741008495542284>
     #<a:stopwatch_15:774741008793337856>
-
-    cont=cont+ "<a:stopwatch:774741008495542284>"
+    oldcont= cont
+    cont=oldcont+ "<a:stopwatch:774741008495542284>"
     await message_to_respond_to.edit(content=cont, embed=embed)
     done, pending = await asyncio.wait(tasklist, return_when=asyncio.FIRST_COMPLETED) #there's probably a better way to do this.
     if messagetask in done:
@@ -214,7 +215,7 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
         messagetask.cancel();
         reactiontask.cancel();
         output=timeouttask.result();
-
+    await message_to_respond_to.edit(content=oldcont, embed=embed)
     if clear_after:
         await message_to_respond_to.clear_reactions()
     if delete_after:

@@ -10,8 +10,16 @@ class Card_Duel:
         self.players=[]
         self.entity_list=[]
 
+        self.mode="Test" #the "mode" of the game.  Will be used to
+        self.settings=None #Settings of the game.
         self.duel_helper=Card_Duel_Helper(self)
         self.grid=Grid(5,5, self.duel_helper)
+
+        self.round=0
+        self.log=[] #Log of everything that happened.
+    def addPlayer(self, player=None):
+        if(player!=None):
+            self.players.append(player)
     def add_piece(self, piece):
         self.entity_list.append(piece)
     def move_piece(self, piece):

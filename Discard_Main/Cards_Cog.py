@@ -23,6 +23,11 @@ from .classes.Cards.DeckBuilding import *
 
     #<a:stopwatch:774741008495542284>
     #<a:stopwatch_15:774741008793337856>
+
+
+
+
+
 class CardCog2(commands.Cog):
     """Commands for testing system goes here."""
     @commands.command()
@@ -75,7 +80,7 @@ class CardCog2(commands.Cog):
         else:
             await channel.send("Invalid input.")
         message=await channel.send("This is a test of the Reaction+Message based user responce system, with a 30 second timeout.  \n Respond to this message with a single number or a reaction.")
-        cont=await make_tiebreaker(ctx, choices, message=message, timeout_enable=True, clear_after=True)
+        cont=await make_tiebreaker(ctx, choices, message=message, timeout_enable=False, clear_after=True)
         if(cont!=None):
             await channel.send(cont)
         else:
