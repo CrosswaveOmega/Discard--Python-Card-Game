@@ -25,7 +25,7 @@ from .classes.Cards.DeckBuilding import *
     #<a:stopwatch_15:774741008793337856>
 
 class CardCogBattle(commands.Cog):
-    """Commands for testing system goes here."""
+    """Commands for battle system goes here."""
     @commands.command()
     async def start_duel (self, ctx, *args): #Start a duel
         '''
@@ -40,7 +40,7 @@ class CardCogBattle(commands.Cog):
         #Get Users involved.
         print("Get users.  For now, we only need to use the one who called this command.")
         #Get Decks to be used.
-        print("Get deck.")
+        print("Get deck of each player.")
 
         #make DiscordPlayer class
 

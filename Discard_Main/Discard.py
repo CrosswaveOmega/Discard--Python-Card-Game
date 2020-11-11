@@ -1,3 +1,17 @@
+import discord
+import operator
+import io
+import json
+import aiohttp
+import asyncio
+import csv
+import datetime
+from PIL import Image, ImageTk, ImageGrab, ImageDraw, ImageFont
+
+from discord.ext import commands, tasks
+from discord.utils import find
+from discord import Webhook, AsyncWebhookAdapter
+
 from .classes.main import *
 #from classes.main import *
 #The main game.
@@ -24,6 +38,10 @@ class Card_Duel:
         self.entity_list.append(piece)
     def move_piece(self, piece):
         piece.get_move_options(self.grid)
+
+    async def start_game(self):
+        #Game Loop is here.
+        print("TBD.")
 
 class Card_Duel_Helper():
     #This class will help with processing game events game.
