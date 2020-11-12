@@ -6,6 +6,7 @@ import aiohttp
 import asyncio
 import csv
 import datetime
+import queue
 from PIL import Image, ImageTk, ImageGrab, ImageDraw, ImageFont
 
 from discord.ext import commands, tasks
@@ -55,3 +56,32 @@ class CardCogBattle(commands.Cog):
         thisDuel=Card_Duel()
         thisDuel.addPlayer(player1)
         #Start Card_Duel
+
+    @commands.command()
+    async def start_test_duel (self, ctx, *args): #Start a duel
+        '''
+        syntax: start_test_duel
+        This function is for starting a CardDuel, and TESTING it.
+
+        Modify however you wish.
+
+
+        '''
+        bot=ctx.bot
+        author=ctx.message.author;
+        channel=ctx.message.channel;
+        #Get Users involved.
+        print("Get users.  For now, we only need to use the one who called this command.")
+        #Get Decks to be used.
+        print("Get deck of each player.")
+        player1Deck=[]
+        #create DPIOS object
+        player1_DPIOS=DPIOS(channel, author)
+
+        #make DiscordPlayer class
+        player1 = DiscordPlayer(deck=player1Deck, team=1, dpios=player1_DPIOS)
+        #Make Card_Duel class
+        thisDuel=Card_Duel()
+        thisDuel.addPlayer(player1)
+        #Start Card_Duel
+        testPiece=Piece("LO", "MY_NAME", 5,5, "STEP 1", "B1")

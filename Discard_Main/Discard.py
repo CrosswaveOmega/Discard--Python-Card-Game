@@ -50,6 +50,7 @@ class Card_Duel:
         while (self.game_is_active):
             print("PUT GAME LOOP HERE.")
             self.round=self.round+1
+            await asyncio.sleep(1)
             if(self.round>10):
                 self.game_is_active=False
         print("TBD.")
