@@ -58,7 +58,7 @@ class Leader(Piece):
         move_style="STEP 1" #The multilined text
         move_limit=1
         #Speed is 1-100.
-        position=Position(notation=position_notation)'
+        position=Position(notation=position_notation)
         #Image is url
         super().__init__(player=player, name=name, hp=20, speed=speed, move_style=move_style, move_limit=1, position=position)
 #Driver Code.
