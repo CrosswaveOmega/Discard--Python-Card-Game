@@ -24,13 +24,18 @@ class Card_Duel:
         self.players=[]
         self.entity_list=[]
 
-        self.mode="Test" #the "mode" of the game.  Will be used to
+        self.mode="Test" #the "mode" of the game.  a simplified setting.
         self.settings=None #Settings of the game.
         self.duel_helper=Card_Duel_Helper(self)
         self.grid=Grid(5,5, self.duel_helper)
 
         self.round=0
         self.log=[] #Log of everything that happened.
+        self.game_is_active=False
+
+    def apply_settings(self, settings=None):
+        if settings!=None:
+            self.settings=settings
     def addPlayer(self, player=None):
         if(player!=None):
             self.players.append(player)
@@ -41,6 +46,12 @@ class Card_Duel:
 
     async def start_game(self):
         #Game Loop is here.
+        self.game_is_active=True
+        while (self.game_is_active):
+            print("PUT GAME LOOP HERE.")
+            self.round=self.round+1
+            if(self.round>10):
+                self.game_is_active=False
         print("TBD.")
 
 
