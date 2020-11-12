@@ -7,5 +7,7 @@ from discord import Webhook, AsyncWebhookAdapter
 
 class DPIOS:
     #Fil in later.
-    def __init__(self, init):
+    def __init__(self, textchannel, user):
+        self.textchannel=textchannel #Text channel to send input to.
+        self.user=user
         print("tbd")

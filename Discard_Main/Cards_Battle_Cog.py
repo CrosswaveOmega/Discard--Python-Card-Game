@@ -18,6 +18,10 @@ from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
 from .classes.Cards.DeckBuilding import *
+from .classes.DiscordPlayerInputOutputSystem import *
+from .classes.main import *
+
+from ..Discard import Card_Duel
 #from discord.ext.tasks import loop
 
 
@@ -35,15 +39,19 @@ class CardCogBattle(commands.Cog):
 
         '''
         bot=ctx.bot
-        auth=ctx.message.author;
+        author=ctx.message.author;
         channel=ctx.message.channel;
         #Get Users involved.
         print("Get users.  For now, we only need to use the one who called this command.")
         #Get Decks to be used.
         print("Get deck of each player.")
+        player1Deck=[]
+        #create DPIOS object
+        player1_DPIOS=DPIOS(channel, author)
 
         #make DiscordPlayer class
-
+        player1 = DiscordPlayer(deck=player1Deck, team=1, dpios=player1_DPIOS)
         #Make Card_Duel class
-
+        thisDuel=Card_Duel()
+        thisDuel.addPlayer(player1)
         #Start Card_Duel

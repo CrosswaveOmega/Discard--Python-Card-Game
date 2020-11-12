@@ -5,7 +5,7 @@ class Piece:
     # NOTE: Creatures and Leaders will be Classes decended from this.
     """
 
-    def __init__(self, player, name, hp, speed, move_style, position):
+    def __init__(self, player, name, hp, speed, move_style, position, img=None):
         self.player=player #the player object this piece belongs to.
         self.name=name
         self.max_hp=hp
@@ -16,6 +16,11 @@ class Piece:
         self.move_limit=1
         #Speed is 1-100.
         self.position=position
+        self.display_image=img
+        current_options={}
+    def generate_options(self):
+        pass
+
     def get_move_options(self, grid): #Wip function.
         """supposed to split move style into list line by line."""
         lines=self.move_style.splitlines()
@@ -39,6 +44,8 @@ class Piece:
 
 class Creature(Piece):
     """Creature class.  This is what all creatures will be summoned into."""
+    def __init__(self):
+        print("TBD")
 
 class Leader(Piece):
     """Leader class.  This is the avatar of the players."""
@@ -51,7 +58,8 @@ class Leader(Piece):
         move_style="STEP 1" #The multilined text
         move_limit=1
         #Speed is 1-100.
-        position=Position(notation=position_notation)
+        position=Position(notation=position_notation)'
+        #Image is url
         super().__init__(player=player, name=name, hp=20, speed=speed, move_style=move_style, move_limit=1, position=position)
 #Driver Code.
 if __name__ == "__main__":

@@ -42,7 +42,7 @@ class Card_Duel:
     async def start_game(self):
         #Game Loop is here.
         print("TBD.")
-        game
+
 
 class Card_Duel_Helper():
     #This class will help with processing game events game.

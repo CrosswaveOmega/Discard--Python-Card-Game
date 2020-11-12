@@ -3,7 +3,7 @@ from ..DiscordPlayerInputOutputSystem import *
 class Player:
     def __init__(self, player_type="", deck=[], team=1):
         self.PlayerType=player_type
-        self.id="" #I don't know why we have this one.
+        self.id="Play" #I don't know why we have this one.
         self.deck=deck #Should be a list of cards. Initalization prior might be useful.
         self.hand=[] #Cards in hand.
         self.graveyard=[]#All cards in the graveyard.
@@ -18,8 +18,9 @@ class Player:
 
 class DiscordPlayer(Player):
 
-    def __init__(self, deck, team):
+    def __init__(self, deck, team, dpios=None):
         player_type="Discord"
-        self.id=1234
+        self.dpios=dpios
         super().__init__(player_type="Discord", deck=deck, team=team)
-    #Se
+    def get_input(self):
+        pass
