@@ -15,12 +15,16 @@ class Piece:
         self.move_style=move_style #The multilined text
         self.move_limit=1
         #Speed is 1-100.
+        self.position=Position(notation=position)
         self.position=position
         self.display_image=img
         current_options={}
     def generate_options(self):
         pass
-
+    async def get_action(self):#Add other args accordingly.
+        await asyncio.sleep(0.4)
+        print(self.name)
+        return None
     def get_move_options(self, grid): #Wip function.
         """supposed to split move style into list line by line."""
         lines=self.move_style.splitlines()
@@ -32,7 +36,8 @@ class Piece:
     def get_hp(self):
         hp = self.max_hp - self.damage
         return hp
-
+    def get_speed(self):
+        return self.speed
     def add_damage(self, damage_add=0):
 
         self.damage=self.damage+ damage_add
@@ -58,7 +63,7 @@ class Leader(Piece):
         move_style="STEP 1" #The multilined text
         move_limit=1
         #Speed is 1-100.
-        position=Position(notation=position_notation)
+        position=position_notation
         #Image is url
         super().__init__(player=player, name=name, hp=20, speed=speed, move_style=move_style, move_limit=1, position=position)
 #Driver Code.
