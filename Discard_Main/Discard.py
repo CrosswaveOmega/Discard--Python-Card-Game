@@ -49,8 +49,8 @@ class Card_Duel():
             self.players.append(player)
 
     async def send_grid(self): #A WIP function.  it sends a grid to all players.
-        grid=self.grid.grid_to_PIL_array()
-        img=make_image_from_grid(grid, grid.columns, grid.rows)
+        pilgrid=self.grid.grid_to_PIL_array()
+        img=make_image_from_grid(pilgrid, self.grid.columns, self.grid.rows)
         for player in self.players:
             if(player.get_PlayerType()=="Discord"):
                 await player.get_dpios().send_pil_image(img)
