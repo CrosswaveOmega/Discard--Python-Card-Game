@@ -148,6 +148,7 @@ class CardCog(commands.Cog):
         number=None
         embed = discord.Embed(title="Card Profile", colour=discord.Colour(0xce48e9), description=" I dunno what should be the description.  Stuff I guess.  Makes it look a bit WIIIDER.", timestamp=datetime.datetime.now())
         embed.set_image(url=author.avatar_url)
+        print(author.avatar_url)
         #embed.set_thumbnail(url=author.avatar_url)
         personal_retrieval=CustomRetrievalClass(bot)
 

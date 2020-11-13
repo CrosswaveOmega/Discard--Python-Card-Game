@@ -9,6 +9,8 @@ class Player:
         self.graveyard=[]#All cards in the graveyard.
         self.team=team#The team the player is on.
         #Initialize any other gameplay variables here as we need them.
+    def get_PlayerType(self):
+        return self.PlayerType
     def get_input(self):
         return "TBD"
     def get_output(self):
@@ -22,5 +24,9 @@ class DiscordPlayer(Player):
         player_type="Discord"
         self.dpios=dpios
         super().__init__(player_type="Discord", deck=deck, team=team)
+    def get_avatar_url(self):
+        return self.dpios.get_avatar_url()
     def get_input(self):
         pass
+    def get_dpios(self):
+        return self.dpios

@@ -4,6 +4,28 @@ from tkinter import *
 from PIL import Image, ImageTk, ImageGrab, ImageDraw, ImageFont
 import time
 import textwrap
+import urllib.request
+
+
+def url_to_PIL_image(image_url):
+    #full_path = file_path + file_name + '.png'
+    headers={'User-Agent':'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.76 Safari/537.36',}
+    request=urllib.request.Request(image_url,None,headers)
+    response = urllib.request.urlopen(request)
+    #install PIL package to convert the response into a PIL Image object to further save it
+    image=Image.open(response)
+    return image
+
+def make_image_from_grid(grid, col, row):
+    width, height = col*256, row*256
+    background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+    for j in range(col):
+        for i in range(row):
+            if(grid[i][j]!="_"):
+                background.paste(grid[i][j])
+    return background
+
+
 
 def make_summon_cost(r,b,g):
     img = Image.open("Discard_Main\classes\imagemakingfunctions\imageres\scost.png")

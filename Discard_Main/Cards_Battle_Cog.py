@@ -20,9 +20,11 @@ from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
 from .classes.Cards.DeckBuilding import *
 from .classes.DiscordPlayerInputOutputSystem import *
-from .classes.main import *
+#from .classes.main import *
 
-from ..Discard import Card_Duel
+from .Discard import *
+
+
 #from discord.ext.tasks import loop
 
 
@@ -77,11 +79,14 @@ class CardCogBattle(commands.Cog):
         player1Deck=[]
         #create DPIOS object
         player1_DPIOS=DPIOS(channel, author)
-
         #make DiscordPlayer class
         player1 = DiscordPlayer(deck=player1Deck, team=1, dpios=player1_DPIOS)
         #Make Card_Duel class
         thisDuel=Card_Duel()
+        thisDuel.grid.set_game_mode(thisDuel.duel_helper)
         thisDuel.addPlayer(player1)
         #Start Card_Duel
-        testPiece=Piece("LO", "MY_NAME", 5,5, "STEP 1", "B1")
+        testPiece=Leader(player1, "MY_NAME", "B2")
+        testPiece.set_image()
+        thisDuel.add_piece(testPiece)
+        testPiece.send_grid()

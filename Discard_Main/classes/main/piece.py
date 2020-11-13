@@ -1,4 +1,20 @@
+import discord
+import operator
+import io
+import json
+import aiohttp
+import asyncio
+import csv
+import datetime
+import queue
+from PIL import Image, ImageTk, ImageGrab, ImageDraw, ImageFont
+
+from discord.ext import commands, tasks
+from discord.utils import find
+from discord import Webhook, AsyncWebhookAdapter
+
 from .generic.position import Position
+from ..imagemakingfunctions.imaging import *
 
 class Piece:
     """Base Class for Creature and Leader pieces
@@ -6,6 +22,7 @@ class Piece:
     """
 
     def __init__(self, player, name, hp, speed, move_style, position, img=None):
+        #Img should be a PIL image object
         self.player=player #the player object this piece belongs to.
         self.name=name
         self.max_hp=hp
@@ -32,7 +49,9 @@ class Piece:
         for line in lines:
             move_options.extend(grid.get_all_movements_in_range(self.position, line))
         return move_options
-
+    async def get_action(self):
+        await asyncio.sleep(1)
+        return ""
     def get_hp(self):
         hp = self.max_hp - self.damage
         return hp
@@ -45,6 +64,9 @@ class Piece:
 
     def change_position(self, new_position_notation):
         self.position=Position(notation=new_position_notation)
+
+    def get_image(self):
+        return self.image
     #To Do- String Rep.  Rep will be Icon, Name, and Position
 
 class Creature(Piece):
@@ -66,6 +88,10 @@ class Leader(Piece):
         position=position_notation
         #Image is url
         super().__init__(player=player, name=name, hp=20, speed=speed, move_style=move_style, move_limit=1, position=position)
+    def set_image(self):
+        if self.player.get_PlayerType() == "Discord":
+            url=self.player.get_avatar_url()
+            self.image=url_to_PIL_image(url)
 #Driver Code.
 if __name__ == "__main__":
     print("MAIN.")

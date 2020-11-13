@@ -14,6 +14,9 @@ from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 
 from .classes.main import *
+from .classes.main.gridclass import Grid
+from .classes.imagemakingfunctions.imaging import *
+
 #from classes.main import *
 #The main game.
 
@@ -28,7 +31,7 @@ class Card_Duel:
         self.mode="Test" #the "mode" of the game.  a simplified setting.
         self.settings=None #Settings of the game.
         self.duel_helper=Card_Duel_Helper(self)
-        self.grid=Grid(5,5, self.duel_helper)
+        self.grid= Grid(5,5,self.duel_helper)
 
         self.round=0
         self.log=[] #Log of everything that happened.
@@ -40,22 +43,31 @@ class Card_Duel:
     def addPlayer(self, player=None):
         if(player!=None):
             self.players.append(player)
+
+    async def send_grid(self):
+        grid=self.grid.grid_to_PIL_array()
+        img=make_image_from_grid(grid, 5, 5)
+        for player in self.players:
+            if(player.get_PlayerType()=="Discord"):
+                await player.get_dpios().send_pil_image(img)
+
     def add_piece(self, piece):
         self.entity_list.append(piece)
     def move_piece(self, piece):
         piece.get_move_options(self.grid)
-    def sortFunction(e):
-        return e.get_speed()
+
     def turn_sort(self):
+        def sortFunction(e): #this is python.  We can have nested functions.
+            return e.get_speed()
         queue_list = self.entity_list
         queue_list.sort(key = sortFunction) #sort by lowest to highest speed
         return queue_list #list is also a stack with the highest speed at the end that can be called using pop()
-    def turn_queue(self, queue_list):
+    async def turn_queue(self, queue_list):
         queue = list
         stack = []
         for i in range(len(queue)):
             stack.append(queue.pop()) #add to stack from queue the piece with the highest speed and perform its action one a time
-            stack[i].get_action()
+            await stack[i].get_action()
         return stack #stack will now contain entity_list from highest to lowest speed
 
     async def start_game(self):
@@ -63,7 +75,7 @@ class Card_Duel:
         self.game_is_active=True
         while (self.game_is_active):
             print("PUT GAME LOOP HERE.")
-            self.turn_queue(self.turn_sort()) #not sure if this is correct
+            await self.turn_queue(self.turn_sort()) #not sure if this is correct
             self.round=self.round+1
             await asyncio.sleep(1)
             if(self.round>10):
