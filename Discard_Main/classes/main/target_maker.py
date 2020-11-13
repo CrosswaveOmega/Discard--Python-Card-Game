@@ -1,6 +1,6 @@
 from .generic.notationhelp import space_notation_to_value, to_notation, get_letter
 from .generic.position import Position
-from .gridclass import Grid
+from .GridClass import Grid
 
 
 helpDictionary={

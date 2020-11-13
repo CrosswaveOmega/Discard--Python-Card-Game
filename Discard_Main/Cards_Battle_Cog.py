@@ -83,7 +83,6 @@ class CardCogBattle(commands.Cog):
         player1 = DiscordPlayer(deck=player1Deck, team=1, dpios=player1_DPIOS)
         #Make Card_Duel class
         thisDuel=Card_Duel()
-        thisDuel.grid.set_game_mode(thisDuel.duel_helper)
         thisDuel.addPlayer(player1)
         #Start Card_Duel
         testPiece=Leader(player1, "MY_NAME", "B2")

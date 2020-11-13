@@ -37,7 +37,7 @@ class Piece:
         self.display_image=img
         current_options={}
     def generate_options(self):
-        pass
+        print("TBD")
     async def get_action(self):#Add other args accordingly.
         await asyncio.sleep(0.4)
         print(self.name)
@@ -58,13 +58,10 @@ class Piece:
     def get_speed(self):
         return self.speed
     def add_damage(self, damage_add=0):
-
         self.damage=self.damage+ damage_add
         print("Add Damage is incomplete.")
-
     def change_position(self, new_position_notation):
         self.position=Position(notation=new_position_notation)
-
     def get_image(self):
         return self.image
     #To Do- String Rep.  Rep will be Icon, Name, and Position
@@ -93,7 +90,7 @@ class Leader(Piece):
             url=self.player.get_avatar_url()
             self.image=url_to_PIL_image(url)
 #Driver Code.
-if __name__ == "__main__":
-    print("MAIN.")
+#if __name__ == "__main__":
+#    print("MAIN.")
     #testPiece=Piece("LO", "MY_NAME", 5,5, "STEP 1", "B3")
     #print(testPiece.position.x_y())

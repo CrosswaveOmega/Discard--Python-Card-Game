@@ -14,7 +14,7 @@ from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 
 from .classes.main import *
-from .classes.main.gridclass import Grid
+
 from .classes.imagemakingfunctions.imaging import *
 
 #from classes.main import *
@@ -23,6 +23,8 @@ from .classes.imagemakingfunctions.imaging import *
 class Card_Duel:
     """Where the game will be played."""
     def __init__(self):
+        dicti=vars(Grid())
+        print(json.dumps(dicti))
         self.game_id=0
         self.val=0
         self.players=[]
@@ -31,7 +33,8 @@ class Card_Duel:
         self.mode="Test" #the "mode" of the game.  a simplified setting.
         self.settings=None #Settings of the game.
         self.duel_helper=Card_Duel_Helper(self)
-        self.grid= Grid(5,5,self.duel_helper)
+        self.grid=Grid(5,5,self.duel_helper)
+
 
         self.round=0
         self.log=[] #Log of everything that happened.

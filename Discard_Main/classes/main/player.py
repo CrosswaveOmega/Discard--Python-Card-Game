@@ -16,17 +16,15 @@ class Player:
     def get_output(self):
         #Ask for infomation here.
         print("TBD")
-    #Se
 
 class DiscordPlayer(Player):
-
-    def __init__(self, deck, team, dpios=None):
+    def __init__(self, deck=[], team=1, dpios=None):
         player_type="Discord"
         self.dpios=dpios
         super().__init__(player_type="Discord", deck=deck, team=team)
     def get_avatar_url(self):
         return self.dpios.get_avatar_url()
     def get_input(self):
-        pass
+        return None
     def get_dpios(self):
         return self.dpios

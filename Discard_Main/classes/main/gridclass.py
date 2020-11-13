@@ -1,6 +1,6 @@
 from .generic.notationhelp import space_notation_to_value, to_notation, get_letter
 from .generic.position import Position
-LETTERS={"A":1, "B":2, "C":3, "D":4, "E":5, "F":6, "G":7, "H":8, "I":9, "J":10, "K":11, "L":12, "M":13, "N":14, "O":15, "P":16, "Q":17, "R":18, "S":19, "T":20, "U":21, "V":22, "W":23, "X":24, "Y":25, "Z":26}
+#LETTERS={"A":1, "B":2, "C":3, "D":4, "E":5, "F":6, "G":7, "H":8, "I":9, "J":10, "K":11, "L":12, "M":13, "N":14, "O":15, "P":16, "Q":17, "R":18, "S":19, "T":20, "U":21, "V":22, "W":23, "X":24, "Y":25, "Z":26}
 
 class Grid: #Should we make a generic grid class?
     def __init__ (self, rows=5, columns=5, game=None):
@@ -232,9 +232,9 @@ class Grid: #Should we make a generic grid class?
 
     def grid_to_PIL_array(self):
         grid_array=[]
-        for i in range(col):
+        for i in range(self.rows):
             column = []
-            for j in range(row):
+            for j in range(self.columns):
                 column.append("_")
         grid_array.append(column)
         if(self.game_ref!=None):
@@ -242,12 +242,10 @@ class Grid: #Should we make a generic grid class?
                 x, y= piece.position.x_y()
                 grid_array[y-1][x-1]=piece.get_image()
         return grid_array
-
     def print_grid(self, orientation="north"):
         print("START!")
         print("Orientation: "+orientation)
         newgrid= list(map(list, self.grid_array))
-
         numgrid=[]
         if(self.game_ref!=None):
             for piece in self.game_ref.get_entity_list():
@@ -256,11 +254,9 @@ class Grid: #Should we make a generic grid class?
         for j in range(self.columns):
             numgrid.append(get_letter(j+1))
     #    newgrid.insert(0, numgrid)
-
         returnVal=""
         returnVal=returnVal+(''.join(['{:10}|'.format(item) for item in numgrid ]))+str(numgrid)+"\n"
         #north
-
         startValue=0 #Start at top of board.
         endValue=self.rows #End at bottom of board
         #south
@@ -272,7 +268,6 @@ class Grid: #Should we make a generic grid class?
         if startValue>endValue:
             delim=-1
         while row!=endValue:
-
             print(row)
             returnVal=returnVal+(''.join(['{:10}|'.format(item) for item in newgrid[row]]))+str(row+1)+"\n"
             row=row+delim
