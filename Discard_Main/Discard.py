@@ -13,14 +13,15 @@ from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 
-from .classes.main import *
 
 from .classes.imagemakingfunctions.imaging import *
-
+from .classes.main.piece import *
+from .classes.main.player import *
+from .classes.main.GridClass import Grid
 #from classes.main import *
 #The main game.
 
-class Card_Duel:
+class Card_Duel():
     """Where the game will be played."""
     def __init__(self):
         dicti=vars(Grid())
@@ -47,9 +48,9 @@ class Card_Duel:
         if(player!=None):
             self.players.append(player)
 
-    async def send_grid(self):
+    async def send_grid(self): #A WIP function.  it sends a grid to all players.
         grid=self.grid.grid_to_PIL_array()
-        img=make_image_from_grid(grid, 5, 5)
+        img=make_image_from_grid(grid, grid.columns, grid.rows)
         for player in self.players:
             if(player.get_PlayerType()=="Discord"):
                 await player.get_dpios().send_pil_image(img)
@@ -96,30 +97,3 @@ class Card_Duel_Helper():
         for v in self.__card_duel.entity_list:
             new_list.append(v)
         return new_list
-
-
-#Driver Code.
-if __name__ == "__main__":
-    print("MAIN.")
-    #duel=Card_Duel()
-
-    #testPiece=Piece("LO", "MY_NAME", 5,5, "STEP 1", "B1")
-    #testPiece2=Piece("LOE", "OTHER", 5,5, "MOVE", "D3")
-    # testPiece3=Piece("LOE", "OTHER5", 5,5, "MOVE?", "A2")
-    #
-    # duel.add_piece(testPiece2)
-    # duel.add_piece(testPiece3)
-    # print(testPiece.position.x_y())
-    # duel.grid.print_grid()
-    # duel.grid.print_grid("south")
-    #duel.add_piece(testPiece)
-#    testPiece.change_position("C3")
-    #duel.move_piece(testPiece)
-
-    #duel.grid.print_grid()
-   # duel.add_piece(testPiece2)
-   # duel.move_piece(testPiece)
-
-    #duel.grid.print_grid()
-    # duel.grid.print_grid("south")
-    # duel.move_piece(testPiece)

@@ -1,6 +1,6 @@
 from ..DiscordPlayerInputOutputSystem import *
 #The player class.  FOR THE GAME.
-class Player:
+class Player():
     def __init__(self, player_type="", deck=[], team=1):
         self.PlayerType=player_type
         self.id="Play" #I don't know why we have this one.

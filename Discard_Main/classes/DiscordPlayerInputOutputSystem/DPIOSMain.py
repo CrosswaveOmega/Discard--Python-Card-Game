@@ -18,7 +18,7 @@ class DPIOS:
         self.user=user
         print("tbd")
 
-    def get_avatar_url(self, user):
+    def get_avatar_url(self):
         return user.avatar_url
     async def send_pil_image(self, pil):
         with io.BytesIO() as image_binary:

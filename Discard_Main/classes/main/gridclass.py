@@ -236,10 +236,11 @@ class Grid: #Should we make a generic grid class?
             column = []
             for j in range(self.columns):
                 column.append("_")
-        grid_array.append(column)
+            grid_array.append(column)
         if(self.game_ref!=None):
             for piece in self.game_ref.get_entity_list():
                 x, y= piece.position.x_y()
+                print(x,y)
                 grid_array[y-1][x-1]=piece.get_image()
         return grid_array
     def print_grid(self, orientation="north"):
