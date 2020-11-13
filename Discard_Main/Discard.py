@@ -44,12 +44,26 @@ class Card_Duel:
         self.entity_list.append(piece)
     def move_piece(self, piece):
         piece.get_move_options(self.grid)
+    def sortFunction(e):
+        return e.get_speed()
+    def turn_sort(self):
+        queue_list = self.entity_list
+        queue_list.sort(key = sortFunction) #sort by lowest to highest speed
+        return queue_list #list is also a stack with the highest speed at the end that can be called using pop()
+    def turn_queue(self, queue_list):
+        queue = list
+        stack = []
+        for i in range(len(queue)):
+            stack.append(queue.pop()) #add to stack from queue the piece with the highest speed and perform its action one a time
+            stack[i].get_action()
+        return stack #stack will now contain entity_list from highest to lowest speed
 
     async def start_game(self):
         #Game Loop is here.
         self.game_is_active=True
         while (self.game_is_active):
             print("PUT GAME LOOP HERE.")
+            self.turn_queue(self.turn_sort()) #not sure if this is correct
             self.round=self.round+1
             await asyncio.sleep(1)
             if(self.round>10):
@@ -67,19 +81,7 @@ class Card_Duel_Helper():
         for v in self.__card_duel.entity_list:
             new_list.append(v)
         return new_list
-    def sortFunction(e):
-        return e.get_speed()
-    def turn_sort(self):
-        queue_list = self.get_entity_list()
-        queue_list.sort(key = sortFunction) #sort by lowest to highest speed
-        return queue_list #list is also a stack with the highest speed at the end that can be called using pop()
-    def turn_queue(self):
-        queue = self.turn_sort()
-        stack = []
-        for i in range(len(queue)):
-            stack.append(queue.pop()) #add to stack from queue the piece with the highest speed and perform its action one a time
-            stack[i].get_action()
-        return stack #stack will now contain entity_list from highest to lowest speed
+
 
 #Driver Code.
 if __name__ == "__main__":
