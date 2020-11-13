@@ -1,7 +1,7 @@
 from .generic.position import Position
 
 class Piece:
-    """Bace Class for Creature and Leader pieces
+    """Base Class for Creature and Leader pieces
     # NOTE: Creatures and Leaders will be Classes decended from this.
     """
 
