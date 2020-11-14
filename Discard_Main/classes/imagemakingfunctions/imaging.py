@@ -20,13 +20,24 @@ def make_image_from_grid(grid, col, row):
     squaresize=256
     width, height = col*squaresize, row*squaresize
     pasteme= Image.open("""Discard_Main\classes\imagemakingfunctions\imageres\GridSquare.png""")
+    fontname="""Discard_Main\classes\imagemakingfunctions\imageres\{}""".format('bahnschrift.ttf')
+    newfont=ImageFont.truetype(fontname, 72)
+
     background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+    d=ImageDraw.Draw(background)
     for j in range(col):
         for i in range(row):
-            if(grid[i][j]!="_"):
-                background.paste(grid[i][j].resize((squaresize, squaresize)) , (j*squaresize, i*squaresize))
-            else:
+            if(isinstance(grid[i][j], str)):
                 background.paste(pasteme, (j*squaresize, i*squaresize))
+                if(grid[i][j]!="_"):
+                    name=grid[i][j]
+                    x, y=j*squaresize, i*squaresize
+                    x=x+squaresize//2
+                    y=y+squaresize//2
+                    d.text((x,y), text=name, anchor='mb', font=newfont, fill="White")
+            else:
+                background.paste(grid[i][j].resize((squaresize, squaresize)) , (j*squaresize, i*squaresize))
+
     return background
 
 
