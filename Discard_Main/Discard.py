@@ -68,7 +68,9 @@ class Card_Duel():
         return queue_list #list is also a stack with the highest speed at the end that can be called using pop()
 
     async def turn_queue(self, queue_list):
-        queue = queue_list
+        queue = []
+        for i in queue_list:
+            queue.append(i)
         stack = []
         for i in range(len(queue)):
             stack.append(queue.pop()) #add to stack from queue the piece with the highest speed and perform its action one a time
