@@ -94,7 +94,7 @@ class CardCogBattle(commands.Cog):
 
         thisDuel.turn_queue(thisDuel.turn_sort())
         testPiece.send_grid()
-        
+
         await thisDuel.send_grid()
         testPiece.change_position("C2")
         await thisDuel.send_grid()
