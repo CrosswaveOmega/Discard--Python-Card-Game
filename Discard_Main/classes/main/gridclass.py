@@ -230,7 +230,7 @@ class Grid: #Should we make a generic grid class?
     def return_grid(self):
         return self.grid_array
 
-    def grid_to_PIL_array(self):
+    def grid_to_PIL_array(self, space_array=[]):
         grid_array=[]
         for i in range(self.rows):
             column = []
@@ -242,6 +242,11 @@ class Grid: #Should we make a generic grid class?
                 x, y= piece.position.x_y()
                 print(x,y)
                 grid_array[y-1][x-1]=piece.get_image()
+            for space in space_array:
+                pos=Position(notation=space)
+                x, y= pos.x_y()
+                print(x,y)
+                grid_array[y-1][x-1]=space
         return grid_array
     def print_grid(self, orientation="north"):
         print("START!")
