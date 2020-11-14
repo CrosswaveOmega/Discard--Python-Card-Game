@@ -48,9 +48,6 @@ class Piece:
         for line in lines:
             move_options.extend(grid.get_all_movements_in_range(self.position, line))
         return move_options
-    async def get_action(self):
-        await asyncio.sleep(1)
-        return ""
     def get_hp(self):
         hp = self.max_hp - self.damage
         return hp

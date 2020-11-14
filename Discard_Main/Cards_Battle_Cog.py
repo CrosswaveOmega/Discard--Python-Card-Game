@@ -90,10 +90,11 @@ class CardCogBattle(commands.Cog):
         #Start Card_Duel
         testPiece=Leader(player1, "MY_NAME", position_notation="B2")
         testPiece.set_image()
+
+
         thisDuel.add_piece(testPiece)
 
-        thisDuel.turn_queue(thisDuel.turn_sort())
-        testPiece.send_grid()
+        await thisDuel.turn_queue(thisDuel.turn_sort())
 
         await thisDuel.send_grid()
         testPiece.change_position("C2")
