@@ -23,10 +23,14 @@ class DPIOS:
         self.image_msg=None
 
     def get_avatar_url(self):
+        """returns the avatar url of the user"""
         return self.user.avatar_url
     #INPUT
     async def get_user_choice(self, choice_list, prompt="Select a choice."):
         #get command from user.
+        """select a choice from a list.  Same as Tiebreaker.
+        choice_list is a single list of strings.  prompt is a possible promgt.
+        """
         choices=[]
         numberlist=["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
         defchoice=["back","", '🔙']
@@ -41,7 +45,9 @@ class DPIOS:
         result=await make_internal_tiebreaker(self.bot, self.user, self.textchannel, choices, message=message, timeout_enable=True, remove_after=True, delete_after=True)
         return result
     async def get_user_command(self, actions, prompt="ENTER COMMAND:"):
-        #get command from user.
+        """get command from user.  Same as Tiebreaker.
+        actions is a single list of strings.  Prompt is the prompt.
+        """
         choices=[]
         numberlist=["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
         defchoice=["exit","", '🔚']
@@ -55,9 +61,10 @@ class DPIOS:
         message=await self.textchannel.send(content="{}\n{}".format(prompt, outputString))
         result=await make_internal_tiebreaker(self.bot, self.user, self.textchannel, choices, message=message, timeout_enable=True, remove_after=True, delete_after=True)
         return result
-        
+
     #output
     async def update_grid_message(self, iurl, round):
+        #updates the grid image.
         embed=discord.Embed(title="Map", colour=discord.Colour(0x7289da), description="Round: {}".format(round))
         embed.set_image(url="{imgurl}".format(imgurl=iurl))
         if(self.image_msg==None):
@@ -65,6 +72,8 @@ class DPIOS:
         else:
             await self.image_msg.edit(content="$", embed=embed)
     async def send_pil_image(self, pil):
+        #sends pil image, but saves it to a image_binary first
+        #returns message
         image_mes=None
         with io.BytesIO() as image_binary:
             pil.save(image_binary, 'PNG') #Returns pil object.
