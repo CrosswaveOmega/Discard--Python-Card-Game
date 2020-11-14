@@ -92,24 +92,7 @@ async def make_tiebreaker_with_inventory_entries(ctx, inventory_entries):
 
 
 
-
-
-async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False, clear_after=False, ignore_message=False, ignore_reaction=False): #Add card.
-    '''
-    This function's sole purpose is to help with what I call a "tiebreaker."
-
-    It takes in a list of choices, and gets the user's input on them.
-
-    If a valid input was not sent, it returns None.
-
-    If timeout is specified, it will terminate after 15 or 30 seconds.
-
-
-    '''
-    bot=ctx.bot
-    auth=ctx.message.author;
-    channel=ctx.message.channel;
-
+async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False, clear_after=False, ignore_message=False, ignore_reaction=False): #Add card.
     output=None
 
     emoji_list=[
@@ -220,4 +203,25 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
         await message_to_respond_to.clear_reactions()
     if delete_after:
         await message_to_respond_to.delete()
+    return output
+
+
+async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False, clear_after=False, ignore_message=False, ignore_reaction=False): #Add card.
+    '''
+    This function's sole purpose is to help with what I call a "tiebreaker."
+
+    It takes in a list of choices, and gets the user's input on them.
+
+    If a valid input was not sent, it returns None.
+
+    If timeout is specified, it will terminate after 15 or 30 seconds.
+
+
+    '''
+    #temporary fix.  I can't believe I missed this...
+    bot=ctx.bot
+    auth=ctx.message.author;
+    channel=ctx.message.channel;
+
+    output=await make_internal_tiebreaker(bot, auth, channel,  choices, message, timeout_enable, delete_after, remove_after, clear_after, ignore_message, ignore_reaction)
     return output
