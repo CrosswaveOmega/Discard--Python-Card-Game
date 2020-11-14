@@ -58,7 +58,7 @@ class CardCogBattle(commands.Cog):
         #make DiscordPlayer class
         player1 = DiscordPlayer(deck=player1Deck, team=1, dpios=player1_DPIOS)
         #Make Card_Duel class
-        thisDuel=Card_Duel()
+        thisDuel=Card_Duel(bot)
         thisDuel.addPlayer(player1)
         #Start Card_Duel
 
@@ -81,11 +81,11 @@ class CardCogBattle(commands.Cog):
         print("Get deck of each player.")
         player1Deck=[]
         #create DPIOS object
-        player1_DPIOS=DPIOS(channel, author)
+        player1_DPIOS=DPIOS(channel, author, bot)
         #make DiscordPlayer class
         player1 = DiscordPlayer(deck=player1Deck, team=1, dpios=player1_DPIOS)
         #Make Card_Duel class
-        thisDuel=Card_Duel()
+        thisDuel=Card_Duel(bot)
         thisDuel.addPlayer(player1)
         #Start Card_Duel
         testPiece=Leader(player1, "MY_NAME", position_notation="B2")
@@ -93,11 +93,12 @@ class CardCogBattle(commands.Cog):
 
 
         thisDuel.add_piece(testPiece)
+        await thisDuel.update_grid_image()
+        await thisDuel.start_game()
 
-        await thisDuel.turn_queue(thisDuel.turn_sort())
-
-        await thisDuel.send_grid()
+        await thisDuel.update_grid_image()
         testPiece.change_position("C2")
-        await thisDuel.send_grid()
+        await asyncio.sleep(2)
+        await thisDuel.update_grid_image()
         testPiece.change_position("C3")
-        await thisDuel.send_grid()
+        await thisDuel.update_grid_image()
