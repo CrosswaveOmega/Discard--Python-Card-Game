@@ -33,6 +33,7 @@ from Discard_Main import Cards_Debug_Cog
 from Discard_Main import Cards_Battle_Cog
 from Discard_Main import Cards_Deckbuilding_Cog
 
+#from Discard_Main.classes.main.GridClass import Grid
 
 bot = commands.Bot(command_prefix='>')
 
@@ -57,6 +58,8 @@ class Main(commands.Cog):
         '''
         user=message.author
         channel=message.channel
+        #dicti=vars(Grid())
+        #print(json.dumps(dicti))
         if user != bot.user:
             if channel.id == 749673636280926228:
                 await channel.send("HELLO I AM ME!")

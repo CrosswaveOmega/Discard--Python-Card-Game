@@ -2,7 +2,7 @@ from .generic.notationhelp import space_notation_to_value, to_notation, get_lett
 from .generic.position import Position
 from .GridClass import Grid
 
-
+import json
 helpDictionary={
 "shape": "Type of Range",
 "dist":"The Number of Spaces covered.",

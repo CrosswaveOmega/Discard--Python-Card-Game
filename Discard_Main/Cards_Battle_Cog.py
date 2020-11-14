@@ -21,6 +21,9 @@ from .classes.userservices.userprofile import SingleUserProfile
 from .classes.Cards.DeckBuilding import *
 from .classes.DiscordPlayerInputOutputSystem import *
 #from .classes.main import *
+from .classes.main.piece import *
+from .classes.main.player import *
+from .classes.main.GridClass import Grid
 
 from .Discard import *
 
@@ -85,8 +88,15 @@ class CardCogBattle(commands.Cog):
         thisDuel=Card_Duel()
         thisDuel.addPlayer(player1)
         #Start Card_Duel
-        testPiece=Leader(player1, "MY_NAME", "B2")
+        testPiece=Leader(player1, "MY_NAME", position_notation="B2")
         testPiece.set_image()
         thisDuel.add_piece(testPiece)
+
         thisDuel.turn_queue(thisDuel.turn_sort())
         testPiece.send_grid()
+        
+        await thisDuel.send_grid()
+        testPiece.change_position("C2")
+        await thisDuel.send_grid()
+        testPiece.change_position("C3")
+        await thisDuel.send_grid()

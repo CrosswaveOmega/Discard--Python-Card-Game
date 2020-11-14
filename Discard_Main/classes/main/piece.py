@@ -33,7 +33,6 @@ class Piece:
         self.move_limit=1
         #Speed is 1-100.
         self.position=Position(notation=position)
-        self.position=position
         self.display_image=img
         current_options={}
     def generate_options(self):
@@ -84,7 +83,7 @@ class Leader(Piece):
         #Speed is 1-100.
         position=position_notation
         #Image is url
-        super().__init__(player=player, name=name, hp=20, speed=speed, move_style=move_style, move_limit=1, position=position)
+        super().__init__(player=player, name=name, hp=20, speed=speed, move_style=move_style, position=position_notation)
     def set_image(self):
         if self.player.get_PlayerType() == "Discord":
             url=self.player.get_avatar_url()
