@@ -36,11 +36,57 @@ class Piece:
         self.display_image=img
         current_options={}
     def generate_options(self):
-        print("TBD")
-    async def get_action(self):#Add other args accordingly.
+        #creates a new dictionary of all options.
+        #Universal opitons are: MOVE, ... END.
+        actions={}
+        actions["MOVE"]=self.move_limit
+        actions["END"]=1
+        return actions
+
+    async def do_move(self, game_ref):
+        move_options=self.get_move_options(game_ref.get_grid())
+
+        img=await game_ref.make_move_preview(move_options)
+        sent_mess = await self.player.get_dpios().send_pil_image(img)
+        option=await self.player.select_option(move_options)
+        await sent_mess.delete()
+        if(option!="back" and option!="timeout"):
+            print(option)
+            self.change_position(option)
+            game_ref.set_update()
+            await game_ref.send_user_updates()
+            return True
+        return False
+
+    async def get_action(self, game_ref):#Add other args accordingly.
+        options=self.generate_options()
+        my_turn=True
+        while my_turn:
+            choices=[]
+            for key, item in options.items():
+                if item >0:
+                    choices.append(key)
+            action= await self.player.select_command(choices)
+            print(action)
+            completed=False
+            if (action=="MOVE"):
+                completed= await self.do_move(game_ref)
+            elif (action=="END"):
+                my_turn=False
+            elif (action == "timeout"):
+                print("Timeout")
+                my_turn == False
+            if(completed):
+                if action in options:
+                    options[action]=options[action]-1
+
+
+
         await asyncio.sleep(0.4)
         print(self.name)
         return None
+    def process_option(self, option):
+        pass
     def get_move_options(self, grid): #Wip function.
         """supposed to split move style into list line by line."""
         lines=self.move_style.splitlines()
@@ -48,6 +94,7 @@ class Piece:
         for line in lines:
             move_options.extend(grid.get_all_movements_in_range(self.position, line))
         return move_options
+
     def get_hp(self):
         hp = self.max_hp - self.damage
         return hp
@@ -81,10 +128,22 @@ class Leader(Piece):
         position=position_notation
         #Image is url
         super().__init__(player=player, name=name, hp=20, speed=speed, move_style=move_style, position=position_notation)
+
     def set_image(self):
         if self.player.get_PlayerType() == "Discord":
             url=self.player.get_avatar_url()
             self.image=url_to_PIL_image(url)
+
+    def generate_options(self):
+        #creates a new dictionary of all options.
+        #Universal opitons are: MOVE, ... END.
+        actions={}
+        actions["MOVE"]=self.move_limit
+        actions["DRAW"]=1
+        actions["END"]=1
+        return actions
+    def process_option(self, option):
+        pass
 #Driver Code.
 #if __name__ == "__main__":
 #    print("MAIN.")

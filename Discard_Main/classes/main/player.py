@@ -11,6 +11,9 @@ class Player():
         #Initialize any other gameplay variables here as we need them.
     def get_PlayerType(self):
         return self.PlayerType
+    def select_option(self, options=[]):
+        pass
+        return self.PlayerType
     def get_input(self):
         return "TBD"
     def get_output(self):
@@ -28,3 +31,11 @@ class DiscordPlayer(Player):
         return None
     def get_dpios(self):
         return self.dpios
+    async def select_command(self, options=[]):
+            #get input from dpios.
+        option= await self.dpios.get_user_command(options)
+        return option
+    async def select_option(self, options=[]):
+        #get input from dpios.
+        option= await self.dpios.get_user_choice(options)
+        return option
