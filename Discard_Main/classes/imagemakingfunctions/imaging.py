@@ -17,14 +17,14 @@ def url_to_PIL_image(image_url):
     return image
 
 def make_image_from_grid(grid, col, row):
-    squaresize=214
+    squaresize=256
     width, height = col*squaresize, row*squaresize
     pasteme= Image.open("""Discard_Main\classes\imagemakingfunctions\imageres\GridSquare.png""")
     background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
     for j in range(col):
         for i in range(row):
             if(grid[i][j]!="_"):
-                background.paste(grid[i][j], (j*squaresize, i*squaresize))
+                background.paste(grid[i][j].resize((squaresize, squaresize)) , (j*squaresize, i*squaresize))
             else:
                 background.paste(pasteme, (j*squaresize, i*squaresize))
     return background
