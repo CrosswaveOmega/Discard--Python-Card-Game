@@ -88,4 +88,5 @@ class CardCogBattle(commands.Cog):
         testPiece=Leader(player1, "MY_NAME", "B2")
         testPiece.set_image()
         thisDuel.add_piece(testPiece)
+        thisDuel.turn_queue(thisDuel.turn_sort())
         testPiece.send_grid()
