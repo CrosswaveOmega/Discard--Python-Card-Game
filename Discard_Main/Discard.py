@@ -136,7 +136,7 @@ class Card_Duel():
             print(self.round)
             await self.update_grid_image()
             await asyncio.sleep(1)
-            if(self.round>10):
+            if(self.round>5):
                 self.game_is_active=False
         print("TBD.")
 
@@ -158,5 +158,7 @@ class Card_Duel_Helper():
         return img
     def set_update(self):
         self.__card_duel.grid_updated()
+    def request_termination(self):
+        print("To Be Completed.")
     async def send_user_updates(self):
         await self.__card_duel.update_grid_image()

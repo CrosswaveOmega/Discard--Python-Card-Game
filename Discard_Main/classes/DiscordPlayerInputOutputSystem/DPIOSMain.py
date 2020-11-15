@@ -55,6 +55,7 @@ class DPIOS:
         choices.append(defchoice)
         outputString=""
         if(len(actions)==1):
+            #return the first action if there is no need.
             return actions[0]
         for i in range(0,len(actions)):
             name=actions[i]
