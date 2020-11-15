@@ -48,6 +48,7 @@ class DeckCog(commands.Cog):
                     return
             print(str(deck))
             profile.add_deck(deck)
+            await channel.send("Deck '{}' has been added!".format(deckName))
         else:
             await channel.send(str("Please enter the command along with a deck name."))
 
@@ -70,11 +71,13 @@ class DeckCog(commands.Cog):
             new_deckName = args[1]
             for j in profile.get_decks():
                 if(j.get_deck_name() == new_deckName):
+
                     await channel.send(str("A deck with that name already exist."))
                     return
             for i in profile.get_decks():
                 if(i.get_deck_name() == deckName):
                     i.set_deck_name(new_deckName)
+                    await channel.send("Deck '{}' has been renamed to {}.".format(deckName, new_deckName))
                     return
             await channel.send(str("The deck does not exist."))
         else:
@@ -100,6 +103,7 @@ class DeckCog(commands.Cog):
             for i in profile.get_decks():
                 if(i.get_deck_name() == deckName):
                     profile.get_decks().remove(i)
+                    await channel.send("Deck '{}' has been deleted.".format(deckName))
                     break
             await channel.send(str("The deck does not exist."))
         else:
@@ -161,6 +165,9 @@ class DeckCog(commands.Cog):
                         break
                 if(deck.inDeck(cardvalue) == False):
                     deck.addToDeck(cardvalue) #to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
+                    await channel.send("Card has been added to '{}' with no problems.".format(deckName))
+
+
                 else:
                     await channel.send("Hang on, This card is already in your deck!")
             else:
@@ -304,6 +311,7 @@ class DeckCog(commands.Cog):
 
     @commands.command(pass_context=True)
     async def viewCardsInDeck(self, ctx, arg):
+        """"Syntax: viewCardsInDeck 'Deck Name' """
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel
@@ -319,8 +327,8 @@ class DeckCog(commands.Cog):
                 deck = i
                 break
         for card in deck.get_deck_cards():
-            card = CardRetrievalClass().getByID(int(card["card_id"], 16))
-            list.append(card)
+            cardobj = CardRetrievalClass().getByID(int(card["card_id"], 16))
+            list.append(cardobj)
         message_content=""
         for j in list:
             message_content=message_content+str(j)+"\n"
