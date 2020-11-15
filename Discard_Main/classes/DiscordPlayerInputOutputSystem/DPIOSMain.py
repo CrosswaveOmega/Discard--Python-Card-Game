@@ -21,6 +21,7 @@ class DPIOS:
         self.bot=bot
         print("tbd")
         self.image_msg=None
+        self.player_msg=None
 
     def get_avatar_url(self):
         """returns the avatar url of the user"""
@@ -53,6 +54,8 @@ class DPIOS:
         defchoice=["exit","", '🔚']
         choices.append(defchoice)
         outputString=""
+        if(len(actions)==1):
+            return actions[0]
         for i in range(0,len(actions)):
             name=actions[i]
             emoji=numberlist[i]
@@ -63,6 +66,11 @@ class DPIOS:
         return result
 
     #output
+    async def update_player_message(self, embed):
+        if(self.player_msg==None):
+            self.player_msg=await self.textchannel.send("Newly_sent", embed=embed)
+        else:
+            await self.player_msg.edit(content="$", embed=embed)
     async def update_grid_message(self, iurl, round):
         #updates the grid image.
         embed=discord.Embed(title="Map", colour=discord.Colour(0x7289da), description="Round: {}".format(round))

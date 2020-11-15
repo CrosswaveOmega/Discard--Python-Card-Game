@@ -59,6 +59,7 @@ class Piece:
         return False
 
     async def get_action(self, game_ref):#Add other args accordingly.
+        self.player.gain_summon_points()
         options=self.generate_options()
         my_turn=True
         while my_turn:
@@ -66,16 +67,9 @@ class Piece:
             for key, item in options.items():
                 if item >0:
                     choices.append(key)
+            await self.player.send_embed_to_user()
             action= await self.player.select_command(choices)
-            print(action)
-            completed=False
-            if (action=="MOVE"):
-                completed= await self.do_move(game_ref)
-            elif (action=="END"):
-                my_turn=False
-            elif (action == "timeout"):
-                print("Timeout")
-                my_turn == False
+            my_turn, completed=await self.process_option(game_ref, action)
             if(completed):
                 if action in options:
                     options[action]=options[action]-1
@@ -85,8 +79,20 @@ class Piece:
         await asyncio.sleep(0.4)
         print(self.name)
         return None
-    def process_option(self, option):
-        pass
+        #universal options.
+    async def process_option(self, game_ref, action):
+        my_turn=True
+        print(action)
+        completed=False
+        if (action=="MOVE"):
+            completed= await self.do_move(game_ref)
+        elif (action=="END"):
+            my_turn=False
+        elif (action == "timeout"):
+            print("Timeout")
+            my_turn == False
+        return my_turn, completed
+
     def get_move_options(self, grid): #Wip function.
         """supposed to split move style into list line by line."""
         lines=self.move_style.splitlines()
@@ -107,6 +113,10 @@ class Piece:
         self.position=Position(notation=new_position_notation)
     def get_image(self):
         return self.image
+    def string_status(self):
+        result="{},{}/{}".format(self.name, self.get_hp(), self.max_hp)
+        return result
+
     #To Do- String Rep.  Rep will be Icon, Name, and Position
 
 class Creature(Piece):
@@ -142,8 +152,24 @@ class Leader(Piece):
         actions["DRAW"]=1
         actions["END"]=1
         return actions
-    def process_option(self, option):
-        pass
+    async def process_option(self, game_ref, action):
+        my_turn=True
+        print(action)
+        completed=False
+        if (action=="MOVE"):
+            completed= await self.do_move(game_ref)
+        elif (action=="DRAW"):
+            self.player.draw_card()
+            completed=True
+            #Draw one card.  Add it to the hand.
+        elif (action=="END"):
+            my_turn=False
+
+        elif (action == "timeout"):
+            print("Timeout")
+            my_turn == False
+        return my_turn, completed
+
 #Driver Code.
 #if __name__ == "__main__":
 #    print("MAIN.")

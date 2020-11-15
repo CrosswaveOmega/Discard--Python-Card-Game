@@ -15,6 +15,7 @@ from discord import Webhook, AsyncWebhookAdapter
 from .classes.Cards.cardretrieval import CardRetrievalClass
 from .classes.discordhelper.tiebreaker import make_tiebreaker, card_multimatch
 from .classes.discordhelper.pagesystem import *
+from .classes.discordhelper.universal_functions import *
 from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
@@ -76,10 +77,17 @@ class CardCogBattle(commands.Cog):
         author=ctx.message.author;
         channel=ctx.message.channel;
         #Get Users involved.
+        SingleUser = SingleUserProfile("arg")
+        profile1 = SingleUser.getByID(author.id)
         print("Get users.  For now, we only need to use the one who called this command.")
         #Get Decks to be used.
         print("Get deck of each player.")
         player1Deck=[]
+        player1Deck_RAW=profile1.get_decks()[0]
+        for deck_card in player1Deck_RAW.get_deck_cards():
+            newcard=await inventory_entry_to_card_object(bot, deck_card)
+            player1Deck.append(newcard)
+
         #create DPIOS object
         player1_DPIOS=DPIOS(channel, author, bot)
         #make DiscordPlayer class
@@ -90,6 +98,8 @@ class CardCogBattle(commands.Cog):
         #Start Card_Duel
         testPiece=Leader(player1, "MY_NAME", position_notation="B2")
         testPiece.set_image()
+
+        player1.set_leader(testPiece)
 
 
         thisDuel.add_piece(testPiece)

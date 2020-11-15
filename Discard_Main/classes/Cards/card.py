@@ -38,6 +38,7 @@ class CardBase():  #Wip.
 
     def get_image(self):
         return self.image
+
     def __str__(self):
         #r, b, g = self.make_compact_summon_cost()
         id_hex=format(self.ID, "05X")
