@@ -104,7 +104,7 @@ class DeckCog(commands.Cog):
                 if(i.get_deck_name() == deckName):
                     profile.get_decks().remove(i)
                     await channel.send("Deck '{}' has been deleted.".format(deckName))
-                    break
+                    return
             await channel.send(str("The deck does not exist."))
         else:
             await channel.send(str("Please enter the command with the deck name."))
@@ -130,6 +130,7 @@ class DeckCog(commands.Cog):
         for i in profile.get_decks():
             if(i.get_deck_name() == deckName):
                 i.set_deck_description(new_deckDescription)
+                await channel.send(str("The description has been changed!"))
                 return
         await channel.send(str("The deck does not exist."))
 
@@ -165,13 +166,13 @@ class DeckCog(commands.Cog):
                         break
                 if(deck.inDeck(cardvalue) == False):
                     deck.addToDeck(cardvalue) #to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
-                    await channel.send("Card has been added to '{}' with no problems.".format(deckName))
+                    await channel.send("Card has been added to '{}' with no problems!".format(deckName))
 
 
                 else:
-                    await channel.send("Hang on, This card is already in your deck!")
+                    await channel.send(str("Hang on, This card is already in your deck!"))
             else:
-                await channel.send("This card was not found in your inventory.")
+                await channel.send(str("This card was not found in your inventory."))
 
 
     @commands.command(pass_context=True)
@@ -204,10 +205,11 @@ class DeckCog(commands.Cog):
                     print("Place Tiebreaker Here.")#do tiebreaker.
                 if(deck.inDeck(cardvalue) == True):
                     deck.removeFromDeck(cardvalue)
+                    await channel.send(str("Card has been removed from deck!"))
                 else:
-                    await channel.send("The card is not in your deck.")
+                    await channel.send(str("The card is not in your deck."))
             else:
-                await channel.send("The card is not in your deck.")
+                await channel.send(str("The card is not in your deck."))
 
 
     @commands.command(pass_context=True)
@@ -239,7 +241,9 @@ class DeckCog(commands.Cog):
                 break
         deck.addListToDeck(cards)
         if(len(does_not_exist) != 0):
-            await channel.send("The following cards does not exist in your inventory: {}".format(does_not_exist))
+            await channel.send(str("The following cards does not exist in your inventory: {}".format(does_not_exist)))
+        else:
+            await channel.send(str("All the cards have been added to your deck!"))
 
 
     @commands.command(pass_context=True)
@@ -273,6 +277,7 @@ class DeckCog(commands.Cog):
                 cards[counter] = card_multimatch(profile, i)[0]["card_id"]
             counter = counter + 1
         deck.removeListFromDeck(cards)
+        await channel.send(str("All the cards have been removed from your deck!"))
 
     @commands.command(pass_context=True)
     async def viewAllDecks(self, ctx):
