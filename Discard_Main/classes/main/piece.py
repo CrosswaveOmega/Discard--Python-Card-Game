@@ -22,7 +22,7 @@ class Piece:
     # NOTE: Creatures and Leaders will be Classes decended from this.
     """
 
-    def __init__(self, player, name="", hp=0, speed=0, move_style=0, position, img=None):
+    def __init__(self, player, name="", hp=1, speed=1, move_style="", position="", img=None):
         #Img should be a PIL image object
         self.player=player #the player object this piece belongs to.
         self.name=name
@@ -35,6 +35,7 @@ class Piece:
         #Speed is 1-100.
         self.position=Position(notation=position)
         self.display_image=img
+        self.image=None
         current_options={}
     def generate_options(self):
         #creates a new dictionary of all options.
@@ -107,10 +108,11 @@ class Piece:
         return hp
     def hp_fraction(self):
         #Returns current hp divided by max_hp
-        return self.get_hp() /  self.max_hp
+        return "{}.{}".format(self.get_hp(), self.max_hp)
 
     def get_speed(self):
         return self.speed
+
     def set_image_by_url(self, url):
         self.image=url_to_PIL_image(url)
 
@@ -130,6 +132,9 @@ class Piece:
         result="{},{}/{}".format(self.name, self.get_hp(), self.get_hp())
         return result
 
+    def get_embed():
+        pass
+
     #To Do- String Rep.  Rep will be Icon, Name, and Position
 
 
@@ -138,11 +143,13 @@ class Creature(Piece):
 
     def __init__(self, creature_card, player, position):
         # Gets the attributes from a passed in creature card
+        # Player and Position come from Piece class
+        super().__init__(player=player, position=position)
         self.name = creature_card.get_name()
         self.skill_1 = creature_card.get_skill_1()
         self.skill_2 = creature_card.get_skill_2()
         self.skill_3 = creature_card.get_skill_3()
-        self.image = creature_card.get_Image()
+        self.display_image = creature_card.get_image()
         self.icon = creature_card.get_icon()
         self.summoncost_r = creature_card.get_summoncost_r()
         self.summoncost_b = creature_card.get_summoncost_b()
@@ -154,8 +161,14 @@ class Creature(Piece):
         self.ID = creature_card.get_ID()
         self.type = creature_card.get_type()
 
-        # Player and Position come from Piece class
-        super().__init__(player, position)
+        self.card=creature_card
+
+        self.set_image_by_url(self.display_image)
+    def get_embed(self):
+        embed=self.card.to_DiscordEmbed(use_image=False)
+        embed.description="{}/{}".format(self.get_hp(), self.max_hp)
+        return embed
+
 
 
 class Leader(Piece):
@@ -177,13 +190,25 @@ class Leader(Piece):
         if self.player.get_PlayerType() == "Discord":
             url=self.player.get_avatar_url()
             self.image=url_to_PIL_image(url)
-
+    def get_summon_spaces(self, grid): #Wip function.
+        """uses a modified version of the move style to get summon spaces."""
+        summonSpace="""STEP 1
+        HOP X -1 Y -1
+        HOP X 1 Y -1
+        HOP X -1 Y 1
+        HOP X 1 Y 1"""
+        lines=summonSpace.splitlines()
+        summon_options=[]
+        for line in lines:
+            summon_options.extend(grid.get_all_movements_in_range(self.position, line))
+        return summon_options
     def generate_options(self):
         #creates a new dictionary of all options.
         #Universal opitons are: MOVE, ... END.
         actions={}
         actions["MOVE"]=self.move_limit
         actions["DRAW"]=1
+        actions["SUMMON"]=1
         actions["END"]=1
         return actions
     async def process_option(self, game_ref, action):
@@ -196,6 +221,10 @@ class Leader(Piece):
             self.player.draw_card()
             completed=True
             #Draw one card.  Add it to the hand.
+        elif (action=="SUMMON"):
+            completed=await self.player.get_summon_action(game_ref, self.get_summon_spaces(game_ref.get_grid()))
+            #completed=True
+            #Draw one card.  Add it to the hand.
         elif (action=="END"):
             my_turn=False
 
@@ -203,6 +232,14 @@ class Leader(Piece):
             print("Timeout")
             my_turn == False
         return my_turn, completed
+
+
+    def get_embed(self):
+        embed = discord.Embed(title="{}".format("Leader"), colour=discord.Colour(0x7289da), description="{}/{}".format(self.get_hp(), self.max_hp))
+        embed.set_thumbnail(url=self.player.get_avatar_url())
+
+        return embed
+
 
 #Driver Code.
 #if __name__ == "__main__":

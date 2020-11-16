@@ -90,6 +90,7 @@ class CardCogBattle(commands.Cog):
 
         #create DPIOS object
         player1_DPIOS=DPIOS(channel, author, bot)
+        await player1_DPIOS.send_order() #This is so the messages are sent in the right order.
         #make DiscordPlayer class
         player1 = DiscordPlayer(deck=player1Deck, team=1, dpios=player1_DPIOS)
         #Make Card_Duel class
