@@ -20,12 +20,13 @@ def make_card_grid_icon(pil_image, team=1, hp_float=1):
     squaresize=188
     background= Image.open("""Discard_Main\classes\imagemakingfunctions\imageres\CardEX.png""")
     fontname="""Discard_Main\classes\imagemakingfunctions\imageres\{}""".format('bahnschrift.ttf')
-    newfont=ImageFont.truetype(fontname, 10)
+    newfont=ImageFont.truetype(fontname, 14)
+    d=ImageDraw.Draw(background)
 
-    background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+    #background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
 
     background.paste(pil_image.resize((squaresize, squaresize)) , (28, 28))
-    d.text((58,218), text=str(hp_float), anchor='mb', font=newfont, fill="White")
+    d.text((58,218), text=str(hp_float), anchor='ma', font=newfont, fill="black")
     return background
 
 def make_image_from_grid(grid, col, row):
