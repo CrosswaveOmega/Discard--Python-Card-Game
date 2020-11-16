@@ -106,6 +106,9 @@ class Piece:
         return hp
     def get_speed(self):
         return self.speed
+    def set_image_by_url(self, url):
+        self.image=url_to_PIL_image(url)
+
     def add_damage(self, damage_add=0):
         self.damage=self.damage+ damage_add
         print("Add Damage is incomplete.")
