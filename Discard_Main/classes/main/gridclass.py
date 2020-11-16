@@ -241,7 +241,7 @@ class Grid: #Should we make a generic grid class?
             for piece in self.game_ref.get_entity_list():
                 x, y= piece.position.x_y()
                 print(x,y)
-                grid_array[y-1][x-1]=piece.get_image()
+                grid_array[y-1][x-1]=piece.get_grid_card_icon()
             for space in space_array:
                 pos=Position(notation=space)
                 x, y= pos.x_y()

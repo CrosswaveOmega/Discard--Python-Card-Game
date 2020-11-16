@@ -124,14 +124,20 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
     #print(currentReactions)
     #Make dictionaryies
     these_reactions=[]
+
+    async def add_react(message_to_respond_to, react):
+        await message_to_respond_to.add_reaction(react)
+
+    reaction_tasks=[]
     for ch in choices:
         message_dict[ch[1]]=ch[0]
         emoji_dict[ch[2]]=ch[0]
         if not (ch[2] in currentReactions):
-            await message_to_respond_to.add_reaction(ch[2])
+            reaction_tasks.append(asyncio.create_task(add_react(message_to_respond_to,ch[2])))
+            #await add_react(message_to_respond_to,ch[2])
         else:
             await message_to_respond_to.remove_reaction(ch[2], auth)
-
+    done, pending = await asyncio.wait(reaction_tasks, return_when=asyncio.ALL_COMPLETED) #
 
     def check(m):
         return m.author == auth and m.channel == channel

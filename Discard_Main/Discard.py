@@ -47,7 +47,7 @@ class Card_Duel():
         self.mode="Test" #the "mode" of the game.  a simplified setting.
         self.settings=None #Settings of the game.
         self.duel_helper=Card_Duel_Helper(self)
-        self.grid=Grid(5,5,self.duel_helper)
+        self.grid = Grid(5,5,self.duel_helper)
 
 
         self.round=0
@@ -74,12 +74,25 @@ class Card_Duel():
             if(player.get_PlayerType()=="Discord"):
                 await player.get_dpios().send_pil_image(img)
 
-    async def send_update(self, url): #A WIP function.  it sends a grid to all players.
+    async def send_update(self, url):
         """UPDATE ALL DPIOS OF PLAYERS."""
         print(self.round)
         for player in self.players:
             if(player.get_PlayerType()=="Discord"):
                 await player.get_dpios().update_grid_message(url, self.round)
+    async def send_current_piece_embed(self, current):
+        """UPDATE ALL DPIOS OF PLAYERS.  CHANGES EMBED FOR THE CURRENT CREATURE"""
+        print(self.round)
+        for player in self.players:
+            if(player.get_PlayerType()=="Discord"):
+                await player.get_dpios().update_current_message(current.get_embed())
+    async def send_announcement(self, content):
+        """UPDATE ALL DPIOS OF PLAYERS.  CHANGES EMBED FOR THE CURRENT CREATURE"""
+        print(self.round)
+        for player in self.players:
+            if(player.get_PlayerType()=="Discord"):
+                await player.get_dpios().send_announcement(content)
+
     def add_piece(self, piece):
         self.entity_list.append(piece)
     def move_piece(self, piece):
@@ -122,6 +135,7 @@ class Card_Duel():
         stack = []
         for i in range(len(queue)):
             current_piece=queue.pop()
+            await self.send_current_piece_embed(current_piece)
             stack.append(current_piece) #add to stack from queue the piece with the highest speed and perform its action one a time
             await stack[i].get_action(self.duel_helper)
         return stack #stack will now contain entity_list from highest to lowest speed
@@ -138,6 +152,7 @@ class Card_Duel():
             await asyncio.sleep(1)
             if(self.round>5):
                 self.game_is_active=False
+        await self.send_announcement("THE GAME IS OVER.")
         print("TBD.")
 
 
@@ -146,6 +161,9 @@ class Card_Duel_Helper():
     def __init__(self, Duel):
         print("TBD.  Might do something.")
         self.__card_duel=Duel
+    def add_creature(self, creature):
+        self.__card_duel.add_piece(creature)
+        self.set_update()
     def get_entity_list(self):
         new_list=[]
         for v in self.__card_duel.entity_list:
@@ -158,6 +176,7 @@ class Card_Duel_Helper():
         return img
     def set_update(self):
         self.__card_duel.grid_updated()
+
     def request_termination(self):
         print("To Be Completed.")
     async def send_user_updates(self):

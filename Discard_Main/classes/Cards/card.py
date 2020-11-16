@@ -36,6 +36,9 @@ class CardBase():  #Wip.
     def get_type(self):
         return self.type
 
+    def can_activate(self):
+        return True
+
     def get_image(self):
         return self.image
 
@@ -189,6 +192,15 @@ class CreatureCard(CardBase):
     def get_summoncost_b(self):
         return self.summoncost_b
 
+    def get_summoncost_tuple(self):
+        return self.summoncost_r, self.summoncost_b, self.summoncost_g
+
+    def can_activate(self, source_r, source_b, source_g):
+        r, b, g= self.get_summoncost_tuple()
+        if((source_r>=r)and (source_b>=b) and (source_g>=g)):
+            return True
+        return False
+
     def get_skill_1(self):
         return self.skill_1
 
@@ -248,12 +260,13 @@ class CreatureCard(CardBase):
         return line1
         #return self.icon + "|" + self.name + "|" + self.type + "|"+ self.hp + "|"+ self.speed + "|"+ str(self.ID)
 
-    def to_DiscordEmbed(self):
-        embed = discord.Embed(title="{icon} {card_name}".format(icon=self.icon, card_name=self.name), colour=discord.Colour(0x7289da), description="HP: <:_9:754494641105272842><:_9:754494641105272842> {hp} \n ```we could let users place a description here.```".format(hp=self.hp))
+    def to_DiscordEmbed(self, use_image=True):
+        embed = discord.Embed(title="{icon} {card_name}".format(icon=self.icon, card_name=self.name), colour=discord.Colour(0x7289da), description="HP: {hp} \n ```we could let users place a description here.```".format(hp=self.hp))
         print("Image",self.image)
         if(self.image!=None and self.image!="None"):
-            embed.set_image(url="{imgurl}".format(imgurl=self.image))
-        embed.set_thumbnail(url="https://cdn.discordapp.com/embed/avatars/0.png")
+            if(use_image):
+                embed.set_image(url="{imgurl}".format(imgurl=self.image))
+            embed.set_thumbnail(url=self.image)
 
         #, icon_url="""https://media.discordapp.net/attachments/763800266855415838/771803875946528788/image.png"""
         embed.set_author(name="{CardType}".format(CardType=self.type))

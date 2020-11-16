@@ -22,15 +22,22 @@ class DPIOS:
         print("tbd")
         self.image_msg=None
         self.player_msg=None
+        self.current_msg=None
 
     def get_avatar_url(self):
         """returns the avatar url of the user"""
         return self.user.avatar_url
+
     #INPUT
+    async def send_order(self):
+        self.player_msg = await self.textchannel.send("Player")
+        self.image_msg = await self.textchannel.send("Image")
+        self.current_msg = await self.textchannel.send("Current")
+
     async def get_user_choice(self, choice_list, prompt="Select a choice."):
         #get command from user.
         """select a choice from a list.  Same as Tiebreaker.
-        choice_list is a single list of strings.  prompt is a possible promgt.
+        choice_list is a single list of strings.  prompt is a possible prompt.
         """
         choices=[]
         numberlist=["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
@@ -43,7 +50,24 @@ class DPIOS:
             choices.append([choice_list[i], name, emoji])
             outputString=outputString + " {}[{}] ".format(emoji, name)
         message=await self.textchannel.send(content="{}\n{}".format(prompt, outputString))
-        result=await make_internal_tiebreaker(self.bot, self.user, self.textchannel, choices, message=message, timeout_enable=True, remove_after=True, delete_after=True)
+        result=await make_internal_tiebreaker(self.bot, self.user, self.textchannel, choices, message=message, timeout_enable=True, delete_after=True)
+        return result
+    async def get_user_card(self, choice_list, prompt=""):
+        """select a cardobject from a list of card objects.  Same as Tiebreaker.
+        choice_list is a single list of cardobjects.  prompt is a possible prompt.
+        """
+        choices=[]
+        numberlist=["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
+        defchoice=["back","", '🔙']
+        choices.append(defchoice)
+        outputString=""
+        for i in range(0,len(choice_list)):
+            name=choice_list[i].get_name()
+            emoji=numberlist[i]
+            choices.append([choice_list[i], name, emoji])
+            outputString=outputString + " {}[{}] ".format(emoji, name)
+        message=await self.textchannel.send(content="{}\n{}".format(prompt, outputString))
+        result=await make_internal_tiebreaker(self.bot, self.user, self.textchannel, choices, message=message, timeout_enable=True, delete_after=True)
         return result
     async def get_user_command(self, actions, prompt="ENTER COMMAND:"):
         """get command from user.  Same as Tiebreaker.
@@ -60,13 +84,20 @@ class DPIOS:
         for i in range(0,len(actions)):
             name=actions[i]
             emoji=numberlist[i]
-            choices.append([actions[i], name, emoji])
+            choices.append([actions[i], str(name), emoji])
             outputString=outputString + " {}[{}] ".format(emoji, name)
         message=await self.textchannel.send(content="{}\n{}".format(prompt, outputString))
-        result=await make_internal_tiebreaker(self.bot, self.user, self.textchannel, choices, message=message, timeout_enable=True, remove_after=True, delete_after=True)
+        result=await make_internal_tiebreaker(self.bot, self.user, self.textchannel, choices, message=message, timeout_enable=True, delete_after=True)
         return result
-
+    async def send_announcement(self, announcement):
+        await self.textchannel.send(announcement)
     #output
+    async def update_current_message(self, embed):
+        #For the current creature's turn.
+        if(self.current_msg==None):
+            self.current_msg=await self.textchannel.send("Newly_sent", embed=embed)
+        else:
+            await self.current_msg.edit(content="$", embed=embed)
     async def update_player_message(self, embed):
         if(self.player_msg==None):
             self.player_msg=await self.textchannel.send("Newly_sent", embed=embed)
@@ -80,6 +111,7 @@ class DPIOS:
             self.image_msg=await self.textchannel.send("Newly_sent", embed=embed)
         else:
             await self.image_msg.edit(content="$", embed=embed)
+
     async def send_pil_image(self, pil):
         #sends pil image, but saves it to a image_binary first
         #returns message
