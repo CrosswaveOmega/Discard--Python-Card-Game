@@ -14,6 +14,7 @@ from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 
 from .generic.position import Position
+from ..Cards.card import CreatureCard
 from ..imagemakingfunctions.imaging import *
 
 class Piece:
@@ -122,10 +123,31 @@ class Piece:
 
     #To Do- String Rep.  Rep will be Icon, Name, and Position
 
+
 class Creature(Piece):
     """Creature class.  This is what all creatures will be summoned into."""
-    def __init__(self):
-        print("TBD")
+
+    def __init__(self, creature_card, player, position):
+        # Gets the attributes from a passed in creature card
+        self.name = creature_card.get_name()
+        self.skill_1 = creature_card.get_skill_1()
+        self.skill_2 = creature_card.get_skill_2()
+        self.skill_3 = creature_card.get_skill_3()
+        self.image = creature_card.get_Image()
+        self.icon = creature_card.get_icon()
+        self.summoncost_r = creature_card.get_summoncost_r()
+        self.summoncost_b = creature_card.get_summoncost_b()
+        self.summoncost_g = creature_card.get_summoncost_g()
+        self.speed = creature_card.get_speed()
+        self.move_style = creature_card.get_move_style()
+        self.move_limit = creature_card.get_move_limit()
+        self.max_hp = creature_card.get_hp()
+        self.ID = creature_card.get_ID()
+        self.type = creature_card.get_type()
+
+        # Player and Position come from Piece class
+        super().__init__(player, position)
+
 
 class Leader(Piece):
     """Leader class.  This is the avatar of the players."""
