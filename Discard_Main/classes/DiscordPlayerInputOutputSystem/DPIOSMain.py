@@ -26,6 +26,7 @@ class DPIOS:
     def get_avatar_url(self):
         """returns the avatar url of the user"""
         return self.user.avatar_url
+    
     #INPUT
     async def get_user_choice(self, choice_list, prompt="Select a choice."):
         #get command from user.

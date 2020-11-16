@@ -21,7 +21,7 @@ class Piece:
     # NOTE: Creatures and Leaders will be Classes decended from this.
     """
 
-    def __init__(self, player, name, hp, speed, move_style, position, img=None):
+    def __init__(self, player, name="", hp=0, speed=0, move_style=0, position, img=None):
         #Img should be a PIL image object
         self.player=player #the player object this piece belongs to.
         self.name=name
@@ -104,6 +104,10 @@ class Piece:
     def get_hp(self):
         hp = self.max_hp - self.damage
         return hp
+    def hp_fraction(self):
+        #Returns current hp divided by max_hp
+        return self.get_hp() /  self.max_hp
+
     def get_speed(self):
         return self.speed
     def set_image_by_url(self, url):
@@ -114,10 +118,15 @@ class Piece:
         print("Add Damage is incomplete.")
     def change_position(self, new_position_notation):
         self.position=Position(notation=new_position_notation)
+    def get_grid_card_icon(self):
+        #Will need to optimize later.
+        orig_img=self.get_image()
+        return make_card_grid_icon(orig_img, self.player.team, self.hp_fraction())
+
     def get_image(self):
         return self.image
     def string_status(self):
-        result="{},{}/{}".format(self.name, self.get_hp(), self.max_hp)
+        result="{},{}/{}".format(self.name, self.get_hp(), self.get_hp())
         return result
 
     #To Do- String Rep.  Rep will be Icon, Name, and Position
