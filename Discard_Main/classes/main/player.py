@@ -15,6 +15,7 @@ from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 
+from .piece import Creature
 from ..DiscordPlayerInputOutputSystem import *
 #The player class.  FOR THE GAME.
 class Player():
@@ -35,10 +36,10 @@ class Player():
     def gain_summon_points(self):
         #exactly how to gain Summon points, I still have no idea.
         #this will give points randomly.
-        self.summon_r=self.summon_r+0.20
-        self.summon_b=self.summon_b+0.2
-        self.summon_g=self.summon_g+0.2
-        for i in range(0,5):
+        self.summon_r=self.summon_r+1
+        self.summon_b=self.summon_b+1
+        self.summon_g=self.summon_g+1
+        for i in range(0,10):
             val=random.randint(1,3)
             if val ==1:
                 self.summon_r=self.summon_r+0.2
@@ -52,14 +53,41 @@ class Player():
         self.leader=leader
     def get_PlayerType(self):
         return self.PlayerType
-    async def select_command(self, options=[]):
+    async def select_command(self, options=[], prompt=""):
             #get input from dpios.
         pass
-    async def select_option(self, options=[]):
+    async def select_option(self, options=[], prompt=""):
+        pass
+    async def select_card(self, options=[], prompt=""):
         pass
     def draw_card(self):
-        card=self.deck.pop()
-        self.hand.append(card)
+        if(len(self.deck)>=1):
+            card=self.deck.pop()
+            self.hand.append(card)
+    async def get_summon_action(self, game_ref, summon_locations):
+        valid_options=[]
+        for card in self.hand:
+            if card.get_type()=="Creature":
+                if( card.can_activate(self.summon_r, self.summon_b, self.summon_g)):
+                    valid_options.append(card)
+        card=await self.select_option(valid_options, "select a card.")
+        if(card=='back' or card=='timeout'):
+            return False
+        position_not=await self.select_option(summon_locations, "Where should it summon to?")
+        if(position_not!="back" and position_not!="timeout"):
+            print(position_not)
+            new_creature=Creature(card, self, position_not)
+            self.hand.remove(card)
+            game_ref.add_creature(new_creature)
+            r, b, g= card.get_summoncost_tuple()
+            self.summon_r = self.summon_r - r
+            self.summon_b = self.summon_b - b
+            self.summon_g = self.summon_g - g
+            return True
+
+
+        return False
+
 
     def get_input(self):
         return "TBD"
@@ -99,13 +127,17 @@ class DiscordPlayer(Player):
         return None
     def get_dpios(self):
         return self.dpios
-    async def select_command(self, options=[]):
+    async def select_command(self, options=[], prompt="Enter a command"):
             #get input from dpios.
-        option= await self.dpios.get_user_command(options)
+        option= await self.dpios.get_user_command(options, prompt)
         return option
-    async def select_option(self, options=[]):
+    async def select_option(self, options=[], prompt="Select a choice"):
         #get input from dpios.
-        option= await self.dpios.get_user_choice(options)
+        option= await self.dpios.get_user_choice(options, prompt)
+        return option
+    async def select_card(self, options=[], prompt="Select a card"):
+        #get input from dpios.
+        option= await self.dpios.get_user_card(options, prompt)
         return option
     async def send_embed_to_user(self):
         embed=self.to_embed('self')
