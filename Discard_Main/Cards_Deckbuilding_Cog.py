@@ -164,6 +164,9 @@ class DeckCog(commands.Cog):
                     if(i.get_deck_name() == deckName):
                         deck = i
                         break
+                if(deck == None): #if the deck entered does not correspond with a deck name in user profile. End the operation
+                    await channel.send(str("The deck you've entered does not exist."))
+                    return
                 if(deck.inDeck(cardvalue) == False):
                     deck.addToDeck(cardvalue) #to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
                     await channel.send("Card has been added to '{}' with no problems!".format(deckName))
@@ -200,6 +203,9 @@ class DeckCog(commands.Cog):
                     if(i.get_deck_name() == deckName):
                         deck = i
                         break
+                if(deck == None): #if the deck entered does not correspond with a deck name in user profile. End the operation
+                    await channel.send(str("The deck you've entered does not exist."))
+                    return
                 cardvalue=multimatched[0]
                 if(len(multimatched)>1):# Tiebreaker is needed here.
                     print("Place Tiebreaker Here.")#do tiebreaker.
@@ -239,6 +245,9 @@ class DeckCog(commands.Cog):
             if(i.get_deck_name() == deckName):
                 deck = i
                 break
+        if(deck == None): #if the deck entered does not correspond with a deck name in user profile. End the operation
+            await channel.send(str("The deck you've entered does not exist."))
+            return
         deck.addListToDeck(cards)
         if(len(does_not_exist) != 0):
             await channel.send(str("The following cards does not exist in your inventory: {}".format(does_not_exist)))
@@ -270,6 +279,9 @@ class DeckCog(commands.Cog):
             if(j.get_deck_name() == deckName):
                 deck = j
                 break
+        if(deck == None): #if the deck entered does not correspond with a deck name in user profile. End the operation
+            await channel.send(str("The deck you've entered does not exist."))
+            return
         for i in cards: #converts all cards regardless of identifier to card_id
             if(card_multimatch(profile, i) == None):
                 cards.remove(i)
@@ -281,6 +293,10 @@ class DeckCog(commands.Cog):
 
     @commands.command(pass_context=True)
     async def viewAllDecks(self, ctx):
+        '''
+        syntax: viewAllDecks
+
+        '''
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel
@@ -301,6 +317,11 @@ class DeckCog(commands.Cog):
 
     @commands.command(pass_context=True)
     async def viewDescription(self, ctx, arg):
+        '''
+        syntax: viewDescription [Name_of_deck]
+        [Name_of_deck]: The current name of the deck
+
+        '''
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel
@@ -313,10 +334,15 @@ class DeckCog(commands.Cog):
             if(i.get_deck_name() == deckName):
                 await channel.send(str(i.get_deck_description()))
                 return
+        await channel.send("The deck you've entered does not exist.")
 
     @commands.command(pass_context=True)
     async def viewCardsInDeck(self, ctx, arg):
-        """"Syntax: viewCardsInDeck 'Deck Name' """
+        '''
+        syntax: viewCardsInDeck [Name_of_deck]
+        [Name_of_deck]: The current name of the deck
+
+        '''
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel
@@ -331,6 +357,9 @@ class DeckCog(commands.Cog):
             if(i.get_deck_name() == deckName):
                 deck = i
                 break
+        if(deck == None): #if the deck entered does not correspond with a deck name in user profile. End the operation
+            await channel.send(str("The deck you've entered does not exist."))
+            return
         for card in deck.get_deck_cards():
             cardobj = CardRetrievalClass().getByID(int(card["card_id"], 16))
             list.append(cardobj)
