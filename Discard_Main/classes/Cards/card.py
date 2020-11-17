@@ -124,7 +124,7 @@ class Skill():
         desc=self.description
         print(type, name, target, desc)
         return trigger, type, name, target, desc
-
+    
     def doSkill(self, user, target, game_ref):
         #What the skill will actually do.
         #user is the entity using the skill.

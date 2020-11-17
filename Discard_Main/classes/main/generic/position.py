@@ -25,6 +25,24 @@ class Position():
         return (self.x(), self.y())
     def get_notation(self):
         return to_notation(self.column, self.row);
+
+    def get_horizontal_and_vertical_distance(self, other):
+        x1, y1= self.x_y()
+        x2, y2= other.x_y()
+        x_dist=abs(x2-x1)
+        y_dist=abs(y2-y1)
+        return x_dist, y_dist
+
+    def get_chessboard_distance(self, other):
+        x_dist, y_dist= self.get_horizontal_and_vertical_distance(other)
+        return max(x_dist, y_dist)
+
+    def get_rectilinear_distance(self, other):
+        x_dist, y_dist= self.get_horizontal_and_vertical_distance(other)
+        return x_dist + y_dist
+    def get_diagonal_and_dist(self, other):
+        x_dist, y_dist= self.get_horizontal_and_vertical_distance(other)
+        return x_dist == y_dist, x_dist
     def same_row(self, other):
         """Check if other is in same row."""
         if(self.y()==other.y()):
@@ -74,22 +92,45 @@ class Position():
             return True
         return False
     def southeast_of(self, other, rangeVal=1):
-        if (self.south_of(other, rangeVal) and self.south_of(other, range_val)):
+        if (self.south_of(other, rangeVal) and self.east_of(other, range_val)):
             return True
         return False
     def southwest_of(self, other, rangeVal=1):
         if (self.south_of(other, rangeVal) and self.west_of(other, range_val)):
             return True
         return False
-    def diagonal_to(self, other, rangeVal=1):
-        if not(self.same_row(other) or self.same_column(other)): #test 1. only diagonals.
-            if(self.north_of(other) or self.south_of(other) or self.east_of(other) or self.west_of(other)):
+
+    def cardinal_to(self, other, rangeVal=1):
+        if (self.same_row(other) or self.same_column(other)): #No Diagonals
+            if(self.get_chessboard_distance(other) <=rangeVal):
                 return True
         return False
-    def adjacent_to(self, other):
-        if(self.same_row(other) or self.same_column(other)): #test 1. no diagonals.
-            if((self.north_of(other)) or (self.south_of(other)) or (self.east_of(other)) or (self.west_of(other))):
+    def diagonal_to(self, other, rangeVal=1):
+        if not(self.same_row(other) or self.same_column(other)): #test 1. only diagonals.
+            diagonalcheck, dist= self.get_diagonal_and_dist(other):
+            if(diagonalcheck and dist<=rangeVal):
                 return True
+        return False
+
+    def cardinal_or_diagonal_to(self, other, rangeVal=1):
+        if not(self.same_row(other) or self.same_column(other)): #test 1. only diagonals.
+            diagonalcheck, dist= self.get_diagonal_and_dist(other):
+            if(diagonalcheck and dist<=rangeVal):
+                return True
+        return False
+
+    def adjacent_to(self, other):
+        return self.cardinal_to(other, 1)
+
+    def rectilinear_to(self, other, rangeVal=1):
+        if (self.get_rectilinear_distance(other)<=rangeVal):
+            return True
+        return False
+    def is_equal(self, other):
+        x1, y1 = self.x_y()
+        x2, y2 = other.x_y()
+        if(x1==x2 and y1==y2):
+            return True
         return False
      # adding two objects
     def __add__(self, other):

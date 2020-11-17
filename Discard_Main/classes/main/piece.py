@@ -16,7 +16,7 @@ from discord import Webhook, AsyncWebhookAdapter
 from .generic.position import Position
 from ..Cards.card import CreatureCard
 from ..imagemakingfunctions.imaging import *
-
+from .target_matching import match_with_target_data
 class Piece:
     """Base Class for Creature and Leader pieces
     # NOTE: Creatures and Leaders will be Classes decended from this.
@@ -26,6 +26,9 @@ class Piece:
         #Img should be a PIL image object
         self.player=player #the player object this piece belongs to.
         self.name=name
+
+        self.game_id=0
+
         self.max_hp=hp
         self.damage=0
         #Current HP= max_hp - damage.
@@ -37,6 +40,8 @@ class Piece:
         self.display_image=img
         self.image=None
         current_options={}
+    def set_game_id(self, new_id):
+        self.game_id=new_id
     def generate_options(self):
         #creates a new dictionary of all options.
         #Universal opitons are: MOVE, ... END.
@@ -128,10 +133,13 @@ class Piece:
 
     def get_image(self):
         return self.image
+    def get_team(self):
+        return self.player.get_team()
     def string_status(self):
         result="{},{}/{}".format(self.name, self.get_hp(), self.get_hp())
         return result
-
+    def get_position(self):
+        return self.position
     def get_embed():
         pass
 
@@ -168,6 +176,7 @@ class Creature(Piece):
         embed=self.card.to_DiscordEmbed(use_image=False)
         embed.description="{}/{}".format(self.get_hp(), self.max_hp)
         return embed
+
 
 
 

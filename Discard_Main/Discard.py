@@ -95,6 +95,7 @@ class Card_Duel():
 
     def add_piece(self, piece):
         self.entity_list.append(piece)
+
     def move_piece(self, piece):
         piece.get_move_options(self.grid)
 

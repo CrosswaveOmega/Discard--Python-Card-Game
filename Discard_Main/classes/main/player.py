@@ -84,8 +84,6 @@ class Player():
             self.summon_b = self.summon_b - b
             self.summon_g = self.summon_g - g
             return True
-
-
         return False
 
 
@@ -94,6 +92,8 @@ class Player():
     def get_output(self):
         #Ask for infomation here.
         print("TBD")
+    def get_team(self):
+        return self.team
     def to_embed(self, view):
         hand_disp=len(self.hand)
         if view=='self':

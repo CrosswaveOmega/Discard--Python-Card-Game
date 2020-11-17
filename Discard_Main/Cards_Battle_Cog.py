@@ -34,7 +34,7 @@ from .Discard import *
 
     #<a:stopwatch:774741008495542284>
     #<a:stopwatch_15:774741008793337856>
-async def get_everything(bot, author, channel):
+async def get_everything(bot, author, channel, team=1):
     """Returns profile and player of the passed in info"""
     print("get profile of user.")
     profile = SingleUser.getById(author.id)
@@ -46,7 +46,7 @@ async def get_everything(bot, author, channel):
         playerDeck.append(newcard)
     player_DPIOS=DPIOS(channel, author, bot)
     await player_DPIOS.send_order()
-    player = DiscordPlayer(deck=playerDeck, team=1, dpios=player_DPIOS)
+    player = DiscordPlayer(deck=playerDeck, team=team, dpios=player_DPIOS)
     return profile, player
 
 class CardCogBattle(commands.Cog):
@@ -122,8 +122,8 @@ class CardCogBattle(commands.Cog):
         if messagetask2 in done:
             user2=messagetask2.result();
 
-        profile1, player1= await get_everything(bot, user1, room1)
-        profile2, player2= await get_everything(bot, user2, room2)
+        profile1, player1= await get_everything(bot, user1, room1, team=1)
+        profile2, player2= await get_everything(bot, user2, room2, team=2)
 
         thisDuel=Card_Duel(bot)
         thisDuel.addPlayer(player1)
@@ -145,7 +145,7 @@ class CardCogBattle(commands.Cog):
         thisDuel.add_piece(testPiece2)
 
         await thisDuel.start_game()
-        
+
     @commands.command()
     async def start_test_duel (self, ctx, *args): #Start a duel
         '''
