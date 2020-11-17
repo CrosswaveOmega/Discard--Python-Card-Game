@@ -62,7 +62,27 @@ class CardCogBattle(commands.Cog):
         thisDuel=Card_Duel(bot)
         thisDuel.addPlayer(player1)
         #Start Card_Duel
+    @commands.command()
+    async def start_2_player_duel_test (self, ctx, *args): #Start a duel
+        '''
+        syntax: start_test_duel
+        This function is for starting a CardDuel, and TESTING it.
 
+        Modify however you wish.
+
+
+        '''
+        bot=ctx.bot
+        author=ctx.message.author;
+        channel=ctx.message.channel;
+
+        server=channel.guild
+
+        room1=server.fetch_channel(777997792558710804)
+        room2=server.fetch_channel(777998040283086900)
+
+
+        channel_1=server.fetch
     @commands.command()
     async def start_test_duel (self, ctx, *args): #Start a duel
         '''
