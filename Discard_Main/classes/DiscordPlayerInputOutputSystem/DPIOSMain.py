@@ -69,6 +69,23 @@ class DPIOS:
         message=await self.textchannel.send(content="{}\n{}".format(prompt, outputString))
         result=await make_internal_tiebreaker(self.bot, self.user, self.textchannel, choices, message=message, timeout_enable=True, delete_after=True)
         return result
+    async def get_user_piece(self, choice_list, prompt=""):
+        """select a piece from a list of piece objects.  Same as Tiebreaker.
+        choice_list is a single list of cardobjects.  prompt is a possible prompt.
+        """
+        choices=[]
+        numberlist=["1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟"]
+        defchoice=["back","", '🔙']
+        choices.append(defchoice)
+        outputString=""
+        for i in range(0,len(choice_list)):
+            name=choice_list[i].get_name()
+            emoji=numberlist[i]
+            choices.append([choice_list[i], name, emoji])
+            outputString=outputString + " {}[{}] ".format(emoji, name)
+        message=await self.textchannel.send(content="{}\n{}".format(prompt, outputString))
+        result=await make_internal_tiebreaker(self.bot, self.user, self.textchannel, choices, message=message, timeout_enable=True, delete_after=True)
+        return result
     async def get_user_command(self, actions, prompt="ENTER COMMAND:"):
         """get command from user.  Same as Tiebreaker.
         actions is a single list of strings.  Prompt is the prompt.

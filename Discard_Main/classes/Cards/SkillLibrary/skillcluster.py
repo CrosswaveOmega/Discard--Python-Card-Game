@@ -11,13 +11,14 @@ class BasicAttack(card.Skill):  # Custom Class
         super().__init__(name, trigger, target, type, limit, description)
 
     def doSkill(self, user, target, game_ref):
-        # What the skill will actually do.
-        # user is the entity using the skill.
-        # target is a LIST what the skill is being used on.
-        # Game_ref is a reference to the Card_Duel's helper class.
-        # Use a dictionary.
+        """
+         What the skill will actually do.
+         user is the entity using the skill.
+         target is a LIST of entities the skill is being used on.
+         game_ref is a reference to the Card_Duel's helper class.
+         Use a dictionary."""
 
-        warning("INCOMPLETE.")
+        print("INCOMPLETE.")
         dictionary={}  # Initialization of dictionary
         dictionary["user"]=user
         dictionary["target"]=target
@@ -49,6 +50,10 @@ class BasicHeal(card.Skill):
         heal_dict["target"] = target
         heal_dict["heal_amount"] = self.heal_amount
         print("The target piece can be healed by "+str(self.heal_amount)+" at most.")
+        for entity in heal_dict["target"]:
+            print("HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
+            if True:  # here, it would check for some kind of effect. for record.
+                piece.heal_damage(dictionary["damage"])
 
 
 # This class gives certain creatures the ability to diminish the amount of damage they receive from an attack.
@@ -68,7 +73,8 @@ class BasicShield(card.Skill):
         shield_dict["target"] = target
         shield_dict["shield_amount"] = self.shield_amount
         print("The amount of damage that can be shielded by this skill is: "+str(self.shield_amount))
-
+        print("Okay normally, this skill should reduce incoming damage.")
+        print("It will do this with a effect.")
 
 # This class allows for attacks which are split into multiple parts.
 # It can be used to attack multiple targets if desired as a part of one total attack sequence.
@@ -83,7 +89,7 @@ class MultiAttack(card.Skill):
         self.damage_tag = damage_tag
         super().__init__(name, trigger, target, type, limit, description)
 
-    def doSKill(self, user, target, game_ref):
+    def doSkill(self, user, target, game_ref):
 
         # This is the most basic version of the multi-stage attack.
         # It strikes three times, but this could easily be changed if necessary.

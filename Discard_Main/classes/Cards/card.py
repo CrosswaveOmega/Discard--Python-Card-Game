@@ -99,10 +99,18 @@ class Skill():
         self.type= type #The type of skill.
         self.limit= limit #When the skill can not be used.
         self.description= description # What the skill will say it does.
-
+    def get_name(self):
+        return self.name
+    def get_trigger(self):
+        return self.trigger
+    def can_use(self):
+        #Check if skill can be used.
+        return True
     def __str__(self):
         print("TBD.")
         return ""
+    def get_target_data(self):
+        return self.target_value
 
     def make_target_string(self):
         target=self.target_value
@@ -124,7 +132,7 @@ class Skill():
         desc=self.description
         print(type, name, target, desc)
         return trigger, type, name, target, desc
-    
+
     def doSkill(self, user, target, game_ref):
         #What the skill will actually do.
         #user is the entity using the skill.

@@ -53,6 +53,9 @@ class Player():
         self.leader=leader
     def get_PlayerType(self):
         return self.PlayerType
+    async def select_piece(self, options=[], prompt=""):
+            #get input from dpios.
+        pass
     async def select_command(self, options=[], prompt=""):
             #get input from dpios.
         pass
@@ -127,6 +130,9 @@ class DiscordPlayer(Player):
         return None
     def get_dpios(self):
         return self.dpios
+    async def select_piece(self, options=[], prompt="Select a piece"):
+        option= await self.dpios.get_user_piece(options, prompt)
+        return option
     async def select_command(self, options=[], prompt="Enter a command"):
             #get input from dpios.
         option= await self.dpios.get_user_command(options, prompt)

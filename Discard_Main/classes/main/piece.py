@@ -39,7 +39,12 @@ class Piece:
         self.position=Position(notation=position)
         self.display_image=img
         self.image=None
-        current_options={}
+
+        self.current_options={}
+
+        self.effects={}
+    def add_effect(self, effect_name, effect):
+        pass
     def set_game_id(self, new_id):
         self.game_id=new_id
     def generate_options(self):
@@ -49,7 +54,8 @@ class Piece:
         actions["MOVE"]=self.move_limit
         actions["END"]=1
         return actions
-
+    def get_name(self):
+        return self.name
     async def do_move(self, game_ref):
         move_options=self.get_move_options(game_ref.get_grid())
 
@@ -124,6 +130,12 @@ class Piece:
     def add_damage(self, damage_add=0):
         self.damage=self.damage+ damage_add
         print("Add Damage is incomplete.")
+
+    def heal_damage(self, damage_add=0):
+        self.damage=self.damage- damage_add
+        if(self.damage<0):
+            self.damage=0
+        print("Add Damage is incomplete.")
     def change_position(self, new_position_notation):
         self.position=Position(notation=new_position_notation)
     def get_grid_card_icon(self):
@@ -172,6 +184,70 @@ class Creature(Piece):
         self.card=creature_card
 
         self.set_image_by_url(self.display_image)
+
+
+    def generate_options(self):
+        #creates a new dictionary of all options.
+        #Universal opitons are: MOVE, ... END.
+        actions={}
+        actions["MOVE"]=self.move_limit
+        actions["SKILL"]=1
+        actions["END"]=1
+        return actions
+    async def skill_option(self, game_ref):
+        """Processing of skill."""
+
+        skill_list=[]
+        if(skill_1!=None):
+            skill_list.append(skill_1.get_name())
+        if(skill_2!=None):
+            skill_list.append(skill_2.get_name())
+        if(skill_3!=None):
+            skill_list.append(skill_3.get_name())
+
+
+        option=await self.player.select_option(skill_list, "Select a skill")
+        if(option=="back" or option=="timeout"):
+            return False
+        skill=None
+        if(option==skill_1.get_name()):
+            skill=skill_1
+        if(option==skill_2.get_name()):
+            skill=skill_2
+        if(option==skill_3.get_name()):
+            skill=skill_3
+
+        target_list, amount=match_with_target_data(skill.get_target_data(), self, game_ref)
+        if(len(target_list)<=amount):
+            skill.doSkill(self, target, game_ref)
+            return True
+
+        selected_targets=[]
+        for i in range(0,amount):
+            target=await self.player.select_piece(target_list, "Select a target.")
+            if(target=="back" or target=="timeout"):
+                return False
+            selected_targets.append(target)
+        skill.doSkill(self, target, game_ref)
+        return True
+
+    async def process_option(self, game_ref, action):
+        my_turn=True
+        print(action)
+        completed=False
+        if (action=="MOVE"):
+            completed= await self.do_move(game_ref)
+        elif (action=="SKILL"):
+            completed=await self.skill_option(game_ref)
+            #Draw one card.  Add it to the hand.
+        elif (action=="END"):
+            my_turn=False
+
+        elif (action == "timeout"):
+            print("Timeout")
+            my_turn == False
+        return my_turn, completed
+
     def get_embed(self):
         embed=self.card.to_DiscordEmbed(use_image=False)
         embed.description="{}/{}".format(self.get_hp(), self.max_hp)
