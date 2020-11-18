@@ -1,81 +1,87 @@
-
 from .. import card
 from ..SkillLibrary.skillcluster import *
+
+
 class TestCard(card.CardBase):
     """docstring for TestCard."""
-    ID=0x000FF          #• ID- The internal ID of the card.
-                    #All cards have this, and they should all be unique.
-                    #consists of a five digit hexadecimal number
-                    #Cards should be referenced by this ID, not their name.
-                    #(00000  to FFFFF, makes maximum of 1,048,576 cards.
+    ID = 0x000FF  # • ID- The internal ID of the card.
+
+    # All cards have this, and they should all be unique.
+    # consists of a five digit hexadecimal number
+    # Cards should be referenced by this ID, not their name.
+    # (00000  to FFFFF, makes maximum of 1,048,576 cards.
     def __init__(self):
-        self.ID=0x000FF          #• ID- The internal ID of the card.
-                            #All cards have this, and they should all be unique.
-                            #consists of a five digit hexadecimal number
-                            #Cards should be referenced by this ID, not their name.
-                            #(00000  to FFFFF, makes maximum of 1,048,576 cards.
-        name="Test Name"
-        icon="🎴"
-        image="NA"
-        type="None"
-        super().__init__(self.ID,name, icon, type, image)
+        self.ID = 0x000FF  # • ID- The internal ID of the card.
+        # All cards have this, and they should all be unique.
+        # consists of a five digit hexadecimal number
+        # Cards should be referenced by this ID, not their name.
+        # (00000  to FFFFF, makes maximum of 1,048,576 cards.
+        name = "Test Name"
+        icon = "🎴"
+        image = "NA"
+        type = "None"
+        super().__init__(self.ID, name, icon, type, image)
 
 
 class TestCard2(card.CardBase):
     """docstring for TestCard."""
-    ID=0x0000F          #• ID- The internal ID of the card.
-                    #All cards have this, and they should all be unique.
-                    #consists of a five digit hexadecimal number
-                    #Cards should be referenced by this ID, not their name.
-                    #(00000  to FFFFF, makes maximum of 1,048,576 cards.
+    ID = 0x0000F  # • ID- The internal ID of the card.
+
+    # All cards have this, and they should all be unique.
+    # consists of a five digit hexadecimal number
+    # Cards should be referenced by this ID, not their name.
+    # (00000  to FFFFF, makes maximum of 1,048,576 cards.
     def __init__(self):
-        self.ID=0x0000F          #• ID- The internal ID of the card.
-                            #All cards have this, and they should all be unique.
-                            #consists of a five digit hexadecimal number
-                            #Cards should be referenced by this ID, not their name.
-                            #(00000  to FFFFF, makes maximum of 1,048,576 cards.
-        name="Test Name 2"
-        icon="🎴"
-        image="NA"
-        type="None"
-        super().__init__(self.ID,name, icon, type, image)
+        self.ID = 0x0000F  # • ID- The internal ID of the card.
+        # All cards have this, and they should all be unique.
+        # consists of a five digit hexadecimal number
+        # Cards should be referenced by this ID, not their name.
+        # (00000  to FFFFF, makes maximum of 1,048,576 cards.
+        name = "Test Name 2"
+        icon = "🎴"
+        image = "NA"
+        type = "None"
+        super().__init__(self.ID, name, icon, type, image)
+
 
 class TestCreature1(card.CreatureCard):
     """docstring for TestCard."""
-    ID=0x00001          #• ID- The internal ID of the card.
-                    #All cards have this, and they should all be unique.
-                    #consists of a five digit hexadecimal number
-                    #Cards should be referenced by this ID, not their name.
-                    #(00000  to FFFFF, makes maximum of 1,048,576 cards.
+    ID = 0x00001  # • ID- The internal ID of the card.
+
+    # All cards have this, and they should all be unique.
+    # consists of a five digit hexadecimal number
+    # Cards should be referenced by this ID, not their name.
+    # (00000  to FFFFF, makes maximum of 1,048,576 cards.
     def __init__(self):
-        self.ID=0x00001          #• ID- The internal ID of the card.
-                            #All cards have this, and they should all be unique.
-                            #consists of a five digit hexadecimal number
-                            #Cards should be referenced by this ID, not their name.
-                            #(00000  to FFFFF, makes maximum of 1,048,576 cards.
-        name="Test Name For A Creature"
-        icon="🐻"
-        image="NA"
-        type="None"
-        hp=10
-        speed=9 #Speed is 0-99.
-        #Defining summon cost.
-        summonr=3
-        summonb=2
-        summong=2
-        #Defining Skills.
-        skill1=BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type", limit="limit", description="Type description here.", damage=12)
-        skill2=None #CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
-        skill3=None #CustomSkill3("Custom Name 3", "trigger", "target", "type", "limit", "Type description here.")
-        #Defining move Style.
-        movestyle="STEP 2"
-        movelimit=1
+        self.ID = 0x00001  # • ID- The internal ID of the card.
+        # All cards have this, and they should all be unique.
+        # consists of a five digit hexadecimal number
+        # Cards should be referenced by this ID, not their name.
+        # (00000  to FFFFF, makes maximum of 1,048,576 cards.
+        name = "Test Name For A Creature"
+        icon = "🐻"
+        image = "NA"
+        type = "None"
+        hp = 10
+        speed = 9  # Speed is 0-99.
+        # Defining summon cost.
+        summonr = 3
+        summonb = 2
+        summong = 2
+        # Defining Skills.
+        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type",
+                             limit="limit", description="Type description here.", damage=12)
+        skill2 = None  # CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
+        skill3 = None  # CustomSkill3("Custom Name 3", "trigger", "target", "type", "limit", "Type description here.")
+        # Defining move Style.
+        movestyle = "STEP 2"
+        movelimit = 1
 
         super().__init__(self.ID, name, icon, image=image, \
-        hp=hp, speed=2,\
-        summoncost_r=summonr, summoncost_b=summonb, summoncost_g=summong, \
-        skill_1=skill1, skill_2=skill2, skill_3=skill3, \
-        movestyle=movestyle, movelimit=movelimit)
+                         hp=hp, speed=2, \
+                         summoncost_r=summonr, summoncost_b=summonb, summoncost_g=summong, \
+                         skill_1=skill1, skill_2=skill2, skill_3=skill3, \
+                         movestyle=movestyle, movelimit=movelimit)
 
 
 class TestCreatureAlpha(card.CreatureCard):
@@ -96,17 +102,20 @@ class TestCreatureAlpha(card.CreatureCard):
         summonb = 2
         summong = 2
 
-        #These are the creature's skills
-        skill1 = MultiAttack("Multi Attacks", "command", ("Rectilinear", "Enemy", "x3"), "attack", "limit", "description", damage=1, attacks=3, damage_tag="")
+        # These are the creature's skills
+        skill1 = MultiAttack("Multi Attacks", "command", ("Rectilinear", "Enemy", "x3"), "attack", "limit",
+                             "description", damage=1, attacks=3, damage_tag="")
         skill2 = BasicShield(name="Shield", shield_amount=2)
-        skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description", heal_amount=1)
+        skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
+                           heal_amount=1)
 
         # This defines the creature's move style
         move_style = "STEP 1"
         movelimit = 1
 
-        super().__init__(self.ID, name, icon,image=image, hp=hp, speed=speed, summoncost_r=summonr, summoncost_b=summonb, summoncost_g=summong,
-                         skill_1=skill1, skill_2=skill2,skill_3=skill3, movestyle=move_style, movelimit=movelimit)
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
+                         summoncost_b=summonb, summoncost_g=summong,
+                         skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 
 class TestCreatureBeta(card.CreatureCard):
@@ -162,7 +171,8 @@ class TestCreatureDelta(card.CreatureCard):
         summong = 1
 
         # These are the creature's skills
-        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit", "Type description here.", damage=5)
+        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit",
+                             "Type description here.", damage=5)
         skill2 = BasicShield("Shield", "command", ("self", "Ally", "x1"), "limit", "description", shield_amount=2)
         skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
                            heal_amount=1)
@@ -174,6 +184,7 @@ class TestCreatureDelta(card.CreatureCard):
         super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
                          summoncost_b=summonb, summoncost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
+
 
 class TestCreature2(card.CreatureCard):
     # This is test creature 2, so its ID is 2 for now.
@@ -194,7 +205,8 @@ class TestCreature2(card.CreatureCard):
         summong = 1
 
         # These are the creature's skills
-        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit", "Type description here.", damage=6)
+        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit",
+                             "Type description here.", damage=6)
         skill2 = BasicShield("Shield", "auto", ("self", "Ally", "x1"), "type", "limit", "description", shield_amount=1)
         skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
                            heal_amount=2)
@@ -206,6 +218,7 @@ class TestCreature2(card.CreatureCard):
         super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
                          summoncost_b=summonb, summoncost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
+
 
 class TestCreature3(card.CreatureCard):
     # This is test creature 3, so its ID is 3 for now.
@@ -226,7 +239,8 @@ class TestCreature3(card.CreatureCard):
         summong = 3
 
         # These are the creature's skills
-        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit", "Type description here.", damage=8)
+        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit",
+                             "Type description here.", damage=8)
         skill2 = BasicShield("Shield", "command", ("self", "Ally", "x1"), "limit", "description", shield_amount=1)
         skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
                            heal_amount=3)

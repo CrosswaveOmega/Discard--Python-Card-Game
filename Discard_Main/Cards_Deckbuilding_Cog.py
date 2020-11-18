@@ -17,13 +17,16 @@ from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
 from .classes.Cards.DeckBuilding import *
-#from discord.ext.tasks import loop
 
-#Primary area with commands.
+
+# from discord.ext.tasks import loop
+
+# Primary area with commands.
 
 
 class DeckCog(commands.Cog):
     """Commands for deck management."""
+
     @commands.command(pass_context=True)
     async def createDeck(self, ctx, *args):
         '''
@@ -38,12 +41,12 @@ class DeckCog(commands.Cog):
 
         user_id = author.id
         profile = SingleUser.getByID(user_id)
-        if(len(args) == 1):
+        if (len(args) == 1):
             deckName = args[0]
             deck = Deck()
             deck.set_deck_name(deckName)
             for i in profile.get_decks():
-                if(i.get_deck_name() == deckName):
+                if (i.get_deck_name() == deckName):
                     await channel.send(str("A deck with that name already exist."))
                     return
             print(str(deck))
@@ -66,23 +69,21 @@ class DeckCog(commands.Cog):
         SingleUser = SingleUserProfile("arg")
         user_id = author.id
         profile = SingleUser.getByID(user_id)
-        if(len(args) == 2):
+        if (len(args) == 2):
             deckName = args[0]
             new_deckName = args[1]
             for j in profile.get_decks():
-                if(j.get_deck_name() == new_deckName):
-
+                if (j.get_deck_name() == new_deckName):
                     await channel.send(str("A deck with that name already exist."))
                     return
             for i in profile.get_decks():
-                if(i.get_deck_name() == deckName):
+                if (i.get_deck_name() == deckName):
                     i.set_deck_name(new_deckName)
                     await channel.send("Deck '{}' has been renamed to {}.".format(deckName, new_deckName))
                     return
             await channel.send(str("The deck does not exist."))
         else:
             await channel.send(str("Please enter the command with the deck name along with a new deck name."))
-
 
     @commands.command(pass_context=True)
     async def deleteDeck(self, ctx, *args):
@@ -98,17 +99,16 @@ class DeckCog(commands.Cog):
 
         user_id = author.id
         profile = SingleUser.getByID(user_id)
-        if(len(args) == 1):
+        if (len(args) == 1):
             deckName = args[0]
             for i in profile.get_decks():
-                if(i.get_deck_name() == deckName):
+                if (i.get_deck_name() == deckName):
                     profile.get_decks().remove(i)
                     await channel.send("Deck '{}' has been deleted.".format(deckName))
                     return
             await channel.send(str("The deck does not exist."))
         else:
             await channel.send(str("Please enter the command with the deck name."))
-
 
     @commands.command(pass_context=True)
     async def changeDeckDescription(self, ctx, arg1, *, arg2):
@@ -128,14 +128,15 @@ class DeckCog(commands.Cog):
         deckName = arg1
         new_deckDescription = arg2
         for i in profile.get_decks():
-            if(i.get_deck_name() == deckName):
+            if (i.get_deck_name() == deckName):
                 i.set_deck_description(new_deckDescription)
                 await channel.send(str("The description has been changed!"))
                 return
         await channel.send(str("The deck does not exist."))
 
     @commands.command(pass_context=True)
-    async def addCardToDeck(self, ctx, *args): #check if card exist in inventory, args can have custom name, card id, and card name
+    async def addCardToDeck(self, ctx,
+                            *args):  # check if card exist in inventory, args can have custom name, card id, and card name
         '''
         syntax: addCard [Name_of_deck][Card in inventory]
         [Name_of_deck]: The current name of the deck
@@ -154,21 +155,23 @@ class DeckCog(commands.Cog):
 
             card = args[1]
             deck = None
-            multimatched=card_multimatch(profile, card)
+            multimatched = card_multimatch(profile, card)
 
-            if (multimatched != None): #check if card exist in player's inventory.
-                cardvalue=multimatched[0]
-                if(len(multimatched)>1):# Tiebreaker is needed here.
-                    print("Place Tiebreaker Here.")#do tiebreaker.
+            if (multimatched != None):  # check if card exist in player's inventory.
+                cardvalue = multimatched[0]
+                if (len(multimatched) > 1):  # Tiebreaker is needed here.
+                    print("Place Tiebreaker Here.")  # do tiebreaker.
                 for i in profile.get_decks():
-                    if(i.get_deck_name() == deckName):
+                    if (i.get_deck_name() == deckName):
                         deck = i
                         break
-                if(deck == None): #if the deck entered does not correspond with a deck name in user profile. End the operation
+                if (
+                        deck == None):  # if the deck entered does not correspond with a deck name in user profile. End the operation
                     await channel.send(str("The deck you've entered does not exist."))
                     return
-                if(deck.inDeck(cardvalue) == False):
-                    deck.addToDeck(cardvalue) #to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
+                if (deck.inDeck(cardvalue) == False):
+                    deck.addToDeck(
+                        cardvalue)  # to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
                     await channel.send("Card has been added to '{}' with no problems!".format(deckName))
 
 
@@ -176,7 +179,6 @@ class DeckCog(commands.Cog):
                     await channel.send(str("Hang on, This card is already in your deck!"))
             else:
                 await channel.send(str("This card was not found in your inventory."))
-
 
     @commands.command(pass_context=True)
     async def removeCardFromDeck(self, ctx, *args):
@@ -197,26 +199,26 @@ class DeckCog(commands.Cog):
             deckName = args[0]
             card = args[1]
             deck = None
-            multimatched=card_multimatch(profile, card)
-            if(multimatched != None):
+            multimatched = card_multimatch(profile, card)
+            if (multimatched != None):
                 for i in profile.get_decks():
-                    if(i.get_deck_name() == deckName):
+                    if (i.get_deck_name() == deckName):
                         deck = i
                         break
-                if(deck == None): #if the deck entered does not correspond with a deck name in user profile. End the operation
+                if (
+                        deck == None):  # if the deck entered does not correspond with a deck name in user profile. End the operation
                     await channel.send(str("The deck you've entered does not exist."))
                     return
-                cardvalue=multimatched[0]
-                if(len(multimatched)>1):# Tiebreaker is needed here.
-                    print("Place Tiebreaker Here.")#do tiebreaker.
-                if(deck.inDeck(cardvalue) == True):
+                cardvalue = multimatched[0]
+                if (len(multimatched) > 1):  # Tiebreaker is needed here.
+                    print("Place Tiebreaker Here.")  # do tiebreaker.
+                if (deck.inDeck(cardvalue) == True):
                     deck.removeFromDeck(cardvalue)
                     await channel.send(str("Card has been removed from deck!"))
                 else:
                     await channel.send(str("The card is not in your deck."))
             else:
                 await channel.send(str("The card is not in your deck."))
-
 
     @commands.command(pass_context=True)
     async def multiAddToDeck(self, ctx, arg1, *, arg2):
@@ -238,22 +240,23 @@ class DeckCog(commands.Cog):
         does_not_exist = []
         deck = None
         for j in cards:
-            if(card_multimatch(profile, j) == None): #use card_multimatch to check if the cards exist in the inventory
+            if (card_multimatch(profile,
+                                j) == None):  # use card_multimatch to check if the cards exist in the inventory
                 does_not_exist.append(j)
                 cards.remove(j)
         for i in profile.get_decks():
-            if(i.get_deck_name() == deckName):
+            if (i.get_deck_name() == deckName):
                 deck = i
                 break
-        if(deck == None): #if the deck entered does not correspond with a deck name in user profile. End the operation
+        if (
+                deck == None):  # if the deck entered does not correspond with a deck name in user profile. End the operation
             await channel.send(str("The deck you've entered does not exist."))
             return
         deck.addListToDeck(cards)
-        if(len(does_not_exist) != 0):
+        if (len(does_not_exist) != 0):
             await channel.send(str("The following cards does not exist in your inventory: {}".format(does_not_exist)))
         else:
             await channel.send(str("All the cards have been added to your deck!"))
-
 
     @commands.command(pass_context=True)
     async def multiRemoveFromDeck(self, ctx, arg1, *, arg2):
@@ -276,14 +279,15 @@ class DeckCog(commands.Cog):
         deck = None
         counter = 0
         for j in profile.get_decks():
-            if(j.get_deck_name() == deckName):
+            if (j.get_deck_name() == deckName):
                 deck = j
                 break
-        if(deck == None): #if the deck entered does not correspond with a deck name in user profile. End the operation
+        if (
+                deck == None):  # if the deck entered does not correspond with a deck name in user profile. End the operation
             await channel.send(str("The deck you've entered does not exist."))
             return
-        for i in cards: #converts all cards regardless of identifier to card_id
-            if(card_multimatch(profile, i) == None):
+        for i in cards:  # converts all cards regardless of identifier to card_id
+            if (card_multimatch(profile, i) == None):
                 cards.remove(i)
             else:
                 cards[counter] = card_multimatch(profile, i)[0]["card_id"]
@@ -307,10 +311,10 @@ class DeckCog(commands.Cog):
         list = []
         for i in profile.get_decks():
             list.append(i.get_deck_name())
-        message_content=""
+        message_content = ""
         for j in list:
-            message_content=message_content+str(j)+"\n"
-        if(len(list)==0):
+            message_content = message_content + str(j) + "\n"
+        if (len(list) == 0):
             await channel.send("NO DECKS IN USER PROFILE.")
         else:
             await channel.send(content=message_content)
@@ -331,7 +335,7 @@ class DeckCog(commands.Cog):
         profile = SingleUser.getByID(user_id)
         deckName = arg
         for i in profile.get_decks():
-            if(i.get_deck_name() == deckName):
+            if (i.get_deck_name() == deckName):
                 await channel.send(str(i.get_deck_description()))
                 return
         await channel.send("The deck you've entered does not exist.")
@@ -354,19 +358,20 @@ class DeckCog(commands.Cog):
         deck = None
         list = []
         for i in profile.get_decks():
-            if(i.get_deck_name() == deckName):
+            if (i.get_deck_name() == deckName):
                 deck = i
                 break
-        if(deck == None): #if the deck entered does not correspond with a deck name in user profile. End the operation
+        if (
+                deck == None):  # if the deck entered does not correspond with a deck name in user profile. End the operation
             await channel.send(str("The deck you've entered does not exist."))
             return
         for card in deck.get_deck_cards():
             cardobj = CardRetrievalClass().getByID(int(card["card_id"], 16))
             list.append(cardobj)
-        message_content=""
+        message_content = ""
         for j in list:
-            message_content=message_content+str(j)+"\n"
-        if(len(list)==0):
+            message_content = message_content + str(j) + "\n"
+        if (len(list) == 0):
             await channel.send("NO CARDS IN DECK.")
         else:
             await channel.send(content=message_content)

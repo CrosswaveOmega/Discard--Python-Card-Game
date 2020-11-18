@@ -1,9 +1,8 @@
-
-
 class Condition:
     def __init__(self):
         condition_list = []
         print("TBD")
+
 
 class Settings:
     def __init__(self):

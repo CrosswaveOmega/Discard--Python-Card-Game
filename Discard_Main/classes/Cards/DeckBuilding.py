@@ -4,18 +4,20 @@ from .custom import *
 from .card import *
 import json
 
+
 class Deck():
-    def __init__(self, deck_name="Brand new deck", deck_description="Enter a description for this deck.", dictionary=None):
+    def __init__(self, deck_name="Brand new deck", deck_description="Enter a description for this deck.",
+                 dictionary=None):
         self.deck_name = deck_name
         self.deck_description = deck_description
         self.deck_cards = []
 
-        if(dictionary!=None): #initalizing from dictionary
+        if (dictionary != None):  # initalizing from dictionary
             for i, v in dictionary.items():
                 if hasattr(self, i):
                     setattr(self, i, v)
 
-    #Setters and Getters
+    # Setters and Getters
     def set_deck_name(self, deck_name):
         self.deck_name = deck_name
 
@@ -23,7 +25,7 @@ class Deck():
         return self.deck_name
 
     def get_shorthand_rep(self):
-        returnString="[{}|{}]".format(self.deck_name, len(self.deck_cards))
+        returnString = "[{}|{}]".format(self.deck_name, len(self.deck_cards))
         return returnString
 
     def set_deck_description(self, deck_description):
@@ -36,36 +38,36 @@ class Deck():
         return self.deck_cards
 
     def update_customs(self, user_inv):
-        #update a deck's card customs.
-        #user_inv is the result returned by a userprofile's get_cards() funciton.
+        # update a deck's card customs.
+        # user_inv is the result returned by a userprofile's get_cards() funciton.
         for i in range(len(self.deck_cards)):
-            #if (self.deck_cards[i]["card_id"] == card_id):
-            key=self.deck_cards[i]["inv_key"]
-            if(user_inv[key]["custom"]!=None):
-                self.deck_cards[i]["custom"]=user_inv[key]["custom"]
+            # if (self.deck_cards[i]["card_id"] == card_id):
+            key = self.deck_cards[i]["inv_key"]
+            if (user_inv[key]["custom"] != None):
+                self.deck_cards[i]["custom"] = user_inv[key]["custom"]
             if (self.deck_cards[i]["inv_key"] == card_value["inv_key"]):
                 return True
         return False
 
     def inDeck(self, card_value):
-        #Check if the card_value is in the current deck
+        # Check if the card_value is in the current deck
 
-        #Note: Switch to matching based on the inv_key
+        # Note: Switch to matching based on the inv_key
         for i in range(len(self.deck_cards)):
-            #if (self.deck_cards[i]["card_id"] == card_id):
+            # if (self.deck_cards[i]["card_id"] == card_id):
             if (self.deck_cards[i]["inv_key"] == card_value["inv_key"]):
                 return True
         return False
 
     def addToDeck(self, card_value):
-        #Add card_id along with its custom_id (if available) to the deck
-        #UPDATE: card_id is replaced with card_value.  It has to add from a user's inventory.
+        # Add card_id along with its custom_id (if available) to the deck
+        # UPDATE: card_id is replaced with card_value.  It has to add from a user's inventory.
         self.deck_cards.append(card_value)
 
     def removeFromDeck(self, card_value):
-        #Searches the deck for the card_id for removal and removes it
-        #UPDATE: card_id is replaced with card_value.
-        #UPDATE: WILL USE inv_key instead.
+        # Searches the deck for the card_id for removal and removes it
+        # UPDATE: card_id is replaced with card_value.
+        # UPDATE: WILL USE inv_key instead.
         #
         for i in range(len(self.deck_cards)):
             if (self.deck_cards[i]["inv_key"] == card_value["inv_key"]):
@@ -73,14 +75,14 @@ class Deck():
                 return
 
     def addListToDeck(self, cards):
-        #[cards] is a list of inv_keys
-        #Add a list of cards to the deck
+        # [cards] is a list of inv_keys
+        # Add a list of cards to the deck
         for i in cards:
             self.deck_cards.append(i)
 
     def removeListFromDeck(self, cards):
-        #[cards] is a list of inv_keys
-        #Searches the deck for all the cards corresponding to the list passed by the argument and remove them
+        # [cards] is a list of inv_keys
+        # Searches the deck for all the cards corresponding to the list passed by the argument and remove them
         counter = 0
         for i in self.deck_cards:
             if (self.deck_cards[counter]["inv_key"] in cards):
@@ -91,8 +93,9 @@ class Deck():
         return vars(self)
 
     def toJson(self):
-        return json.dumps(self, default = lambda o: o.__dict__, sort_keys = True, indent = 4)
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+
     def __str__(self):
-        #String representation for loading.
-        string="{},{},{}".format(self.deck_name, self.deck_description, len(self.deck_cards))
+        # String representation for loading.
+        string = "{},{},{}".format(self.deck_name, self.deck_description, len(self.deck_cards))
         return string
