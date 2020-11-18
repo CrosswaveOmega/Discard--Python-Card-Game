@@ -34,13 +34,13 @@ class BasicAttack(card.Skill):  # Custom Class
         dictionary["tag"] = self.damage_tag
 
         for entity in dictionary["target"]:
-            await game_ref.make_announcement(
-                "{} uses {} on {} for {} damage.".format(user.get_name(), self.get_name(), piece.get_name(),
+            await game_ref.send_announcement(
+                "{} uses {} on {} for {} damage.".format(user.get_name(), self.get_name(), entity.get_name(),
                                                          dictionary["damage"]))
             print(
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
             if True:  # here, it would check for some kind of effect. for record.
-                piece.add_damage(dictionary["damage"])
+                entity.add_damage(dictionary["damage"])
         print("OPERATION HAS BEEN DONE.")
 
 
@@ -65,7 +65,8 @@ class BasicHeal(card.Skill):
             print(
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
             if True:  # here, it would check for some kind of effect. for record.
-                piece.heal_damage(dictionary["damage"])
+                await game_ref.send_announcement("The" +entity.get_name()+" piece can be healed by " + str(self.heal_amount) + " at most.")
+                entity.heal_damage(dictionary["damage"])
 
 
 # This class gives certain creatures the ability to diminish the amount of damage they receive from an attack.
@@ -117,9 +118,12 @@ class MultiAttack(card.Skill):
         dictionary["attacks"] = self.damage
         dictionary["tag"] = self.damage_tag
         for entity in dictionary["target"]:
+            output="{} uses {} on {}!  Dealing {} damage {} times!".format(user.get_name(), self.get_name(), entity.get_name(), dictionary["damage"], dictionary["attacks"])
+            await game_ref.send_announcement(output)
+
             print(
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
             if True:  # here, it would check for some kind of effect. for record.
                 for count in range(0, dictionary["attacks"]):
-                    piece.add_damage(dictionary["damage"])  # Deals damage attacks times
+                    entity.add_damage(dictionary["damage"])  # Deals damage attacks times
         print("OPERATION HAS BEEN DONE.")

@@ -47,9 +47,9 @@ def match_shape_and_dist(posA, posB, shape, dist):
         return posA.same_row(posB)
     if shape == "Column":
         return posA.same_column(posB)
-    if pos == "Any":
+    if shape == "Any":
         return True
-    if pos == "Other":
+    if shape == "Other":
         return True
     return False
 

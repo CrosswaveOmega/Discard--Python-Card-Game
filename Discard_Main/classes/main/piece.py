@@ -66,15 +66,23 @@ class Piece:
     async def do_move(self, game_ref):
         move_options = self.get_move_options(game_ref.get_grid())
 
-        img = await game_ref.make_move_preview(move_options)
-        sent_mess = await self.player.get_dpios().send_pil_image(img)
+        buffer = self.player.has_something_in_buffer()
+        sent_mess = None
+        if(not buffer):
+            img = await game_ref.make_move_preview(move_options)
+            sent_mess = await self.player.get_dpios().send_pil_image(img)
+
         option = await self.player.select_option(move_options)
-        await sent_mess.delete()
+
+        if(sent_mess != None):
+            await sent_mess.delete()
+
         if (option != "back" and option != "timeout"):
             print(option)
             self.change_position(option)
             game_ref.set_update()
             await game_ref.send_user_updates()
+            await self.player.send_announcement("Moved {} to {}".format(self.get_name(), option))
             return True
         return False
 
@@ -82,6 +90,7 @@ class Piece:
         self.player.gain_summon_points()
         options = self.generate_options()
         my_turn = True
+        await game_ref.send_announcement("{}'s turn".format(self.get_name()))
         while my_turn:
             choices = []
             for key, item in options.items():
@@ -95,21 +104,27 @@ class Piece:
                     options[action] = options[action] - 1
 
         await asyncio.sleep(0.4)
-        print(self.name)
+        await game_ref.send_announcement("Turn end.")
         return None
         # universal options.
 
     async def process_option(self, game_ref, action):
+        #Universal actions
         my_turn = True
         print(action)
         completed = False
         if (action == "MOVE"):
             completed = await self.do_move(game_ref)
         elif (action == "END"):
+            await self.player.send_announcement("Ending Turn.")
             my_turn = False
+        elif (action=="invalidmessage"):
+            await self.player.send_announcement("unrecognized input.  Try again.")
         elif (action == "timeout"):
-            print("Timeout")
-            my_turn == False
+            await self.player.send_announcement("Timeout.  Advancing turn.")
+            my_turn = False
+        else:
+            my_turn, completed=await self.player.local_commands(action, game_ref)
         return my_turn, completed
 
     def get_move_options(self, grid):  # Wip function.
@@ -117,7 +132,8 @@ class Piece:
         lines = self.move_style.splitlines()
         move_options = []
         for line in lines:
-            move_options.extend(grid.get_all_movements_in_range(self.position, line))
+            move_options.extend(
+                grid.get_all_movements_in_range(self.position, line))
         return move_options
 
     def get_hp(self):
@@ -211,28 +227,29 @@ class Creature(Piece):
         """Processing of skill."""
 
         skill_list = []
-        if (skill_1 != None):
-            if (skill_1.trigger == "command"):
-                skill_list.append(skill_1.get_name())
-        if (skill_2 != None):
-            if (skill_2.trigger == "command"):
-                skill_list.append(skill_2.get_name())
-        if (skill_3 != None):
-            if (skill_3.trigger == "command"):
-                skill_list.append(skill_2.get_name())
+        if (self.skill_1 != None):
+            if (self.skill_1.trigger == "command"):
+                skill_list.append(self.skill_1.get_name())
+        if (self.skill_2 != None):
+            if (self.skill_2.trigger == "command"):
+                skill_list.append(self.skill_2.get_name())
+        if (self.skill_3 != None):
+            if (self.skill_3.trigger == "command"):
+                skill_list.append(self.skill_3.get_name())
 
         option = await self.player.select_option(skill_list, "Select a skill")
         if (option == "back" or option == "timeout"):
             return False
         skill = None
-        if (option == skill_1.get_name()):
-            skill = skill_1
-        if (option == skill_2.get_name()):
-            skill = skill_2
-        if (option == skill_3.get_name()):
-            skill = skill_3
+        if (option == self.skill_1.get_name()):
+            skill = self.skill_1
+        if (option == self.skill_2.get_name()):
+            skill = self.skill_2
+        if (option == self.skill_3.get_name()):
+            skill = self.skill_3
 
-        target_list, amount = match_with_target_data(skill.get_target_data(), self, game_ref)
+        target_list, amount = match_with_target_data(
+            skill.get_target_data(), self, game_ref)
         if (len(target_list) <= amount):
             await skill.doSkill(self, target, game_ref)
             return True
@@ -250,17 +267,12 @@ class Creature(Piece):
         my_turn = True
         print(action)
         completed = False
-        if (action == "MOVE"):
-            completed = await self.do_move(game_ref)
-        elif (action == "SKILL"):
-            completed = await self.skill_option(game_ref)
-            # Draw one card.  Add it to the hand.
-        elif (action == "END"):
-            my_turn = False
 
-        elif (action == "timeout"):
-            print("Timeout")
-            my_turn == False
+        if (action == "SKILL"):
+            completed = await self.skill_option(game_ref)
+        else:
+            my_turn, completed=await super().process_option(game_ref, action)
+
         return my_turn, completed
 
     def get_embed(self):
@@ -293,15 +305,17 @@ class Leader(Piece):
 
     def get_summon_spaces(self, grid):  # Wip function.
         """uses a modified version of the move style to get summon spaces."""
-        summonSpace = """STEP 1
-        HOP X -1 Y -1
-        HOP X 1 Y -1
-        HOP X -1 Y 1
-        HOP X 1 Y 1"""
+        summonSpace = """
+STEP 1
+HOP X -1 Y -1
+HOP X 1 Y -1
+HOP X -1 Y 1
+HOP X 1 Y 1"""
         lines = summonSpace.splitlines()
         summon_options = []
         for line in lines:
-            summon_options.extend(grid.get_all_movements_in_range(self.position, line))
+            summon_options.extend(
+                grid.get_all_movements_in_range(self.position, line))
         return summon_options
 
     def generate_options(self):
@@ -318,22 +332,16 @@ class Leader(Piece):
         my_turn = True
         print(action)
         completed = False
-        if (action == "MOVE"):
-            completed = await self.do_move(game_ref)
-        elif (action == "DRAW"):
-            self.player.draw_card()
+        if (action == "DRAW"):
+            feedbackstr=self.player.draw_card()
+            await self.player.send_announcement(feedbackstr)
             completed = True
             # Draw one card.  Add it to the hand.
         elif (action == "SUMMON"):
             completed = await self.player.get_summon_action(game_ref, self.get_summon_spaces(game_ref.get_grid()))
-            # completed=True
-            # Draw one card.  Add it to the hand.
-        elif (action == "END"):
-            my_turn = False
-
-        elif (action == "timeout"):
-            print("Timeout")
-            my_turn == False
+            #summon a creature
+        else:
+            my_turn, completed=await super().process_option(game_ref, action)
         return my_turn, completed
 
     def get_embed(self):

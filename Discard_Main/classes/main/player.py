@@ -75,6 +75,8 @@ class Player():
         if (len(self.deck) >= 1):
             card = self.deck.pop()
             self.hand.append(card)
+            return "Added {} to hand.".format(str(card))
+        return "Your deck is empty."
 
     async def get_summon_action(self, game_ref, summon_locations):
         valid_options = []
@@ -82,8 +84,10 @@ class Player():
             if card.get_type() == "Creature":
                 if (card.can_activate(self.summon_r, self.summon_b, self.summon_g)):
                     valid_options.append(card)
-        card = await self.select_option(valid_options, "select a card.")
-        if (card == 'back' or card == 'timeout'):
+        card = await self.select_card(valid_options, "select a card.")
+        if (card == 'back' or card == 'timeout' or card=="invalidmessage"):
+            if(card=="invalidmessage"):
+                await self.send_announcement("unrecognized string was sent in.")
             return False
         position_not = await self.select_option(summon_locations, "Where should it summon to?")
         if (position_not != "back" and position_not != "timeout"):
@@ -91,7 +95,9 @@ class Player():
             new_creature = Creature(card, self, position_not)
             self.hand.remove(card)
             game_ref.add_creature(new_creature)
+
             r, b, g = card.get_summoncost_tuple()
+            await game_ref.send_announcement("{} Summoned to {}".format(card.get_name(), position_not))
             self.summon_r = self.summon_r - r
             self.summon_b = self.summon_b - b
             self.summon_g = self.summon_g - g
@@ -102,11 +108,13 @@ class Player():
         return "TBD"
 
     def get_output(self):
-        # Ask for infomation here.
         print("TBD")
 
     def get_team(self):
         return self.team
+
+    def buffer(self):
+        return True
 
     def to_embed(self, view):
         hand_disp = len(self.hand)
@@ -128,7 +136,8 @@ class Player():
         embed.add_field(name="Level", value="0", inline=True)
         embed.add_field(name="graveyard", value=str(len(self.graveyard)), inline=True)
         return embed
-
+    async def local_commands(self, action, game_ref):
+        return True, False
     async def send_embed_to_user(self):
         await asyncio.sleep(1)
 
@@ -142,12 +151,27 @@ class DiscordPlayer(Player):
     def get_avatar_url(self):
         return self.dpios.get_avatar_url()
 
+    def has_something_in_buffer(self):
+        return self.dpios.has_something_in_buffer()
     def get_input(self):
         return None
 
     def get_dpios(self):
         return self.dpios
 
+    async def local_commands(self, action, game_ref):
+        my_turn = True
+        print(action)
+        completed = False
+        if (action == "OVERVIEW"):
+            await self.dpios.send_order()
+        elif (action == "PLAYER"):
+            await self.dpios.send_order(p=True, i=False, c=False)
+        elif (action == "BOARD"):
+            await self.dpios.send_order(p=False, i=True, c=False)
+        elif (action == "CURRENT"):
+            await self.dpios.send_order(p=False, i=False, c=True)
+        return my_turn, completed
     async def select_piece(self, options=[], prompt="Select a piece"):
         option = await self.dpios.get_user_piece(options, prompt)
         return option
@@ -170,3 +194,6 @@ class DiscordPlayer(Player):
     async def send_embed_to_user(self):
         embed = self.to_embed('self')
         await self.dpios.update_player_message(embed)
+
+    async def send_announcement(self, announce="blank."):
+        await self.dpios.send_announcement(announce)

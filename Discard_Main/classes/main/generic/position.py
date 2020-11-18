@@ -107,14 +107,14 @@ class Position():
         return False
     def diagonal_to(self, other, rangeVal=1):
         if not(self.same_row(other) or self.same_column(other)): #test 1. only diagonals.
-            diagonalcheck, dist= self.get_diagonal_and_dist(other):
+            diagonalcheck, dist= self.get_diagonal_and_dist(other)
             if(diagonalcheck and dist<=rangeVal):
                 return True
         return False
 
     def cardinal_or_diagonal_to(self, other, rangeVal=1):
         if not(self.same_row(other) or self.same_column(other)): #test 1. only diagonals.
-            diagonalcheck, dist= self.get_diagonal_and_dist(other):
+            diagonalcheck, dist= self.get_diagonal_and_dist(other)
             if(diagonalcheck and dist<=rangeVal):
                 return True
         return False

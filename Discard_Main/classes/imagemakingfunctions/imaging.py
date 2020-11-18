@@ -6,6 +6,7 @@ import time
 import textwrap
 import urllib.request
 
+from ..main.generic.notationhelp import to_notation
 
 def url_to_PIL_image(image_url):
     #full_path = file_path + file_name + '.png'
@@ -48,6 +49,13 @@ def make_image_from_grid(grid, col, row):
                     x=x+squaresize//2
                     y=y+squaresize//2
                     d.text((x,y), text=name, anchor='mb', font=newfont, fill="White")
+                else:
+                    name=to_notation(j+1,i+1)
+                    x, y=j*squaresize, i*squaresize
+                    x=x+squaresize//2
+                    y=y+squaresize//2
+                    d.text((x,y), text=name, anchor='mb', font=newfont, fill="Black")
+
             else:
                 background.paste(pasteme, (j*squaresize, i*squaresize))
                 cardsqu=grid[i][j]

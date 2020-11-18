@@ -91,7 +91,7 @@ class CardCogBattle(commands.Cog):
         channel=ctx.message.channel;
 
         server=channel.guild
-``
+
         room1=server.fetch_channel(777997792558710804)
         room2=server.fetch_channel(777998040283086900)
 

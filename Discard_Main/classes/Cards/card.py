@@ -297,7 +297,7 @@ class CreatureCard(CardBase):
             embed.set_thumbnail(url=self.image)
 
         # , icon_url="""https://media.discordapp.net/attachments/763800266855415838/771803875946528788/image.png"""
-        embed.set_author(name="{CardType}".format(CardType=self.type))
+        #embed.set_author(name="{CardType}".format(CardType=self.type))
         id_hex = format(self.ID, "05X")
         embed.set_footer(text="Card Id:{card_id} - Custom ID:{custom_id}".format(card_id=id_hex, custom_id=self.custom))
         if (self.skill_1 != None):

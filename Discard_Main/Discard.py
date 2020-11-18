@@ -39,13 +39,18 @@ class Card_Duel():
         self.entity_list = []
         self.bot = bot
 
-        self.grid_message = None
-        self.gridchange = True
+
 
         self.mode = "Test"  # the "mode" of the game.  a simplified setting.
         self.settings = None  # Settings of the game.
         self.duel_helper = Card_Duel_Helper(self)
         self.grid = Grid(5, 5, self.duel_helper)
+
+
+        self.grid_message = None #The message containing the grid object
+        self.gridchange = True
+        self.grid_image_url=""
+        self.queue_preview=""
 
         self.round = 0
         self.log = []  # Log of everything that happened.
@@ -67,6 +72,7 @@ class Card_Duel():
         return img
 
     def grid_updated(self):
+        """Sets the boolean value gridchange to True."""
         self.gridchange = True
 
     async def send_grid(self):  # A WIP function.  it sends a grid to all players.
@@ -76,12 +82,14 @@ class Card_Duel():
             if (player.get_PlayerType() == "Discord"):
                 await player.get_dpios().send_pil_image(img)
 
-    async def send_update(self, url):
+
+    async def send_grid_update(self):
         """UPDATE ALL DPIOS OF PLAYERS."""
         print(self.round)
+        embed=self.to_embed()
         for player in self.players:
             if (player.get_PlayerType() == "Discord"):
-                await player.get_dpios().update_grid_message(url, self.round)
+                await player.get_dpios().update_grid_message(embed)
 
     async def send_current_piece_embed(self, current):
         """UPDATE ALL DPIOS OF PLAYERS.  CHANGES EMBED FOR THE CURRENT CREATURE"""
@@ -91,7 +99,7 @@ class Card_Duel():
                 await player.get_dpios().update_current_message(current.get_embed())
 
     async def send_announcement(self, content):
-        """UPDATE ALL DPIOS OF PLAYERS.  CHANGES EMBED FOR THE CURRENT CREATURE"""
+        """UPDATE ALL DPIOS OF PLAYERS.  SENDS A ANNOUNCEMENT."""
         print(self.round)
         for player in self.players:
             if (player.get_PlayerType() == "Discord"):
@@ -103,10 +111,12 @@ class Card_Duel():
     def move_piece(self, piece):
         piece.get_move_options(self.grid)
 
-    async def resend_infomation(self):
+    async def update_all(self, resend_messages=False):
+        """DPIOS HAS THREE MESSAGES.  THE PLAYER, THE GRID, AND THE CURRENT PIECE.  THIS RESENDS THEM."""
         for player in self.players:
             if (player.get_PlayerType() == "Discord"):
-                await player.get_dpios().send_order()
+                if(resend_messages):
+                    await player.get_dpios().send_order()
                 await player.send_embed_to_user()
         await self.update_grid_image()
         if self.current_piece != None:
@@ -127,9 +137,9 @@ class Card_Duel():
             self.gridchange = False
         url = "p"
         for attach in self.grid_message.attachments:
-            url = attach.url
-            print("url")
-            await self.send_update(url)
+            self.grid_image_url = attach.url
+            print(self.grid_image_url)
+        await self.send_grid_update()
 
     def turn_sort(self):
         def sortFunction(e):  # this is python.  We can have nested functions.
@@ -146,9 +156,12 @@ class Card_Duel():
             queue.append(i)
         stack = []
         for i in range(len(queue)):
+            self.queue_preview=str([piece.get_name() for piece in queue])
             current_piece = queue.pop()
+            print(queue)
             self.current_piece = current_piece
-            await self.send_current_piece_embed(current_piece)
+            await self.update_all()
+            #await self.send_current_piece_embed(current_piece)
             stack.append(
                 current_piece)  # add to stack from queue the piece with the highest speed and perform its action one a time
             await stack[i].get_action(self.duel_helper)
@@ -168,6 +181,13 @@ class Card_Duel():
                 self.game_is_active = False
         await self.send_announcement("THE GAME IS OVER.")
         print("TBD.")
+
+    def to_embed(self):
+        embed = discord.Embed(title="Game.", colour=discord.Colour(0x7289da))
+        embed.description = "Round: {} \n, queue = {}".format(self.round, self.queue_preview)
+        embed.set_image(url="{imgurl}".format(imgurl=self.grid_image_url))
+        return embed
+
 
 
 class Card_Duel_Helper():
@@ -189,7 +209,7 @@ class Card_Duel_Helper():
     def get_grid(self):
         return self.__card_duel.grid
 
-    async def make_announcement(self, announe="Unset Announcement"):
+    async def send_announcement(self, announe="Unset Announcement"):
         await self.__card_duel.send_announcement(announe)
 
     async def make_move_preview(self, spaces):
@@ -206,4 +226,4 @@ class Card_Duel_Helper():
         await self.__card_duel.update_grid_image()
 
     async def resend_info_messages(self):
-        await self.__card_duel.resend_infomation()
+        await self.__card_duel.update_all()

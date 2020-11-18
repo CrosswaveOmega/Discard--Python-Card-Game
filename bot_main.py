@@ -51,6 +51,7 @@ class Main(commands.Cog):
     """
     a basic class.
     """
+    
     @commands.Cog.listener()
     async def on_message(self, message):
         '''
@@ -60,9 +61,10 @@ class Main(commands.Cog):
         channel=message.channel
         #dicti=vars(Grid())
         #print(json.dumps(dicti))
-        if user != bot.user:
-            if channel.id == 749673636280926228:
-                await channel.send("HELLO I AM ME!")
+        #if user != bot.user:
+            #if channel.id == 749673636280926228:
+                #await channel.send("HELLO I AM ME!")
+                
 bot.add_cog(Main())
 bot.add_cog(Cards_Cog.CardCog())
 bot.add_cog(Cards_Cog.CardCog2())
