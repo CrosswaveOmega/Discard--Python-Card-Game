@@ -23,8 +23,8 @@ async def make_tiebreaker_double(ctx, choices, message=None, timeout_enable=Fals
 
     '''
     bot = ctx.bot
-    auth = ctx.message.author;
-    channel = ctx.message.channel;
+    auth = ctx.message.author
+    channel = ctx.message.channel
 
     output = None
 
@@ -110,7 +110,7 @@ async def make_tiebreaker_double(ctx, choices, message=None, timeout_enable=Fals
                                                return_when=asyncio.FIRST_COMPLETED)  # there's probably a better way to do this.
             #    done, pending2 = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED) #there's probably a better way to do this.
             if ra in done:
-                result = ra.result();
+                result = ra.result()
                 if rb in pending:
                     rb.cancel()
                 if rc in pending:
@@ -118,7 +118,7 @@ async def make_tiebreaker_double(ctx, choices, message=None, timeout_enable=Fals
                 middleA = True
 
             if rb in done:
-                result = rb.result();
+                result = rb.result()
                 if ra in pending:
                     ra.cancel()
                 if rc in pending:
@@ -155,32 +155,32 @@ async def make_tiebreaker_double(ctx, choices, message=None, timeout_enable=Fals
     done, pending = await asyncio.wait(tasklist,
                                        return_when=asyncio.FIRST_COMPLETED)  # there's probably a better way to do this.
     if messagetask in done:
-        result = messagetask.result();
+        result = messagetask.result()
         if (result in message_dict):
-            output = message_dict[result];
+            output = message_dict[result]
         else:
             print("Invalid Message")
             output = "invalidmessage"
-        reactiontask.cancel();
+        reactiontask.cancel()
         if timeout_enable:
-            timeouttask.cancel();
+            timeouttask.cancel()
     if reactiontask in done:
         # print("DONE.")
         result = str(reactiontask.result())
         if (result in emoji_dict):
-            output = emoji_dict[result];
+            output = emoji_dict[result]
         else:
             print("Invalid Reaction")
             output = "invalidreaction"
         if (remove_after):
             await message_to_respond_to.remove_reaction(result, auth)
-        messagetask.cancel();
+        messagetask.cancel()
         if timeout_enable:
-            timeouttask.cancel();
+            timeouttask.cancel()
     if timeouttask in done:
-        messagetask.cancel();
-        reactiontask.cancel();
-        output = timeouttask.result();
+        messagetask.cancel()
+        reactiontask.cancel()
+        output = timeouttask.result()
     await message_to_respond_to_2.delete()
     if clear_after:
         await message_to_respond_to.clear_reactions()

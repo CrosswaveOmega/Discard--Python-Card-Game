@@ -28,10 +28,11 @@ configur.read('config.ini')
 
 async def custom_id_from_match(ctx, profile, data_to_match):
     bot = ctx.bot
-    author = ctx.message.author;
-    channel = ctx.message.channel;
+    author = ctx.message.author
+    channel = ctx.message.channel
     custom_id = None
-    type_of_match, matched_data = card_multimatch_with_type(profile, data_to_match)
+    type_of_match, matched_data = card_multimatch_with_type(
+        profile, data_to_match)
     if (type_of_match == "custom_name" or type_of_match == "card_id"):
         print(type_of_match, matched_data)
         inventory_entry = await make_tiebreaker_with_inventory_entries(ctx, matched_data)
@@ -45,9 +46,11 @@ async def custom_id_from_match(ctx, profile, data_to_match):
             if (inventory_entry["custom"] == None):
                 # Makes new custom, and applys it to the key_id
                 await ctx.invoke(bot.get_command('newCustom'), "Temporary Name", inventory_entry["inv_key"])
-                custom_id = profile.get_inventory_entry_by_key(inventory_entry["inv_key"])["custom"]
+                custom_id = profile.get_inventory_entry_by_key(
+                    inventory_entry["inv_key"])["custom"]
             else:
-                custom_id = profile.get_inventory_entry_by_key(inventory_entry["inv_key"])["custom"]
+                custom_id = profile.get_inventory_entry_by_key(
+                    inventory_entry["inv_key"])["custom"]
     elif (type_of_match == "custom_id"):
         return matched_data
     return custom_id
@@ -56,10 +59,11 @@ async def custom_id_from_match(ctx, profile, data_to_match):
 async def inv_key_from_match(ctx, profile, data_to_match):
     "returns inventory key from a match"
     bot = ctx.bot
-    author = ctx.message.author;
-    channel = ctx.message.channel;
+    author = ctx.message.author
+    channel = ctx.message.channel
     inv_key = None
-    type_of_match, matched_data = card_multimatch_with_type(profile, data_to_match, match_by_custom_id=False)
+    type_of_match, matched_data = card_multimatch_with_type(
+        profile, data_to_match, match_by_custom_id=False)
     if (type_of_match == "custom_name" or type_of_match == "card_id"):
         print(type_of_match, matched_data)
         inventory_entry = await make_tiebreaker_with_inventory_entries(ctx, matched_data)
@@ -77,14 +81,15 @@ async def inv_key_from_match(ctx, profile, data_to_match):
 class CustomsCog(commands.Cog):
 
     @commands.command(pass_context=True)
-    async def newCustom(self, ctx, *args):  # A very rudimentary card retrieval system.
+    # A very rudimentary card retrieval system.
+    async def newCustom(self, ctx, *args):
         '''
         syntax: createCustom "New Name"
         Creates a new custom,
         '''
         bot = ctx.bot
-        author = ctx.message.author;
-        channel = ctx.message.channel;
+        author = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         set_name = "blank_custom"
         key_id = None
@@ -113,8 +118,8 @@ class CustomsCog(commands.Cog):
         [new name] - the new name of the card
         '''
         bot = ctx.bot
-        author = ctx.message.author;
-        channel = ctx.message.channel;
+        author = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         data_to_match = None
         new_name = None
@@ -146,8 +151,8 @@ class CustomsCog(commands.Cog):
         [new icon] - the new icon of the card.  Must be a emoji.
         '''
         bot = ctx.bot
-        author = ctx.message.author;
-        channel = ctx.message.channel;
+        author = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         data_to_match = None
         new_icon = None
@@ -170,7 +175,8 @@ class CustomsCog(commands.Cog):
             await channel.send("Name Updated.")
 
     @commands.command(pass_context=True)
-    async def changeDisplayImage(self, ctx, *args):  # A very rudimentary card retrieval system.
+    # A very rudimentary card retrieval system.
+    async def changeDisplayImage(self, ctx, *args):
         '''
         syntax: upload_image CustomId
         [CustomId]: The CustomId you want to change the image of.
@@ -179,14 +185,14 @@ class CustomsCog(commands.Cog):
 
         '''
         bot = ctx.bot
-        author = ctx.message.author;
-        channel = ctx.message.channel;
+        author = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         attachLength = len(ctx.message.attachments)
         print(attachLength)
         if (leng >= 1 and attachLength > 0):
             for attach in ctx.message.attachments:
-                byte = await attach.read();
+                byte = await attach.read()
                 fil = io.BytesIO(byte)  # file in attachments.
                 with io.BytesIO() as image_binary:
                     custom = await CustomRetrievalClass().getByID(args[0], bot)
@@ -194,9 +200,12 @@ class CustomsCog(commands.Cog):
                         await channel.send(
                             "Error! {0} not found.".format(args[0]))  # EXCEPTION: INVALID CIPHER ID WAS GIVEN.+
                     print("Going for it.")
-                    make_card_image(fil).save(image_binary, 'PNG')  # Returns pil object.
+                    # Returns pil object.
+                    make_card_image(fil).save(image_binary, 'PNG')
                     image_binary.seek(0)
-                    checkGuild = bot.get_guild(int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
+                    # Behind The Scenes server
+                    checkGuild = bot.get_guild(
+                        int(configur.get("Default", 'bts_server')))
                     custom_channel = checkGuild.get_channel(
                         int(configur.get("Default", 'bts_card_image_channel')))  # Customs Channel.
                     image_msg = await custom_channel.send(file=discord.File(fp=image_binary, filename='image.png'))
@@ -209,14 +218,15 @@ class CustomsCog(commands.Cog):
                     await CustomRetrievalClass().updateCustomByID(custom, bot)
 
     @commands.command(pass_context=True)
-    async def applyCustom(self, ctx, *args):  # A very rudimentary card retrieval system.
+    # A very rudimentary card retrieval system.
+    async def applyCustom(self, ctx, *args):
         '''
         syntax: applyCustom "[inventory_identifier]" "custom_id"
         Applies a customization to a card in your inventory.
         '''
         bot = ctx.bot
-        author = ctx.message.author;
-        channel = ctx.message.channel;
+        author = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         data_to_match = None
         custom = None
@@ -247,14 +257,15 @@ class CustomsCog(commands.Cog):
             await channel.send("INVALID KEY OR CUSTOMID.")
 
     @commands.command(pass_context=True)
-    async def ApplyCustomWithInvKey(self, ctx, *args):  # A very rudimentary card retrieval system.
+    # A very rudimentary card retrieval system.
+    async def ApplyCustomWithInvKey(self, ctx, *args):
         '''
         syntax: ApplyCustomWithInvKey "inv_key" "custom_id"
         Applies a customization to a card in your inventory.
         '''
         bot = ctx.bot
-        author = ctx.message.author;
-        channel = ctx.message.channel;
+        author = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         key = None
         custom = None
@@ -278,14 +289,15 @@ class CustomsCog(commands.Cog):
             await channel.send("INVALID KEY OR CUSTOMID.")
 
     @commands.command(pass_context=True)
-    async def copyCustom(self, ctx, *args):  # A very rudimentary card retrieval system.
+    # A very rudimentary card retrieval system.
+    async def copyCustom(self, ctx, *args):
         '''
         syntax: copyCustom "custom_id"
         Makes a copy of the custom.
         '''
         bot = ctx.bot
-        author = ctx.message.author;
-        channel = ctx.message.channel;
+        author = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         custom = None
         if (leng >= 1):
@@ -307,13 +319,14 @@ class CustomsCog(commands.Cog):
             await channel.send("INVALID KEY OR CUSTOMID.")
 
     @commands.command(pass_context=True)
-    async def deleteCustom(self, ctx, *args):  # A very rudimentary card retrieval system.
+    # A very rudimentary card retrieval system.
+    async def deleteCustom(self, ctx, *args):
         '''
         syntax: deleteCustom "custom_id"
         deletes a custom
         '''
         bot = ctx.bot
-        author = ctx.message.author;
-        channel = ctx.message.channel;
+        author = ctx.message.author
+        channel = ctx.message.channel
         await channel.send("Delete custom comming soon.")
         print("TO BE DONE.")

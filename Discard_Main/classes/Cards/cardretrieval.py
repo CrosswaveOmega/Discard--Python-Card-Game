@@ -41,9 +41,11 @@ class CardRetrievalSingleton:
 
     instance = None
 
-    def __init__(self, arg):  # Internally, it keeps a single instance of the __SingleDictionary class in memory.
+    # Internally, it keeps a single instance of the __SingleDictionary class in memory.
+    def __init__(self, arg):
         if not CardRetrievalSingleton.instance:
-            CardRetrievalSingleton.instance = CardRetrievalSingleton.__SingleDictionary(arg)
+            CardRetrievalSingleton.instance = CardRetrievalSingleton.__SingleDictionary(
+                arg)
         else:
             CardRetrievalSingleton.instance.current_status = arg
 

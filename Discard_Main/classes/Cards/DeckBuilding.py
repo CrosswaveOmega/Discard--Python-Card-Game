@@ -97,5 +97,6 @@ class Deck():
 
     def __str__(self):
         # String representation for loading.
-        string = "{},{},{}".format(self.deck_name, self.deck_description, len(self.deck_cards))
+        string = "{},{},{}".format(
+            self.deck_name, self.deck_description, len(self.deck_cards))
         return string

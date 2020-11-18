@@ -100,6 +100,7 @@ def make_move_style_for_content(movestyle_str):
     grid_array = adjust_grid(grid_array, ["C3"], "🟩")
     returnVal = ""
     for re in range(0, row):
-        returnVal = returnVal + (''.join(['{}'.format(item) for item in grid_array[re]])) + "\n"
+        returnVal = returnVal + \
+            (''.join(['{}'.format(item) for item in grid_array[re]])) + "\n"
     make_string = "```" + returnVal + "```"
     return make_string

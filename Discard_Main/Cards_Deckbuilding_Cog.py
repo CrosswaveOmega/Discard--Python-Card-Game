@@ -157,7 +157,8 @@ class DeckCog(commands.Cog):
             deck = None
             multimatched = card_multimatch(profile, card)
 
-            if (multimatched != None):  # check if card exist in player's inventory.
+            # check if card exist in player's inventory.
+            if (multimatched != None):
                 cardvalue = multimatched[0]
                 if (len(multimatched) > 1):  # Tiebreaker is needed here.
                     print("Place Tiebreaker Here.")  # do tiebreaker.
@@ -173,7 +174,6 @@ class DeckCog(commands.Cog):
                     deck.addToDeck(
                         cardvalue)  # to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
                     await channel.send("Card has been added to '{}' with no problems!".format(deckName))
-
 
                 else:
                     await channel.send(str("Hang on, This card is already in your deck!"))

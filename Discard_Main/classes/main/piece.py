@@ -28,7 +28,7 @@ class Piece:
         # Img should be a PIL image object
         self.player = player  # the player object this piece belongs to.
         self.name = name
-
+        self.type="Default"
         self.game_id = 0
 
         self.max_hp = hp
@@ -208,11 +208,14 @@ class Creature(Piece):
         self.move_limit = creature_card.get_move_limit()
         self.max_hp = creature_card.get_hp()
         self.ID = creature_card.get_ID()
-        self.type = creature_card.get_type()
+        self.type = "Creature"
 
         self.card = creature_card
 
         self.set_image_by_url(self.display_image)
+
+    def get_card(self):
+        return self.card()
 
     def generate_options(self):
         # creates a new dictionary of all options.
@@ -297,6 +300,7 @@ class Leader(Piece):
         # Image is url
         super().__init__(player=player, name=name, hp=20, speed=speed, move_style=move_style,
                          position=position_notation)
+        self.type="Leader"
 
     def set_image(self):
         if self.player.get_PlayerType() == "Discord":

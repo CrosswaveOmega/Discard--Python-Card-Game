@@ -47,9 +47,12 @@ class DebugCog(commands.Cog):
 
         '''
         bot = ctx.bot  # The refrence to the bot object. https://discordpy.readthedocs.io/en/latest/ext/commands/api.htm?highlight=bot#bot
-        author = ctx.message.author;  # The refrence to the message author.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=user#user
-        channel = ctx.message.channel;  # the refrence to the channel this message was sent in.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=textchannel#textchannel
-        SingleUser = SingleUserProfile("arg")  # Singleton Object that gets a user based on their id.
+        # The refrence to the message author.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=user#user
+        author = ctx.message.author
+        # the refrence to the channel this message was sent in.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=textchannel#textchannel
+        channel = ctx.message.channel
+        # Singleton Object that gets a user based on their id.
+        SingleUser = SingleUserProfile("arg")
 
         user_id = author.id
         profile = SingleUser.getByID(user_id)

@@ -39,18 +39,15 @@ class Card_Duel():
         self.entity_list = []
         self.bot = bot
 
-
-
         self.mode = "Test"  # the "mode" of the game.  a simplified setting.
         self.settings = None  # Settings of the game.
         self.duel_helper = Card_Duel_Helper(self)
         self.grid = Grid(5, 5, self.duel_helper)
 
-
-        self.grid_message = None #The message containing the grid object
+        self.grid_message = None  # The message containing the grid object
         self.gridchange = True
-        self.grid_image_url=""
-        self.queue_preview=""
+        self.grid_image_url = ""
+        self.queue_preview = ""
 
         self.round = 0
         self.log = []  # Log of everything that happened.
@@ -75,18 +72,18 @@ class Card_Duel():
         """Sets the boolean value gridchange to True."""
         self.gridchange = True
 
-    async def send_grid(self):  # A WIP function.  it sends a grid to all players.
+    # A WIP function.  it sends a grid to all players.
+    async def send_grid(self):
         pilgrid = self.grid.grid_to_PIL_array()
         img = make_image_from_grid(pilgrid, self.grid.columns, self.grid.rows)
         for player in self.players:
             if (player.get_PlayerType() == "Discord"):
                 await player.get_dpios().send_pil_image(img)
 
-
     async def send_grid_update(self):
         """UPDATE ALL DPIOS OF PLAYERS."""
         print(self.round)
-        embed=self.to_embed()
+        embed = self.to_embed()
         for player in self.players:
             if (player.get_PlayerType() == "Discord"):
                 await player.get_dpios().update_grid_message(embed)
@@ -108,8 +105,17 @@ class Card_Duel():
     def add_piece(self, piece):
         self.entity_list.append(piece)
 
-    def move_piece(self, piece):
-        piece.get_move_options(self.grid)
+    def remove_piece(self, piece):
+        self.entity_list.remove(piece)
+
+    def entity_clear(self):
+        """remove all entities with a hp less than zero."""
+        for entity in self.entity_list:
+            if entity.get_hp() <= 0:
+                player = entity.player
+                if entity.type == "Creature":
+                    player.card_to_graveyard(entity.get_card())
+                self.remove_piece(entity)
 
     async def update_all(self, resend_messages=False):
         """DPIOS HAS THREE MESSAGES.  THE PLAYER, THE GRID, AND THE CURRENT PIECE.  THIS RESENDS THEM."""
@@ -124,11 +130,15 @@ class Card_Duel():
 
     async def update_grid_image(self):
         # Refresh the grid image.
-        checkGuild = self.bot.get_guild(int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
-        image_channel = checkGuild.get_channel(int(configur.get("Default", 'bts_game_images')))  # Customs Channel.
+        checkGuild = self.bot.get_guild(
+            int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
+        # Customs Channel.
+        image_channel = checkGuild.get_channel(
+            int(configur.get("Default", 'bts_game_images')))
         if (self.gridchange):
             pilgrid = self.grid.grid_to_PIL_array()
-            img = make_image_from_grid(pilgrid, self.grid.columns, self.grid.rows)
+            img = make_image_from_grid(
+                pilgrid, self.grid.columns, self.grid.rows)
             with io.BytesIO() as image_binary:
                 img.save(image_binary, 'PNG')  # Returns pil object.
                 image_binary.seek(0)
@@ -147,7 +157,8 @@ class Card_Duel():
 
         queue_list = self.entity_list
         queue_list.sort(key=sortFunction)  # sort by lowest to highest speed
-        return queue_list  # list is also a stack with the highest speed at the end that can be called using pop()
+        # list is also a stack with the highest speed at the end that can be called using pop()
+        return queue_list
 
     async def turn_queue(self, queue_list):
         # Might need to revise later.
@@ -156,14 +167,17 @@ class Card_Duel():
             queue.append(i)
         stack = []
         for i in range(len(queue)):
-            self.queue_preview=str([piece.get_name() for piece in queue])
+            self.queue_preview = str([piece.get_name() for piece in queue])
             current_piece = queue.pop()
             print(queue)
             self.current_piece = current_piece
             await self.update_all()
-            #await self.send_current_piece_embed(current_piece)
-            stack.append(current_piece)  # add to stack from queue the piece with the highest speed and perform its action one a time
-            await stack[i].get_action(self.duel_helper)
+            # await self.send_current_piece_embed(current_piece)
+            # add to stack from queue the piece with the highest speed and perform its action one a time
+            stack.append(current_piece)
+            if(stack[i].get_hp() > 0):
+                await stack[i].get_action(self.duel_helper)
+
         return stack  # stack will now contain entity_list from highest to lowest speed
 
     async def start_game(self):
@@ -171,9 +185,11 @@ class Card_Duel():
         self.game_is_active = True
         while (self.game_is_active):
             print("PUT GAME LOOP HERE.")
-            await self.turn_queue(self.turn_sort())  # not sure if this is correct
+            # not sure if this is correct
+            await self.turn_queue(self.turn_sort())
             self.round = self.round + 1
             print(self.round)
+            self.entity_clear()
             await self.update_grid_image()
             await asyncio.sleep(1)
             if (self.round > 5):
@@ -183,10 +199,10 @@ class Card_Duel():
 
     def to_embed(self):
         embed = discord.Embed(title="Game.", colour=discord.Colour(0x7289da))
-        embed.description = "Round: {} \n, queue = {}".format(self.round, self.queue_preview)
+        embed.description = "Round: {} \n, queue = {}".format(
+            self.round, self.queue_preview)
         embed.set_image(url="{imgurl}".format(imgurl=self.grid_image_url))
         return embed
-
 
 
 class Card_Duel_Helper():

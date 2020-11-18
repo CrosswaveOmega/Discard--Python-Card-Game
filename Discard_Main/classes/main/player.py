@@ -70,7 +70,8 @@ class Player():
 
     async def select_card(self, options=[], prompt=""):
         pass
-
+    def card_to_graveyard(self, card):
+        self.graveyard.append(card)
     def draw_card(self):
         if (len(self.deck) >= 1):
             card = self.deck.pop()

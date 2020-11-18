@@ -71,16 +71,18 @@ class TestCreature1(card.CreatureCard):
         # Defining Skills.
         skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type",
                              limit="limit", description="Type description here.", damage=12)
-        skill2 = None  # CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
-        skill3 = None  # CustomSkill3("Custom Name 3", "trigger", "target", "type", "limit", "Type description here.")
+        # CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
+        skill2 = None
+        # CustomSkill3("Custom Name 3", "trigger", "target", "type", "limit", "Type description here.")
+        skill3 = None
         # Defining move Style.
         movestyle = "STEP 2"
         movelimit = 1
 
-        super().__init__(self.ID, name, icon, image=image, \
-                         hp=hp, speed=2, \
-                         summoncost_r=summonr, summoncost_b=summonb, summoncost_g=summong, \
-                         skill_1=skill1, skill_2=skill2, skill_3=skill3, \
+        super().__init__(self.ID, name, icon, image=image,
+                         hp=hp, speed=2,
+                         summoncost_r=summonr, summoncost_b=summonb, summoncost_g=summong,
+                         skill_1=skill1, skill_2=skill2, skill_3=skill3,
                          movestyle=movestyle, movelimit=movelimit)
 
 
@@ -139,7 +141,8 @@ class TestCreatureBeta(card.CreatureCard):
         # These are the creature's skills
         skill1 = MultiAttack("Multi Attacks", "command", ("Rectilinear", "Enemy", "x3"), "attack", "limit",
                              "description", damage=1, attacks=3, damage_tag="")
-        skill2 = BasicShield("Shield", "command", ("self", "Ally", "x1"), "limit", "description", shield_amount=2)
+        skill2 = BasicShield("Shield", "command", ("self", "Ally",
+                                                   "x1"), "limit", "description", shield_amount=2)
         skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
                            heal_amount=1)
 
@@ -173,7 +176,8 @@ class TestCreatureDelta(card.CreatureCard):
         # These are the creature's skills
         skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit",
                              "Type description here.", damage=5)
-        skill2 = BasicShield("Shield", "command", ("self", "Ally", "x1"), "limit", "description", shield_amount=2)
+        skill2 = BasicShield("Shield", "command", ("self", "Ally",
+                                                   "x1"), "limit", "description", shield_amount=2)
         skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
                            heal_amount=1)
 
@@ -207,7 +211,8 @@ class TestCreature2(card.CreatureCard):
         # These are the creature's skills
         skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit",
                              "Type description here.", damage=6)
-        skill2 = BasicShield("Shield", "auto", ("self", "Ally", "x1"), "type", "limit", "description", shield_amount=1)
+        skill2 = BasicShield("Shield", "auto", ("self", "Ally", "x1"),
+                             "type", "limit", "description", shield_amount=1)
         skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
                            heal_amount=2)
 
@@ -241,7 +246,8 @@ class TestCreature3(card.CreatureCard):
         # These are the creature's skills
         skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit",
                              "Type description here.", damage=8)
-        skill2 = BasicShield("Shield", "command", ("self", "Ally", "x1"), "limit", "description", shield_amount=1)
+        skill2 = BasicShield("Shield", "command", ("self", "Ally",
+                                                   "x1"), "limit", "description", shield_amount=1)
         skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
                            heal_amount=3)
 

@@ -47,7 +47,8 @@ class CardBase():  # Wip.
     def __str__(self):
         # r, b, g = self.make_compact_summon_cost()
         id_hex = format(self.ID, "05X")
-        line1 = "{}|`{:20}`|`{}-{}`".format(self.icon, self.name, id_hex, self.custom)
+        line1 = "{}|`{:20}`|`{}-{}`".format(self.icon,
+                                            self.name, id_hex, self.custom)
         return line1
         # return self.icon + "|" + self.name + "|" + self.type + "|"+ str(self.ID)
 
@@ -161,9 +162,9 @@ class CreatureCard(CardBase):
     """docstring for TestCard."""
 
     def __init__(self, ID, name="Default Name", icon="🐻",
-                 image="https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png", \
-                 hp=0, speed=0, summoncost_r=0, summoncost_b=0, summoncost_g=0, \
-                 skill_1=None, skill_2=None, skill_3=None, \
+                 image="https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png",
+                 hp=0, speed=0, summoncost_r=0, summoncost_b=0, summoncost_g=0,
+                 skill_1=None, skill_2=None, skill_3=None,
                  movestyle="", movelimit=1):
         self.ID = ID  # • ID- The internal ID of the card.
         # All cards have this, and they should all be unique.
@@ -297,28 +298,33 @@ class CreatureCard(CardBase):
             embed.set_thumbnail(url=self.image)
 
         # , icon_url="""https://media.discordapp.net/attachments/763800266855415838/771803875946528788/image.png"""
-        #embed.set_author(name="{CardType}".format(CardType=self.type))
+        # embed.set_author(name="{CardType}".format(CardType=self.type))
         id_hex = format(self.ID, "05X")
-        embed.set_footer(text="Card Id:{card_id} - Custom ID:{custom_id}".format(card_id=id_hex, custom_id=self.custom))
+        embed.set_footer(
+            text="Card Id:{card_id} - Custom ID:{custom_id}".format(card_id=id_hex, custom_id=self.custom))
         if (self.skill_1 != None):
             trigger, type, name, target, desc = self.skill_1.get_text_tuple()
             embed.add_field(
-                name="{trig}{skill_type}: {skill_name}".format(trig=trigger, skill_type=type, skill_name=name),
+                name="{trig}{skill_type}: {skill_name}".format(
+                    trig=trigger, skill_type=type, skill_name=name),
                 value="***target: {target_string_format}***\n{description}".format(target_string_format=target,
                                                                                    description=desc), inline=False)
         if (self.skill_2 != None):
             trigger, type, name, target, desc = self.skill_2.get_text_tuple()
             embed.add_field(
-                name="{trig}{skill_type}: {skill_name}".format(trig=trigger, skill_type=type, skill_name=name),
+                name="{trig}{skill_type}: {skill_name}".format(
+                    trig=trigger, skill_type=type, skill_name=name),
                 value="***target: {target_string_format}***\n{description}".format(target_string_format=target,
                                                                                    description=desc), inline=False)
         if (self.skill_3 != None):
             trigger, type, name, target, desc = self.skill_3.get_text_tuple()
             embed.add_field(
-                name="{trig}{skill_type}: {skill_name}".format(trig=trigger, skill_type=type, skill_name=name),
+                name="{trig}{skill_type}: {skill_name}".format(
+                    trig=trigger, skill_type=type, skill_name=name),
                 value="***target: {target_string_format}***\n{description}".format(target_string_format=target,
                                                                                    description=desc), inline=False)
-        embed.add_field(name="Speed", value="{speed}".format(speed=self.speed), inline=True)
+        embed.add_field(name="Speed", value="{speed}".format(
+            speed=self.speed), inline=True)
         moveString = make_move_style_for_content(self.move_style)
         embed.add_field(name="Move Style", value=moveString, inline=True)
         embed.add_field(name="Summon_Cost",

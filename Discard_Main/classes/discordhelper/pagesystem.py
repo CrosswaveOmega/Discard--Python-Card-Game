@@ -22,7 +22,8 @@ async def pages(ctx, display=[], perpage=5, header="new", content="new"):
     length = len(display)
     largest_spot = ((length - 1) // perpage) * perpage
     maxpages = ((length - 1) // perpage) + 1
-    emb = discord.Embed(title=header, colour=discord.Colour(0x7289da), description=content)
+    emb = discord.Embed(title=header, colour=discord.Colour(
+        0x7289da), description=content)
     page = (spot // perpage) + 1
     emb.set_author(name=" Page {}/{}, {} total".format(page, maxpages, length))
     # <a:stopwatch:774737394594218035>
@@ -32,9 +33,12 @@ async def pages(ctx, display=[], perpage=5, header="new", content="new"):
     while running:
         page = (spot // perpage) + 1
 
-        emb = discord.Embed(title=header, colour=discord.Colour(0x7289da), description=content)
-        emb.set_author(name=" Page {}/{}, {} total".format(page, maxpages, length))
-        numberlist = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+        emb = discord.Embed(title=header, colour=discord.Colour(
+            0x7289da), description=content)
+        emb.set_author(
+            name=" Page {}/{}, {} total".format(page, maxpages, length))
+        numberlist = ["1️⃣", "2️⃣", "3️⃣", "4️⃣",
+                      "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
         c = 0
         for i in display[spot:spot + perpage]:
             emb.add_field(name=str(numberlist[c]), value=i, inline=False)

@@ -105,46 +105,48 @@ async def make_tiebreaker_with_inventory_entries(ctx, inventory_entries):
     cont = await make_tiebreaker(ctx, choices, message=message_to_respond_to, clear_after=True)
     return cont
 
-#need tiebreaker that can work with a buffer.
+# need tiebreaker that can work with a buffer.
+
+
 async def make_internal_tiebreaker_with_buffer(bot, auth, channel, choices, buffer=[], message=None, message_content=None, timeout_enable=False, delete_after=False,
-                                   remove_after=False, clear_after=False, ignore_message=False,
-                                   ignore_reaction=False, delete_input_message=False):  # Maxes x into n
+                                               remove_after=False, clear_after=False, ignore_message=False,
+                                               ignore_reaction=False, delete_input_message=False):  # Maxes x into n
     "The choices can have a list for the message match."
     output = None
-    new_list=[]
-    continue_with_everything=True
+    new_list = []
+    continue_with_everything = True
 
-    if len(buffer)>0 :
-        for ch in choices: #I call this, skipping the line.
+    if len(buffer) > 0:
+        for ch in choices:  # I call this, skipping the line.
             print(ch)
             print(buffer)
             if(buffer[0] in ch[1]):
-                output=ch[0]
+                output = ch[0]
                 buffer.pop(0)
-                new_list=buffer
-                continue_with_everything=False
+                new_list = buffer
+                continue_with_everything = False
                 break
 
     message_dict = {}
     emoji_dict = {}
 
-
     if continue_with_everything:
         message_to_respond_to = message
         if message == None:
-            cont="Tiebreaker!  Please Respond."
-            if(message_content!=None):
-                cont=message_content
+            cont = "Tiebreaker!  Please Respond."
+            if(message_content != None):
+                cont = message_content
             message_to_respond_to = await channel.send(cont)
 
         #fetchedmessage = message_to_respond_to
         #reactions = fetchedmessage.reactions
         # print(reactions)
         #currentReactions = [str(rea.emoji) for rea in reactions]
-        currentReactions=[]
+        currentReactions = []
         # print(currentReactions)
         # Make dictionaryies
         these_reactions = []
+
         async def add_react(message_to_respond_to, react):
             await message_to_respond_to.add_reaction(react)
 
@@ -153,7 +155,7 @@ async def make_internal_tiebreaker_with_buffer(bot, auth, channel, choices, buff
             for stringtomatch in ch[1]:
                 message_dict[stringtomatch] = ch[0]
             #message_dict[ch[1]] = ch[0]
-            if(ch[2]!=None):
+            if(ch[2] != None):
                 emoji_dict[ch[2]] = ch[0]
                 if not (ch[2] in currentReactions):
                     reaction_tasks.append(asyncio.create_task(
@@ -208,9 +210,9 @@ async def make_internal_tiebreaker_with_buffer(bot, auth, channel, choices, buff
         done, pending = await asyncio.wait(tasklist,
                                            return_when=asyncio.FIRST_COMPLETED)  # there's probably a better way to do this.
         if messagetask in done:
-            msg= messagetask.result()
+            msg = messagetask.result()
             result = msg.content
-            list=re.findall(r'(?:[^\s,"]|"(?:\\.|[^"])*")+', result)
+            list = re.findall(r'(?:[^\s,"]|"(?:\\.|[^"])*")+', result)
             if (list[0] in message_dict):
                 print(list)
                 output = message_dict[list[0]]

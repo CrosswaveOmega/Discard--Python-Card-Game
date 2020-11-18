@@ -37,8 +37,8 @@ class CardCog2(commands.Cog):
         This function is for testing the page system.
         '''
         bot = ctx.bot
-        auth = ctx.message.author;
-        channel = ctx.message.channel;
+        auth = ctx.message.author
+        channel = ctx.message.channel
         await pages(ctx, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], 7,
                     header="Test of pages, ", content="This is some content")
 
@@ -49,8 +49,8 @@ class CardCog2(commands.Cog):
         This function is for testing the page system.
         '''
         bot = ctx.bot
-        auth = ctx.message.author;
-        channel = ctx.message.channel;
+        auth = ctx.message.author
+        channel = ctx.message.channel
         await ctx.channel.send("<a:stopwatch:774741008495542284>\n <a:stopwatch_15:774741008793337856>")
 
     @commands.command()
@@ -62,8 +62,8 @@ class CardCog2(commands.Cog):
         The tiebreaker system, when presented with a list, will send
         '''
         bot = ctx.bot
-        auth = ctx.message.author;
-        channel = ctx.message.channel;
+        auth = ctx.message.author
+        channel = ctx.message.channel
         choices = [
             ["Case 0", "0", "<:_0:754494641050615809>"],
             ["Case 1", "1", "<:_1:754494641096622153>"],
@@ -98,22 +98,23 @@ class CardCog(commands.Cog):
     @commands.command(pass_context=True, aliases=['stampV'])
     async def stamp(self, ctx, *args):
         bot = ctx.bot
-        auth = ctx.message.author;
-        channel = ctx.message.channel;
+        auth = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
 
     @commands.command(pass_context=True)
     async def numbertoimage(self, ctx, *args):
         bot = ctx.bot
-        auth = ctx.message.author;
-        channel = ctx.message.channel;
+        auth = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         number = None
         if (leng == 1):
             number = int(args[0])
         if (number != None):
             with io.BytesIO() as image_binary:
-                makeNumber(number).save(image_binary, 'PNG')  # Returns pil object.
+                # Returns pil object.
+                makeNumber(number).save(image_binary, 'PNG')
                 image_binary.seek(0)
                 await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
 
@@ -148,8 +149,8 @@ class CardCog(commands.Cog):
     async def myprofile(self, ctx, *args):
         """Returns the User's Profile."""
         bot = ctx.bot
-        author = ctx.message.author;
-        channel = ctx.message.channel;
+        author = ctx.message.author
+        channel = ctx.message.channel
 
         user_id = author.id
         leng = len(args)
@@ -165,31 +166,42 @@ class CardCog(commands.Cog):
         personal_retrieval = CustomRetrievalClass(bot)
 
         cardhead = "Cards: {}".format(profile.get_cardcount())
-        card_list = ''.join([' {},'.format(item[0:32]) for item in profile.card_name_list()])
+        card_list = ''.join([' {},'.format(item[0:32])
+                             for item in profile.card_name_list()])
         card_list = "{:400}".format(card_list[:-1])
 
         customhead = "Customs: {}".format(profile.get_customcount())
-        custom_list = ''.join([' {},'.format(item[0:32]) for item in profile.custom_id_list()])
+        custom_list = ''.join([' {},'.format(item[0:32])
+                               for item in profile.custom_id_list()])
         custom_list = "{:400}".format(custom_list[:-1])
 
         embed.set_author(name=author.name, icon_url=author.avatar_url)
-        embed.set_footer(text="myprofile command", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
+        embed.set_footer(text="myprofile command",
+                         icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
         embed.add_field(name="**Inventory**",
-                        value="{}\n```{}```{}\n```{}```\n".format(cardhead, card_list, customhead, custom_list),
+                        value="{}\n```{}```{}\n```{}```\n".format(
+                            cardhead, card_list, customhead, custom_list),
                         inline=False)
 
         deckhead = "Decks: {}".format(profile.get_deckcount())
-        deck_list = ''.join([' {},'.format(item.get_shorthand_rep()) for item in profile.get_decks()])
+        deck_list = ''.join([' {},'.format(item.get_shorthand_rep())
+                             for item in profile.get_decks()])
         deck_list = "{:400}".format(deck_list[:-1])
-        embed.add_field(name=deckhead, value="```{}```".format(deck_list), inline=False)
+        embed.add_field(name=deckhead, value="```{}```".format(
+            deck_list), inline=False)
 
-        embed.add_field(name="Coins", value=str(profile.get_coins()), inline=True)
-        embed.add_field(name="Stars", value=str(profile.get_stars()), inline=True)
-        embed.add_field(name="TBD", value=str(profile.get_stars()), inline=True)
+        embed.add_field(name="Coins", value=str(
+            profile.get_coins()), inline=True)
+        embed.add_field(name="Stars", value=str(
+            profile.get_stars()), inline=True)
+        embed.add_field(name="TBD", value=str(
+            profile.get_stars()), inline=True)
         # embed.add_field(name="custom", value="Custom was applied.",)
         embed.add_field(name="Exp", value=str(profile.get_exp()), inline=True)
-        embed.add_field(name="Level", value=str(profile.get_level()), inline=True)
-        embed.add_field(name="TBD", value=str(profile.get_stars()), inline=True)
+        embed.add_field(name="Level", value=str(
+            profile.get_level()), inline=True)
+        embed.add_field(name="TBD", value=str(
+            profile.get_stars()), inline=True)
 
         mess = await channel.send(content="", embed=embed)
 
@@ -197,24 +209,26 @@ class CardCog(commands.Cog):
     async def getimage(self, ctx, *args):
         """Get a image and return it."""
         bot = ctx.bot
-        auth = ctx.message.author;
-        channel = ctx.message.channel;
+        auth = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         with io.BytesIO() as image_binary:
-            make_summon_cost(1, 1, 1).save(image_binary, 'PNG')  # Returns pil object.
+            # Returns pil object.
+            make_summon_cost(1, 1, 1).save(image_binary, 'PNG')
             image_binary.seek(0)
             await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
 
     @commands.command(pass_context=True)
-    async def viewcard(self, ctx, *args):  # A very rudimentary card retrieval system.
+    # A very rudimentary card retrieval system.
+    async def viewcard(self, ctx, *args):
         '''
         syntax: viewcard [CardId]
         [CardId]: The Card ID you want to get.
         Gets the card_id specified out of your inventory
         '''
         bot = ctx.bot
-        author = ctx.message.author;
-        channel = ctx.message.channel;
+        author = ctx.message.author
+        channel = ctx.message.channel
 
         SingleUser = SingleUserProfile("arg")
         card_id = args[0]
@@ -227,7 +241,8 @@ class CardCog(commands.Cog):
             "\n Viewcard command.  Ideally, this will return multiple cards if the user has a duplicate.  Not now though. \n")
         for card in result:
             if (card["custom"] != None):
-                customobject = await CustomRetrievalClass().getByID(card["custom"], bot)  # Test
+                # Test
+                customobject = await CustomRetrievalClass().getByID(card["custom"], bot)
                 newcard.apply_custom(custom=customobject)
                 embed = newcard.to_DiscordEmbed()
                 await channel.send(content=str(newcard), embed=embed)
@@ -238,7 +253,8 @@ class CardCog(commands.Cog):
         print("NOTE: NEED TO MAKE CARD EMBED FORMAT CLASS IN CARD.PY")
 
     @commands.command(pass_context=True)
-    async def addCustomold(self, ctx, *args):  # A very rudimentary card retrieval system.
+    # A very rudimentary card retrieval system.
+    async def addCustomold(self, ctx, *args):
         '''
         syntax: cardGet [CardId] CustomId]
         [CardId]: The Card ID you want to get.
@@ -246,23 +262,24 @@ class CardCog(commands.Cog):
 
         '''
         bot = ctx.bot
-        auth = ctx.message.author;
-        channel = ctx.message.channel;
+        auth = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
 
         cipher = await CustomRetrievalClass().addCustom("TEXT", bot)
         await channel.send(content=cipher)
 
     @commands.command(pass_context=True)
-    async def carddex(self, ctx, *args):  # A very rudimentary card retrieval system.
+    # A very rudimentary card retrieval system.
+    async def carddex(self, ctx, *args):
         '''
         syntax: carddex
 
         Returns a list of every single card in the game.
         '''
         bot = ctx.bot
-        auth = ctx.message.author;
-        channel = ctx.message.channel;
+        auth = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         param1 = 0
         if (leng >= 1):
@@ -274,7 +291,8 @@ class CardCog(commands.Cog):
         #    await channel.send(str(card))
 
     @commands.command(pass_context=True)
-    async def cardGet(self, ctx, *args):  # A very rudimentary card retrieval system.
+    # A very rudimentary card retrieval system.
+    async def cardGet(self, ctx, *args):
         '''
         syntax: cardGet [CardId] CustomId]
         [CardId]: The Card ID you want to get.
@@ -282,8 +300,8 @@ class CardCog(commands.Cog):
 
         '''
         bot = ctx.bot
-        auth = ctx.message.author;
-        channel = ctx.message.channel;
+        auth = ctx.message.author
+        channel = ctx.message.channel
         leng = len(args)
         if (leng >= 1):
             id = args[0]

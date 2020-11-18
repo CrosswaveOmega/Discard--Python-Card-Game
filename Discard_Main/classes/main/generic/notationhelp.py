@@ -34,7 +34,7 @@ def get_letter(number):
 
 def to_notation(column, row):
     letter = NUMBERS[column]
-    return "" + letter + str(row);
+    return "" + letter + str(row)
 
 
 # Driver Code.

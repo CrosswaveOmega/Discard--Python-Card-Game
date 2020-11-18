@@ -31,8 +31,10 @@ class CustomBase():  # Wip.
         #    (00000000  to FFFFFFFF, makes maximum of 4,294,967,296 cards.
         self.name = ""  # • Name- The name of the card.  Customizable by a user,
         self.icon = ""  # • Icon- A emoji that will represent this card, placed before.   Customizable by a user,<:thonkang:219069250692841473>
-        self.image_url = ""  # • Image- Background image the card displays.   Customizable by a user,
-        self.image_message_id = 0  # • Image- Background image the card displays.   Customizable by a user,
+        # • Image- Background image the card displays.   Customizable by a user,
+        self.image_url = ""
+        # • Image- Background image the card displays.   Customizable by a user,
+        self.image_message_id = 0
         self.subtype = ""  # • Type- The type of card this is.
         if csvText != "none":
             print("Iterating CSV TABLE")
@@ -44,7 +46,8 @@ class CustomBase():  # Wip.
             self.name = name  # • Name- The name of the card.  Customizable by a user,
             self.icon = icon  # • Icon- A emoji that will represent this card, placed before.   Customizable by a user,<:thonkang:219069250692841473>
             self.image_message_id = 0
-            self.image_url = image  # • Image- Background image the card displays.   Customizable by a user,
+            # • Image- Background image the card displays.   Customizable by a user,
+            self.image_url = image
             self.subtype = type  # • Type- The type of card this is.
 
     def fromCSV(self, csvText):
@@ -103,22 +106,24 @@ class CustomIDSystem:
             file = self.get_file_from_directory(1)
             file2 = self.get_file_from_directory(2)
             if (file != None):
-                f = file.open(mode='r');
-                string = f.read();
+                f = file.open(mode='r')
+                string = f.read()
                 self.custom_dictionary = json.loads(string)
                 f.close()
             else:
                 self.custom_dictionary = {}
-                print("Should initalize new default user profile, add that into custom_dictionary under user id.")
+                print(
+                    "Should initalize new default user profile, add that into custom_dictionary under user id.")
                 self.save_custom_dictionary(1)
             if (file2 != None):
-                f = file2.open(mode='r');
-                string = f.read();
+                f = file2.open(mode='r')
+                string = f.read()
                 self.custom_names = json.loads(string)
                 f.close()
             else:
                 self.custom_names = {}
-                print("Should initalize new default user profile, add that into custom_dictionary under user id.")
+                print(
+                    "Should initalize new default user profile, add that into custom_dictionary under user id.")
                 self.save_custom_dictionary(2)
 
         def getCipherInternal(self, cipher_id):
@@ -148,7 +153,8 @@ class CustomIDSystem:
             file_id is 1 for custom_dictionary
             file_id is 2 for custom_names
             """
-            filename = "customdata_" + str(file_id) + ".json"  # filename from json.
+            filename = "customdata_" + str(file_id) + \
+                ".json"  # filename from json.
             to_save = {}
             if (file_id == 1):
                 to_save = self.custom_dictionary
@@ -188,7 +194,8 @@ class CustomIDSystem:
             return len(self.custom_dictionary)
 
         def get_file_from_directory(self, file_id):
-            filename = "customdata_" + str(file_id) + ".json"  # filename from json.
+            # filename from json.
+            filename = "customdata_" + str(file_id) + ".json"
             file = Path(directory + "/" + filename)
             if file.exists():  # check if this file exists.
                 return file
@@ -200,7 +207,8 @@ class CustomIDSystem:
 
     instance = None
 
-    def __init__(self, arg="None"):  # Internally, it keeps a single instance of the __SingleDictionary class in memory.
+    # Internally, it keeps a single instance of the __SingleDictionary class in memory.
+    def __init__(self, arg="None"):
         if not CustomIDSystem.instance:
             CustomIDSystem.instance = CustomIDSystem.__CustomIDSystem(arg)
         else:
@@ -219,13 +227,15 @@ class CustomIDSystem:
         newCipher = ""
         # every new cipher needs to be unique.
         same_check = True
-        chance_of_repeat = float(CustomIDSystem.instance.get_number_of_all_custom_ids() / 1073741824.0) * 100.0
+        chance_of_repeat = float(
+            CustomIDSystem.instance.get_number_of_all_custom_ids() / 1073741824.0) * 100.0
         print("Chance of repeated CustomId is ", str(chance_of_repeat))
         while same_check:
             same_check = False
             for i in range(0, 6):
                 newCipher = newCipher + random.choice(cipher_characters)
-            same_check = CustomIDSystem.instance.checkforidincustom_dictionary(newCipher)
+            same_check = CustomIDSystem.instance.checkforidincustom_dictionary(
+                newCipher)
         return newCipher
 
     def add_custom_to_system(self, message_id):
@@ -268,11 +278,16 @@ class CustomRetrievalClass():  # by no means what the final version should use.
         if botToUse:
             print("getting id")
             print(configur.get("Default", 'bts_server'))
-            checkGuild = bot.get_guild(int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
-            custom_channel = checkGuild.get_channel(int(configur.get("Default", 'bts_custom')))  # Customs Channel.
+            # Behind The Scenes server
+            checkGuild = bot.get_guild(
+                int(configur.get("Default", 'bts_server')))
+            # Customs Channel.
+            custom_channel = checkGuild.get_channel(
+                int(configur.get("Default", 'bts_custom')))
             print(custom_channel)
 
-            message = await custom_channel.send(content=" Text")  # message to second
+            # message to second
+            message = await custom_channel.send(content=" Text")
             blank_custom = CustomBase(id=message.id, name=new_name)
             cipher = CustomIDSystem("Init").add_custom_to_system(message.id)
             CustomIDSystem("Name").update_name(cipher, new_name)
@@ -295,9 +310,14 @@ class CustomRetrievalClass():  # by no means what the final version should use.
             mess_id = CustomIDSystem("start").cipherIDtoMessageId(ID)
             if (mess_id == None):
                 return "INVALID CUSTOM ID."
-            checkGuild = bot.get_guild(int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
-            custom_channel = checkGuild.get_channel(int(configur.get("Default", 'bts_custom')))  # Customs Channel.
-            message = await custom_channel.fetch_message(int(mess_id))  # message to get.
+            # Behind The Scenes server
+            checkGuild = bot.get_guild(
+                int(configur.get("Default", 'bts_server')))
+            # Customs Channel.
+            custom_channel = checkGuild.get_channel(
+                int(configur.get("Default", 'bts_custom')))
+            # message to get.
+            message = await custom_channel.fetch_message(int(mess_id))
 
             custom = CustomBase(id=ID, csvText=message.content)
             CustomIDSystem("Name").update_name(ID, custom.name)
@@ -317,8 +337,12 @@ class CustomRetrievalClass():  # by no means what the final version should use.
         if botToUse:
             print("getting id")
             print(configur.get("Default", 'bts_server'))
-            checkGuild = bot.get_guild(int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
-            custom_channel = checkGuild.get_channel(int(configur.get("Default", 'bts_custom')))  # Customs Channel.
+            # Behind The Scenes server
+            checkGuild = bot.get_guild(
+                int(configur.get("Default", 'bts_server')))
+            # Customs Channel.
+            custom_channel = checkGuild.get_channel(
+                int(configur.get("Default", 'bts_custom')))
             print(custom_channel)
             ID = custom.ID
             print(ID)
@@ -327,8 +351,10 @@ class CustomRetrievalClass():  # by no means what the final version should use.
             CustomIDSystem("Name").update_name(ID, custom.name)
 
             CustomIDSystem("SaveNew").save_all()
-            message = await custom_channel.fetch_message(mess_id)  # message to get.
-            await message.edit(content=custom.toCSV())  # Custom needs to be uploaded by bot.
+            # message to get.
+            message = await custom_channel.fetch_message(mess_id)
+            # Custom needs to be uploaded by bot.
+            await message.edit(content=custom.toCSV())
             # print(message.content)
             return CustomBase(csvText=message.content)
         return "CUSTOM NOT FOUND."
@@ -346,14 +372,19 @@ class CustomRetrievalClass():  # by no means what the final version should use.
         if botToUse:
             print("getting id")
             print(configur.get("Default", 'bts_server'))
-            checkGuild = bot.get_guild(int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
-            custom_channel = checkGuild.get_channel(int(configur.get("Default", 'bts_custom')))  # Customs Channel.
+            # Behind The Scenes server
+            checkGuild = bot.get_guild(
+                int(configur.get("Default", 'bts_server')))
+            # Customs Channel.
+            custom_channel = checkGuild.get_channel(
+                int(configur.get("Default", 'bts_custom')))
             print(custom_channel)
             print(ID)
             mess_id = CustomIDSystem("start").cipherIDtoMessageId(ID)
             if (mess_id == None):
                 return "INVALID CUSTOM ID."
-            message = await custom_channel.fetch_message(int(mess_id))  # message to get.
+            # message to get.
+            message = await custom_channel.fetch_message(int(mess_id))
             # print(message.content)
             return CustomBase(id=ID, csvText=message.content)
         return None
@@ -369,12 +400,17 @@ class CustomRetrievalClass():  # by no means what the final version should use.
         elif self.botstore:
             botToUse = self.botstore
         if botToUse:
-            checkGuild = bot.get_guild(int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
-            custom_channel = checkGuild.get_channel(int(configur.get("Default", 'bts_custom')))  # Customs Channel.
+            # Behind The Scenes server
+            checkGuild = bot.get_guild(
+                int(configur.get("Default", 'bts_server')))
+            # Customs Channel.
+            custom_channel = checkGuild.get_channel(
+                int(configur.get("Default", 'bts_custom')))
 
             new_name = custom_to_clone.name + "- Copy"
 
-            message = await custom_channel.send(content=" Text")  # message to second
+            # message to second
+            message = await custom_channel.send(content=" Text")
 
             blank_custom = CustomBase(id=message.id, name=new_name)
             cipher = CustomIDSystem("Init").add_custom_to_system(message.id)

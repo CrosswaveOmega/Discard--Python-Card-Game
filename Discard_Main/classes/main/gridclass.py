@@ -38,7 +38,8 @@ class Grid:  # Should we make a generic grid class?
         if (self.check_if_space_is_on_board(pos.getC(), pos.getR())):  # Is within Range,
             if (self.gamemode):
                 for piece in self.game_ref.get_entity_list():
-                    if pos.get_notation() == piece.position.get_notation():  # There is not a creature there.
+                    # There is not a creature there.
+                    if pos.get_notation() == piece.position.get_notation():
                         return False
             return True
         return False
@@ -68,16 +69,19 @@ class Grid:  # Should we make a generic grid class?
         current_row = orig_row
         current_count = 1
         while valid:
-            if (self.check_if_space_is_on_board(current_column + modX, current_row + modY)):  # Out of bounds check.
+            # Out of bounds check.
+            if (self.check_if_space_is_on_board(current_column + modX, current_row + modY)):
                 pos = Position(current_column + modX, current_row + modY)
                 print(pos.get_notation())
-                valid = self.check_if_space_is_valid(pos)  # Is there a piece already there check.
+                # Is there a piece already there check.
+                valid = self.check_if_space_is_valid(pos)
                 if valid:
                     list.append(pos.get_notation())
                     modX = modX + changeX
                     modY = modY + changeY
                 current_count = current_count + 1
-                if (current_count > limit):  # if the current_count is more than the limit param, set valid to false.
+                # if the current_count is more than the limit param, set valid to false.
+                if (current_count > limit):
                     valid = False
             else:
                 valid = False
@@ -102,8 +106,9 @@ class Grid:  # Should we make a generic grid class?
         if scope == "COLUMN":
             orig_column = current.getC()
             orig_row = current.getR()
-            listA = self.check_with_change(orig_column, orig_row, -1, 0, limitV);
-            listB = self.check_with_change(orig_column, orig_row, 1, 0, limitV);
+            listA = self.check_with_change(
+                orig_column, orig_row, -1, 0, limitV)
+            listB = self.check_with_change(orig_column, orig_row, 1, 0, limitV)
             for item in listA:
                 list.append(item)
             for item in listB:
@@ -111,8 +116,9 @@ class Grid:  # Should we make a generic grid class?
         if scope == "ROW":
             orig_column = current.getC()
             orig_row = current.getR()
-            listA = self.check_with_change(orig_column, orig_row, 0, -1, limitV);
-            listB = self.check_with_change(orig_column, orig_row, 0, 1, limitV);
+            listA = self.check_with_change(
+                orig_column, orig_row, 0, -1, limitV)
+            listB = self.check_with_change(orig_column, orig_row, 0, 1, limitV)
             for item in listA:
                 list.append(item)
             for item in listB:
@@ -120,10 +126,13 @@ class Grid:  # Should we make a generic grid class?
         if scope == "DIAGONAL":
             orig_column = current.getC()
             orig_row = current.getR()
-            listA = self.check_with_change(orig_column, orig_row, 1, -1, limitV);
-            listB = self.check_with_change(orig_column, orig_row, 1, 1, limitV);
-            listC = self.check_with_change(orig_column, orig_row, -1, -1, limitV);
-            listD = self.check_with_change(orig_column, orig_row, -1, 1, limitV);
+            listA = self.check_with_change(
+                orig_column, orig_row, 1, -1, limitV)
+            listB = self.check_with_change(orig_column, orig_row, 1, 1, limitV)
+            listC = self.check_with_change(
+                orig_column, orig_row, -1, -1, limitV)
+            listD = self.check_with_change(
+                orig_column, orig_row, -1, 1, limitV)
             for item in listA:
                 list.append(item)
             for item in listB:
@@ -153,11 +162,13 @@ class Grid:  # Should we make a generic grid class?
             scopeb = moves[3]
             valueb = moves[4]
         if scopea == "X":
-            newPos = current + Position(int(valuea), int(valueb))  # If scopeb was set, it would be Y
+            # If scopeb was set, it would be Y
+            newPos = current + Position(int(valuea), int(valueb))
             if (self.check_if_space_is_possibly_valid(newPos, 0, 0)):
                 list.append(newPos.get_notation())
         if scopea == "Y":
-            newPos = current + Position(int(valueb), int(valuea))  # If scopeb was set, it would be X
+            # If scopeb was set, it would be X
+            newPos = current + Position(int(valueb), int(valuea))
             if (self.check_if_space_is_possibly_valid(newPos, 0, 0)):
                 list.append(newPos.get_notation())
         return list
@@ -190,28 +201,32 @@ class Grid:  # Should we make a generic grid class?
                 if not (newPos.get_notation() in list):
                     list.append(newPos.get_notation())
                     if (distance > 0):
-                        current_stack.append({"pos": newPos, "distance": distance})
+                        current_stack.append(
+                            {"pos": newPos, "distance": distance})
             modX, modY = -1, 0
             if (self.check_if_space_is_possibly_valid(pos, modX, modY)):
                 newPos = pos + Position(modX, modY)
                 if not (newPos.get_notation() in list):
                     list.append(newPos.get_notation())
                     if (distance > 0):
-                        current_stack.append({"pos": newPos, "distance": distance})
+                        current_stack.append(
+                            {"pos": newPos, "distance": distance})
             modX, modY = 0, -1
             if (self.check_if_space_is_possibly_valid(pos, modX, modY)):
                 newPos = pos + Position(modX, modY)
                 if not (newPos.get_notation() in list):
                     list.append(newPos.get_notation())
                     if (distance > 0):
-                        current_stack.append({"pos": newPos, "distance": distance})
+                        current_stack.append(
+                            {"pos": newPos, "distance": distance})
             modX, modY = 0, 1
             if (self.check_if_space_is_possibly_valid(pos, modX, modY)):
                 newPos = pos + Position(modX, modY)
                 if not (newPos.get_notation() in list):
                     list.append(newPos.get_notation())
                     if (distance > 0):
-                        current_stack.append({"pos": newPos, "distance": distance})
+                        current_stack.append(
+                            {"pos": newPos, "distance": distance})
         return list
 
     def get_all_movements_in_range(self, current, line):
@@ -274,7 +289,9 @@ class Grid:  # Should we make a generic grid class?
             numgrid.append(get_letter(j + 1))
         #    newgrid.insert(0, numgrid)
         returnVal = ""
-        returnVal = returnVal + (''.join(['{:10}|'.format(item) for item in numgrid])) + str(numgrid) + "\n"
+        returnVal = returnVal + \
+            (''.join(['{:10}|'.format(item)
+                      for item in numgrid])) + str(numgrid) + "\n"
         # north
         startValue = 0  # Start at top of board.
         endValue = self.rows  # End at bottom of board
@@ -288,7 +305,9 @@ class Grid:  # Should we make a generic grid class?
             delim = -1
         while row != endValue:
             print(row)
-            returnVal = returnVal + (''.join(['{:10}|'.format(item) for item in newgrid[row]])) + str(row + 1) + "\n"
+            returnVal = returnVal + \
+                (''.join(['{:10}|'.format(item)
+                          for item in newgrid[row]])) + str(row + 1) + "\n"
             row = row + delim
 
         print(returnVal)
