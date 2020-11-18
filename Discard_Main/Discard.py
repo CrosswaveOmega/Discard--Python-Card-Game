@@ -195,3 +195,5 @@ class Card_Duel_Helper():
         print("To Be Completed.")
     async def send_user_updates(self):
         await self.__card_duel.update_grid_image()
+    async def resend_info_messages(self):
+        await self.__card_duel.resend_infomation()
