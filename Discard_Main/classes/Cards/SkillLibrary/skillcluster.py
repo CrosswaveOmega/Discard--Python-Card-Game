@@ -1,5 +1,6 @@
 from .. import card
-
+import aiohttp
+import asyncio
 
 # BasicAttack is an attack that can be done on adjacent enemies.
 # It inflicts damage on a target, which diminishes that targets HP.
@@ -10,7 +11,7 @@ class BasicAttack(card.Skill):  # Custom Class
         self.danage_tag=damage_tag # for future functionality.  Just ignore it for now.
         super().__init__(name, trigger, target, type, limit, description)
 
-    def doSkill(self, user, target, game_ref):
+    async def doSkill(self, user, target, game_ref):
         """
          What the skill will actually do.
          user is the entity using the skill.
@@ -27,7 +28,9 @@ class BasicAttack(card.Skill):  # Custom Class
 
         dictionary["damage"]=self.damage
         dictionary["tag"]=self.damage_tag
+
         for entity in dictionary["target"]:
+            await game_ref.make_announcement("{} uses {} on {} for {} damage.".format(user.get_name(), self.get_name(), piece.get_name(), dictionary["damage"]))
             print("HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
             if True:  # here, it would check for some kind of effect. for record.
                 piece.add_damage(dictionary["damage"])
@@ -43,7 +46,7 @@ class BasicHeal(card.Skill):
         super().__init__(name, trigger, target, type, limit, description)
         self.heal_amount = heal_amount
 
-    def doSkill(self, user, target, game_ref):
+    async def doSkill(self, user, target, game_ref):
 
         heal_dict = {}
         heal_dict["user"] = user
@@ -66,7 +69,7 @@ class BasicShield(card.Skill):
         self.shield_amount = shield_amount
         super().__init__(name, trigger, target, type, limit, description)
 
-    def doSkill(self, user, target, game_ref):
+    async def doSkill(self, user, target, game_ref):
 
         shield_dict = {}
         shield_dict["user"] = user
@@ -89,7 +92,7 @@ class MultiAttack(card.Skill):
         self.damage_tag = damage_tag
         super().__init__(name, trigger, target, type, limit, description)
 
-    def doSkill(self, user, target, game_ref):
+    async def doSkill(self, user, target, game_ref):
 
         # This is the most basic version of the multi-stage attack.
         # It strikes three times, but this could easily be changed if necessary.

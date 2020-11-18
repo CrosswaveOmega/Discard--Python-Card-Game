@@ -199,11 +199,14 @@ class Creature(Piece):
 
         skill_list=[]
         if(skill_1!=None):
-            skill_list.append(skill_1.get_name())
+            if(skill_1.trigger=="command"):
+                skill_list.append(skill_1.get_name())
         if(skill_2!=None):
-            skill_list.append(skill_2.get_name())
+            if(skill_2.trigger=="command"):
+                skill_list.append(skill_2.get_name())
         if(skill_3!=None):
-            skill_list.append(skill_3.get_name())
+            if(skill_3.trigger=="command"):
+                skill_list.append(skill_2.get_name())
 
 
         option=await self.player.select_option(skill_list, "Select a skill")
@@ -219,7 +222,7 @@ class Creature(Piece):
 
         target_list, amount=match_with_target_data(skill.get_target_data(), self, game_ref)
         if(len(target_list)<=amount):
-            skill.doSkill(self, target, game_ref)
+            await skill.doSkill(self, target, game_ref)
             return True
 
         selected_targets=[]

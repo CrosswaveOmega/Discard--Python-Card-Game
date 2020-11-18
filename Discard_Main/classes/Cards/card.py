@@ -1,6 +1,8 @@
 import discord
 import operator
 import json
+import aiohttp
+import asyncio
 from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
@@ -133,7 +135,7 @@ class Skill():
         print(type, name, target, desc)
         return trigger, type, name, target, desc
 
-    def doSkill(self, user, target, game_ref):
+    async def doSkill(self, user, target, game_ref):
         #What the skill will actually do.
         #user is the entity using the skill.
         #target is what the skill is being used on.

@@ -54,6 +54,8 @@ class Card_Duel():
         self.log=[] #Log of everything that happened.
         self.game_is_active=False
 
+        self.current_piece=None
+
     def apply_settings(self, settings=None):
         if settings!=None:
             self.settings=settings
@@ -99,6 +101,13 @@ class Card_Duel():
     def move_piece(self, piece):
         piece.get_move_options(self.grid)
 
+    async def resend_infomation(self):
+        for player in self.players:
+            if(player.get_PlayerType()=="Discord"):
+                await player.get_dpios().send_order()
+                await player.send_embed_to_user()
+        await self.update_grid_image()
+        await self.send_current_piece_embed(self.current_piece)
     async def update_grid_image(self):
         #Refresh the grid image.
         checkGuild= self.bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
@@ -136,6 +145,7 @@ class Card_Duel():
         stack = []
         for i in range(len(queue)):
             current_piece=queue.pop()
+            self.current_piece=current_piece
             await self.send_current_piece_embed(current_piece)
             stack.append(current_piece) #add to stack from queue the piece with the highest speed and perform its action one a time
             await stack[i].get_action(self.duel_helper)
@@ -172,6 +182,8 @@ class Card_Duel_Helper():
         return new_list
     def get_grid(self):
         return self.__card_duel.grid
+    async def make_announcement(self, announe="Unset Announcement"):
+        await self.__card_duel.send_announcement(announe)
     async def make_move_preview(self, spaces):
         img=await self.__card_duel.move_preview(spaces)
         return img
