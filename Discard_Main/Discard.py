@@ -107,7 +107,8 @@ class Card_Duel():
                 await player.get_dpios().send_order()
                 await player.send_embed_to_user()
         await self.update_grid_image()
-        await self.send_current_piece_embed(self.current_piece)
+        if self.current_piece != None:
+            await self.send_current_piece_embed(self.current_piece)
     async def update_grid_image(self):
         #Refresh the grid image.
         checkGuild= self.bot.get_guild(int(configur.get("Default",'bts_server'))) #Behind The Scenes server
