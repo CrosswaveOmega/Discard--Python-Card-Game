@@ -59,6 +59,7 @@ class Main(commands.Cog):
         '''
         user=message.author
         channel=message.channel
+        print("Yes, yes.")
         #dicti=vars(Grid())
         #print(json.dumps(dicti))
         #if user != bot.user:

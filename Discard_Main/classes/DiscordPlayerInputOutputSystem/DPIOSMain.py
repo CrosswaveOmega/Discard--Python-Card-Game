@@ -26,9 +26,9 @@ class DPIOS:
         self.image_msg=None
         self.player_msg=None
         self.current_msg=None
-        self.image_embed=embed=discord.Embed(title="place", colour=discord.Colour(0x7289da))
-        self.player_embed=embed=discord.Embed(title="place", colour=discord.Colour(0x7289da))
-        self.current_embed=embed=discord.Embed(title="place", colour=discord.Colour(0x7289da))
+        self.image_embed=embed=discord.Embed(title="place", colour=discord.Colour(0x7289da), description="New")
+        self.player_embed=embed=discord.Embed(title="place", colour=discord.Colour(0x7289da), description="New")
+        self.current_embed=embed=discord.Embed(title="place", colour=discord.Colour(0x7289da), description="New")
 
     def has_something_in_buffer(self):
         if len(self.input_buffer)>0:

@@ -162,8 +162,7 @@ class Card_Duel():
             self.current_piece = current_piece
             await self.update_all()
             #await self.send_current_piece_embed(current_piece)
-            stack.append(
-                current_piece)  # add to stack from queue the piece with the highest speed and perform its action one a time
+            stack.append(current_piece)  # add to stack from queue the piece with the highest speed and perform its action one a time
             await stack[i].get_action(self.duel_helper)
         return stack  # stack will now contain entity_list from highest to lowest speed
 
