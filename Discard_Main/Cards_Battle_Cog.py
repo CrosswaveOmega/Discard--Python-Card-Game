@@ -36,13 +36,16 @@ from .Discard import *
 async def get_everything(bot, author, channel, team=1):
     """Returns profile and player of the passed in info"""
     print("get profile of user.")
-    profile = SingleUser.getById(author.id)
+    SingleUser = SingleUserProfile("arg")
+    id=author.id
+    profile = SingleUser.getByID(id)
     playerDeck = []
     print("Right now, it only gets the first deck of the user.")
     playerDeck_RAW = profile.get_decks()[0]  # inventory entries.
     for deck_card in playerDeck_RAW.get_deck_cards():
         newcard = await inventory_entry_to_card_object(bot, deck_card)
         playerDeck.append(newcard)
+        print(newcard.get_image())
     player_DPIOS = DPIOS(channel, author, bot)
     await player_DPIOS.send_order()
     player = DiscordPlayer(deck=playerDeck, team=team, dpios=player_DPIOS)
@@ -92,10 +95,12 @@ class CardCogBattle(commands.Cog):
         channel = ctx.message.channel
 
         server = channel.guild
+        SingleUser = SingleUserProfile("arg")
+        room2 = server.get_channel(777998040283086900)
+        room1 = server.get_channel(777997792558710804)
 
-        room1 = server.fetch_channel(777997792558710804)
-        room2 = server.fetch_channel(777998040283086900)
-
+        await room2.send("SAY SOMETHING HERE!")
+        await room1.send("SAY SOMETHING HERE!")
         user1 = None
         user2 = None
 
@@ -117,7 +122,7 @@ class CardCogBattle(commands.Cog):
 
         messagetask1 = asyncio.create_task(getMessageInChannel1())
         messagetask2 = asyncio.create_task(getMessageInChannel2())
-        tasklist = [messagetask, messagetask2]
+        tasklist = [messagetask1, messagetask2]
 
         await channel.send("Please have one user say something in room1, and have another user say something in room 2.")
         # there's probably a better way to do this.
@@ -126,7 +131,7 @@ class CardCogBattle(commands.Cog):
             user1 = messagetask1.result()
         if messagetask2 in done:
             user2 = messagetask2.result()
-
+        print(user1.id, user2.id)
         profile1, player1 = await get_everything(bot, user1, room1, team=1)
         profile2, player2 = await get_everything(bot, user2, room2, team=2)
 

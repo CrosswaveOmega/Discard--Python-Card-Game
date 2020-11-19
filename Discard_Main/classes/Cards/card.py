@@ -68,8 +68,8 @@ class CardBase():  # Wip.
         if hasattr(custom, 'image_url'):
             if (custom.image_url != "" or custom.image_url != "None"):
                 self.image = custom.image_url
-        if hasattr(custom, 'type'):
-            self.type = custom.type
+        #if hasattr(custom, 'type'):
+        #    self.type = custom.type
 
     def to_DiscordEmbed(self):
         print("TBD")
@@ -289,8 +289,8 @@ class CreatureCard(CardBase):
     def to_DiscordEmbed(self, use_image=True):
         embed = discord.Embed(title="{icon} {card_name}".format(icon=self.icon, card_name=self.name),
                               colour=discord.Colour(0x7289da),
-                              description="HP: {hp} \n ```we could let users place a description here.```".format(
-                                  hp=self.hp))
+                              description="HP: {hp} \n Speed: {speed}```we could let users place a description here.```".format(
+                                  hp=self.hp, speed=self.speed))
         print("Image", self.image)
         if (self.image != None and self.image != "None"):
             if (use_image):
@@ -323,8 +323,6 @@ class CreatureCard(CardBase):
                     trig=trigger, skill_type=type, skill_name=name),
                 value="***target: {target_string_format}***\n{description}".format(target_string_format=target,
                                                                                    description=desc), inline=False)
-        embed.add_field(name="Speed", value="{speed}".format(
-            speed=self.speed), inline=True)
         moveString = make_move_style_for_content(self.move_style)
         embed.add_field(name="Move Style", value=moveString, inline=True)
         embed.add_field(name="Summon_Cost",

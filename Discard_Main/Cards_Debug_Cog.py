@@ -129,6 +129,9 @@ class DebugCog(commands.Cog):
 
     @commands.command()
     async def add_card(self, ctx, *args):
+        '''
+        syntax: add_card [card_id]
+        '''
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel

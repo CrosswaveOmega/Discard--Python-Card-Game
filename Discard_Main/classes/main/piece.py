@@ -193,7 +193,7 @@ class Creature(Piece):
     def __init__(self, creature_card, player, position):
         # Gets the attributes from a passed in creature card
         # Player and Position come from Piece class
-        super().__init__(player=player, position=position)
+        super().__init__(player=player, position=position, img=creature_card.get_image())
         self.name = creature_card.get_name()
         self.skill_1 = creature_card.get_skill_1()
         self.skill_2 = creature_card.get_skill_2()
@@ -211,11 +211,11 @@ class Creature(Piece):
         self.type = "Creature"
 
         self.card = creature_card
-
+        print(self.display_image)
         self.set_image_by_url(self.display_image)
 
     def get_card(self):
-        return self.card()
+        return self.card
 
     def generate_options(self):
         # creates a new dictionary of all options.
@@ -244,17 +244,19 @@ class Creature(Piece):
         if (option == "back" or option == "timeout"):
             return False
         skill = None
-        if (option == self.skill_1.get_name()):
-            skill = self.skill_1
-        if (option == self.skill_2.get_name()):
-            skill = self.skill_2
-        if (option == self.skill_3.get_name()):
-            skill = self.skill_3
+        if(self.skill_1!=None):
+            if (option == self.skill_1.get_name()):
+                skill = self.skill_1
+        if(self.skill_2!=None):
+            if (option == self.skill_2.get_name()):
+                skill = self.skill_2
+        if(self.skill_3!=None):
+            if (option == self.skill_3.get_name()):
+                skill = self.skill_3
 
-        target_list, amount = match_with_target_data(
-            skill.get_target_data(), self, game_ref)
+        target_list, amount = match_with_target_data(skill.get_target_data(), self, game_ref)
         if (len(target_list) <= amount):
-            await skill.doSkill(self, target, game_ref)
+            await skill.doSkill(self, target_list, game_ref)
             return True
 
         selected_targets = []
@@ -263,7 +265,7 @@ class Creature(Piece):
             if (target == "back" or target == "timeout"):
                 return False
             selected_targets.append(target)
-        skill.doSkill(self, target, game_ref)
+        skill.doSkill(self, selected_targets, game_ref)
         return True
 
     async def process_option(self, game_ref, action):

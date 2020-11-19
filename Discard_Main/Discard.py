@@ -191,7 +191,7 @@ class Card_Duel():
             print(self.round)
             self.entity_clear()
             await self.update_grid_image()
-            await asyncio.sleep(1)
+            await asyncio.sleep(0.2)
             if (self.round > 5):
                 self.game_is_active = False
         await self.send_announcement("THE GAME IS OVER.")

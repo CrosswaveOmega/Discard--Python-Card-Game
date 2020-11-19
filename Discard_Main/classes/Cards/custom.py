@@ -32,7 +32,7 @@ class CustomBase():  # Wip.
         self.name = ""  # • Name- The name of the card.  Customizable by a user,
         self.icon = ""  # • Icon- A emoji that will represent this card, placed before.   Customizable by a user,<:thonkang:219069250692841473>
         # • Image- Background image the card displays.   Customizable by a user,
-        self.image_url = ""
+        self.image_url = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         # • Image- Background image the card displays.   Customizable by a user,
         self.image_message_id = 0
         self.subtype = ""  # • Type- The type of card this is.
@@ -91,7 +91,7 @@ class CustomBase():  # Wip.
         return False
 
     def __str__(self):
-        return self.icon + "|" + self.name + "|" + self.type + "|" + str(self.ID)
+        return self.icon + "|" + self.name + "|" + self.subtype + "|" + str(self.ID)
 
 
 class CustomIDSystem:

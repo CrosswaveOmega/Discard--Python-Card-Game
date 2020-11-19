@@ -31,8 +31,7 @@ async def custom_id_from_match(ctx, profile, data_to_match):
     author = ctx.message.author
     channel = ctx.message.channel
     custom_id = None
-    type_of_match, matched_data = card_multimatch_with_type(
-        profile, data_to_match)
+    type_of_match, matched_data = card_multimatch_with_type(profile, data_to_match)
     if (type_of_match == "custom_name" or type_of_match == "card_id"):
         print(type_of_match, matched_data)
         inventory_entry = await make_tiebreaker_with_inventory_entries(ctx, matched_data)

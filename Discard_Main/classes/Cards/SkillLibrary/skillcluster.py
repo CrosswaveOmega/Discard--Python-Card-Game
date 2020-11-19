@@ -13,7 +13,7 @@ class BasicAttack(card.Skill):  # Custom Class
 
         self.damage = damage  # Unique to this skill.
         # for future functionality.  Just ignore it for now.
-        self.danage_tag = damage_tag
+        self.damage_tag = damage_tag
         super().__init__(name, trigger, target, type, limit, description)
 
     async def doSkill(self, user, target, game_ref):
@@ -33,7 +33,7 @@ class BasicAttack(card.Skill):  # Custom Class
         print(self.damage)
 
         dictionary["damage"] = self.damage
-        dictionary["tag"] = self.damage_tag
+        #dictionary["tag"] = self.damage_tag
 
         for entity in dictionary["target"]:
             await game_ref.send_announcement(
@@ -121,7 +121,7 @@ class MultiAttack(card.Skill):
 
         dictionary["damage"] = self.damage
         dictionary["attacks"] = self.damage
-        dictionary["tag"] = self.damage_tag
+        #dictionary["tag"] = self.damage_tag
         for entity in dictionary["target"]:
             output = "{} uses {} on {}!  Dealing {} damage {} times!".format(user.get_name(
             ), self.get_name(), entity.get_name(), dictionary["damage"], dictionary["attacks"])

@@ -339,6 +339,17 @@ class DeckCog(commands.Cog):
                 await channel.send(str(i.get_deck_description()))
                 return
         await channel.send("The deck you've entered does not exist.")
+    @commands.command(pass_context=True)
+    async def updateDeckCards(self, ctx, *args):
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        for i in profile.get_decks():
+            i.update_customs(profile.get_cards())
+
 
     @commands.command(pass_context=True)
     async def viewCardsInDeck(self, ctx, arg):

@@ -70,7 +70,7 @@ class TestCreature1(card.CreatureCard):
         summong = 2
         # Defining Skills.
         skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type",
-                             limit="limit", description="Type description here.", damage=12)
+                             limit="limit", description="Deal 12 damage.", damage=12)
         # CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
         skill2 = None
         # CustomSkill3("Custom Name 3", "trigger", "target", "type", "limit", "Type description here.")
@@ -252,7 +252,7 @@ class TestCreature3(card.CreatureCard):
                            heal_amount=3)
 
         # This defines the creature's move style
-        move_style = "HOP X -2 Y -2"
+        move_style = """STEP 2"""
         movelimit = 1
 
         super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
