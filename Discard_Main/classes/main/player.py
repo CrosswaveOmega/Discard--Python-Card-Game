@@ -91,7 +91,7 @@ class Player():
                 await self.send_announcement("unrecognized string was sent in.")
             return False
         position_not = await self.select_option(summon_locations, "Where should it summon to?")
-        if (position_not != "back" and position_not != "timeout"):
+        if (position_not != "back" and position_not != "timeout"and position_not!="invalidmessage"):
             print(position_not)
             new_creature = Creature(card, self, position_not)
             self.hand.remove(card)

@@ -171,12 +171,15 @@ class Card_Duel():
             current_piece = queue.pop()
             print(queue)
             self.current_piece = current_piece
-            await self.update_all()
+
             # await self.send_current_piece_embed(current_piece)
             # add to stack from queue the piece with the highest speed and perform its action one a time
             stack.append(current_piece)
             if(stack[i].get_hp() > 0):
+                current_piece.toggle_active()
+                await self.update_all()
                 await stack[i].get_action(self.duel_helper)
+            current_piece.toggle_active()
 
         return stack  # stack will now contain entity_list from highest to lowest speed
 
@@ -191,7 +194,7 @@ class Card_Duel():
             print(self.round)
             self.entity_clear()
             await self.update_grid_image()
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(0.02)
             if (self.round > 5):
                 self.game_is_active = False
         await self.send_announcement("THE GAME IS OVER.")

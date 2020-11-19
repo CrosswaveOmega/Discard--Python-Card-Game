@@ -18,6 +18,7 @@ from ..Cards.card import CreatureCard
 from ..imagemakingfunctions.imaging import *
 from .target_matching import match_with_target_data
 
+from .effect import Effect
 
 class Piece:
     """Base Class for Creature and Leader pieces
@@ -30,6 +31,8 @@ class Piece:
         self.name = name
         self.type="Default"
         self.game_id = 0
+
+        self.active=False
 
         self.max_hp = hp
         self.damage = 0
@@ -45,9 +48,26 @@ class Piece:
         self.current_options = {}
 
         self.effects = {}
+    def toggle_active(self):
+        self.active=not self.active
+    def add_effect(self, effect_name, time, context, function, arg, disable, disable_arg, level=0):
+        print("added_effect")
+        self.effects[effect_name]=Effect(time, context, function, arg, disable, disable_arg, level)
 
-    def add_effect(self, effect_name, effect):
-        pass
+    async def check_effects(self, time, context, dictionary, game_ref):
+        dicton=dictionary
+        to_disable=[]
+        for effect_name, effect in self.effects.items():
+            if effect.check_trigger(time, context):
+                dictionary=await effect.execute(dictionary, game_ref)
+            if effect.disable_check():
+                to_disable.append(effect_name)
+                await game_ref.send_announcement("{} wore off.".format(effect_name))
+            print("Ok")
+        print("ok")
+        for effect_name in to_disable:
+            self.effects.pop(effect_name)
+        return dictionary
 
     def set_game_id(self, new_id):
         self.game_id = new_id
@@ -77,7 +97,7 @@ class Piece:
         if(sent_mess != None):
             await sent_mess.delete()
 
-        if (option != "back" and option != "timeout"):
+        if (option != "back" and option != "timeout" and option!="invalidmessage"):
             print(option)
             self.change_position(option)
             game_ref.set_update()
@@ -103,7 +123,7 @@ class Piece:
                 if action in options:
                     options[action] = options[action] - 1
 
-        await asyncio.sleep(0.4)
+        await asyncio.sleep(0.1)
         await game_ref.send_announcement("Turn end.")
         return None
         # universal options.
@@ -142,7 +162,7 @@ class Piece:
 
     def hp_fraction(self):
         # Returns current hp divided by max_hp
-        return "{}.{}".format(self.get_hp(), self.max_hp)
+        return "{}/{}".format(self.get_hp(), self.max_hp)
 
     def get_speed(self):
         return self.speed
@@ -166,7 +186,7 @@ class Piece:
     def get_grid_card_icon(self):
         # Will need to optimize later.
         orig_img = self.get_image()
-        return make_card_grid_icon(orig_img, self.player.team, self.hp_fraction())
+        return make_card_grid_icon(orig_img, self.player.team, self.hp_fraction(), self.active)
 
     def get_image(self):
         return self.image
@@ -241,7 +261,7 @@ class Creature(Piece):
                 skill_list.append(self.skill_3.get_name())
 
         option = await self.player.select_option(skill_list, "Select a skill")
-        if (option == "back" or option == "timeout"):
+        if (option == "back" or option == "timeout" or option=="invalidmessage"):
             return False
         skill = None
         if(self.skill_1!=None):
@@ -262,10 +282,10 @@ class Creature(Piece):
         selected_targets = []
         for i in range(0, amount):
             target = await self.player.select_piece(target_list, "Select a target.")
-            if (target == "back" or target == "timeout"):
+            if (target == "back" or target == "timeout" or option=="invalidmessage"):
                 return False
             selected_targets.append(target)
-        skill.doSkill(self, selected_targets, game_ref)
+        await skill.doSkill(self, selected_targets, game_ref)
         return True
 
     async def process_option(self, game_ref, action):

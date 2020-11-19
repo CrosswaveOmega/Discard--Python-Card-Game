@@ -8,7 +8,7 @@ import asyncio
 
 class BasicAttack(card.Skill):  # Custom Class
 
-    def __init__(self, name="BasicAttacl", trigger="command", target=("Adjacent", "Enemy", "x1"), type="tbd",
+    def __init__(self, name="BasicAttacl", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack",
                  limit="tbd", description="none", damage=5, damage_tag=""):  # there's probably a better way to do this.
 
         self.damage = damage  # Unique to this skill.
@@ -28,12 +28,13 @@ class BasicAttack(card.Skill):  # Custom Class
         dictionary = {}  # Initialization of dictionary
         dictionary["user"] = user
         dictionary["target"] = target
+        dictionary["type"] = 'attack'
         print("This skill should do " + str(self.damage) +
               "Damage to everything in the target parameter.")
         print(self.damage)
 
         dictionary["damage"] = self.damage
-        #dictionary["tag"] = self.damage_tag
+        dictionary["tag"] = self.damage_tag
 
         for entity in dictionary["target"]:
             await game_ref.send_announcement(
@@ -41,8 +42,10 @@ class BasicAttack(card.Skill):  # Custom Class
                                                          dictionary["damage"]))
             print(
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
+            dictionary["incoming_damage"]=dictionary["damage"]
+            dictionary= await entity.check_effects('during', 'as_target', dictionary, game_ref)
             if True:  # here, it would check for some kind of effect. for record.
-                entity.add_damage(dictionary["damage"])
+                entity.add_damage(dictionary["incoming_damage"])
         print("OPERATION HAS BEEN DONE.")
 
 
@@ -61,6 +64,7 @@ class BasicHeal(card.Skill):
         heal_dict = {}
         heal_dict["user"] = user
         heal_dict["target"] = target
+        heal_dict["type"] = 'support'
         heal_dict["heal_amount"] = self.heal_amount
         print("The target piece can be healed by " +
               str(self.heal_amount) + " at most.")
@@ -69,14 +73,14 @@ class BasicHeal(card.Skill):
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
             if True:  # here, it would check for some kind of effect. for record.
                 await game_ref.send_announcement("The" + entity.get_name() + " piece can be healed by " + str(self.heal_amount) + " at most.")
-                entity.heal_damage(dictionary["damage"])
+                entity.heal_damage(heal_dict["heal_amount"])
 
 
 # This class gives certain creatures the ability to diminish the amount of damage they receive from an attack.
 # BasicShield can shield a creature from different types of attacks which the creature might have better defence against
 # It is of type other because its effective area is not relevant to the board.
 class BasicShield(card.Skill):
-    def __init__(self, name="BasicShield", trigger="auto", target=("This", "Ally", "x1"), type="other", limit="",
+    def __init__(self, name="BasicShield", trigger="auto", target=("This", "Self", "x1"), type="other", limit="",
                  description="Reduce Damage From a incoming Attack by a set amount", shield_amount=1):
         # This is the amount of damage reduced from the attack when the shield is activated.
         self.shield_amount = shield_amount
@@ -86,11 +90,32 @@ class BasicShield(card.Skill):
         shield_dict = {}
         shield_dict["user"] = user
         shield_dict["target"] = target
+        shield_dict["type"] = 'other'
         shield_dict["shield_amount"] = self.shield_amount
         print("The amount of damage that can be shielded by this skill is: " +
               str(self.shield_amount))
         print("Okay normally, this skill should reduce incoming damage.")
         print("It will do this with a effect.")
+
+        async def shield_effect(dictionary, game_ref, aug):
+            if dictionary["type"] == 'attack':
+                if "incoming_damage" in dictionary:
+                    dictionary["incoming_damage"]=dictionary["incoming_damage"] - aug
+                    if dictionary["incoming_damage"]<0:
+                        dictionary["incoming_damage"]=0
+                    output = "Shield activated!  Damage reduced by {}...".format(aug)
+                    await game_ref.send_announcement(output)
+            return dictionary
+
+        output = "{} uses {}!".format(user.get_name(), self.get_name())
+        await game_ref.send_announcement(output)
+
+        for entity in shield_dict["target"]:
+            output = "{} will take {} less damage!".format(entity.get_name(), str(shield_dict["shield_amount"]))
+            await game_ref.send_announcement(output)
+            entity.add_effect(self.get_name(), 'during', 'as_target', shield_effect, shield_dict["shield_amount"], 'times_used', 1, 4)
+
+
 
 
 # This class allows for attacks which are split into multiple parts.
@@ -111,17 +136,17 @@ class MultiAttack(card.Skill):
 
         # This is the most basic version of the multi-stage attack.
         # It strikes three times, but this could easily be changed if necessary.
-        warning("INCOMPLETE.")
         dictionary = {}  # Initialization of dictionary
         dictionary["user"] = user
         dictionary["target"] = target
+        dictionary["type"] = 'attack'
         print("This skill should do " + str(self.damage) +
               "Damage to everything in the target parameter.")
         print(self.damage)
 
         dictionary["damage"] = self.damage
         dictionary["attacks"] = self.damage
-        #dictionary["tag"] = self.damage_tag
+        dictionary["tag"] = self.damage_tag
         for entity in dictionary["target"]:
             output = "{} uses {} on {}!  Dealing {} damage {} times!".format(user.get_name(
             ), self.get_name(), entity.get_name(), dictionary["damage"], dictionary["attacks"])
@@ -129,8 +154,11 @@ class MultiAttack(card.Skill):
 
             print(
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
+
             if True:  # here, it would check for some kind of effect. for record.
                 for count in range(0, dictionary["attacks"]):
                     # Deals damage attacks times
-                    entity.add_damage(dictionary["damage"])
+                    dictionary["incoming_damage"]=dictionary["damage"]
+                    dictionary= await entity.check_effects('during', 'as_target', dictionary, game_ref)
+                    entity.add_damage(dictionary["incoming_damage"])
         print("OPERATION HAS BEEN DONE.")

@@ -63,6 +63,8 @@ def match_with_target_data(targetdata, user, game_ref):
     scope = targetdata["scope"]
     number = 0
     inital_targets = []
+    if(scope=="Ally"):
+        inital_targets.append(user)
     if (scope == "Self"):
         return [user]
     for entity in game_ref.get_entity_list():
@@ -71,7 +73,7 @@ def match_with_target_data(targetdata, user, game_ref):
             inital_targets.append(entity)
         if scope == "Ally" and (team_equal):
             inital_targets.append(entity)
-        if scope == "Both" and not (team_equal):
+        if scope == "Both":
             inital_targets.append(entity)
 
     # shape, dist

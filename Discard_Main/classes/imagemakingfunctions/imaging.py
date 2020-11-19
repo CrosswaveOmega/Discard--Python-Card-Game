@@ -19,20 +19,25 @@ def url_to_PIL_image(image_url):
     return image
 
 
-def make_card_grid_icon(pil_image, team=1, hp_float=1):
+def make_card_grid_icon(pil_image, team=1, hp_float=1, active=False):
     squaresize = 188
     background = Image.open(
         """Discard_Main\classes\imagemakingfunctions\imageres\CardEX.png""")
     fontname = """Discard_Main\classes\imagemakingfunctions\imageres\{}""".format(
         'bahnschrift.ttf')
-    newfont = ImageFont.truetype(fontname, 14)
+
+    newfont = ImageFont.truetype(fontname, 32)
     d = ImageDraw.Draw(background)
 
     #background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
 
     background.paste(pil_image.resize((squaresize, squaresize)), (28, 28))
-    d.text((58, 218), text=str(hp_float),
+    d.text((64, 218), text=str(hp_float),
            anchor='ma', font=newfont, fill="black")
+    if team==1:
+        d.rectangle([43, 0, 158,28], fill="red")
+    if team==2:
+        d.rectangle([43, 0, 158,28], fill="blue")
     return background
 
 
