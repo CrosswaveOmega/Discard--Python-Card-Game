@@ -90,7 +90,8 @@ class Piece:
         sent_mess = None
         if(not buffer):
             img = await game_ref.make_move_preview(move_options)
-            sent_mess = await self.player.get_dpios().send_pil_image(img)
+            if(player.PlayerType=="Discord"):
+                sent_mess = await self.player.get_dpios().send_pil_image(img)
 
         option = await self.player.select_option(move_options)
 
