@@ -46,8 +46,10 @@ class BasicAttack(card.Skill):  # Custom Class
             print(
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
             dictionary["incoming_damage"] = dictionary["damage"]
+            dictionary["continue"]=True
             dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
-            if True:  # here, it would check for some kind of effect. for record.
+
+            if dictionary["continue"]:  # here, it would check for some kind of effect. for record.
                 entity.add_damage(dictionary["incoming_damage"])
         print("OPERATION HAS BEEN DONE.")
 
@@ -76,9 +78,8 @@ class BasicHeal(card.Skill):
         print("The target piece can be healed by " +
               str(self.heal_amount) + " at most.")
         for entity in heal_dict["target"]:
-            print(
-                "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
-            if True:  # here, it would check for some kind of effect. for record.
+            dictionary["continue"]=True
+            if dictionary["continue"]=True:  # here, it would check for some kind of effect. for record.
                 await game_ref.send_announcement("The" + entity.get_name() + " piece can be healed by " + str(self.heal_amount) + " at most.")
                 entity.heal_damage(heal_dict["heal_amount"])
 
@@ -154,6 +155,7 @@ class MultiAttack(card.Skill):
         dictionary["user"] = user
         dictionary["target"] = target
         dictionary["type"] = 'attack'
+        print("before")
         print("This skill should do " + str(self.damage) +
               "Damage to everything in the target parameter.")
         print(self.damage)
@@ -161,6 +163,7 @@ class MultiAttack(card.Skill):
         dictionary["damage"] = self.damage
         dictionary["attacks"] = self.damage
         dictionary["tag"] = self.damage_tag
+        print("during")
         for entity in dictionary["target"]:
             output = "{} uses {} on {}!  Dealing {} damage {} times!".format(user.get_name(
             ), self.get_name(), entity.get_name(), dictionary["damage"], dictionary["attacks"])
@@ -168,11 +171,13 @@ class MultiAttack(card.Skill):
 
             print(
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
-
+            dictionary["incoming_attacks"]=dictionary["attacks"]
+            dictionary["incoming_damage"] = dictionary["damage"]
+            dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
+            dictionary["continue"]=True
             if True:  # here, it would check for some kind of effect. for record.
-                for count in range(0, dictionary["attacks"]):
-                    # Deals damage attacks times
-                    dictionary["incoming_damage"] = dictionary["damage"]
-                    dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
+                for count in range(0, dictionary["incoming_attacks"]):
+                    # Deals damage attacks time
                     entity.add_damage(dictionary["incoming_damage"])
+        print("after")
         print("OPERATION HAS BEEN DONE.")

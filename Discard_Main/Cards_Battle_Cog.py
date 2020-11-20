@@ -154,6 +154,15 @@ class CardCogBattle(commands.Cog):
         await thisDuel.start_game()
 
     @commands.command()
+    async def AI_Test(self, ctx, *args):  # Start a duel
+        """
+        This is for a automated test.
+        """
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+
+    @commands.command()
     async def start_test_duel(self, ctx, *args):  # Start a duel
         '''
         syntax: start_test_duel
