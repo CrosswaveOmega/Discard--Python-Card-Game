@@ -8,8 +8,8 @@ import asyncio
 
 class BasicAttack(card.Skill):  # Custom Class
 
-    def __init__(self, name="BasicAttacl", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", description=""
-                 limit="tbd",  damage=5, damage_tag=""):  # there's probably a better way to do this.
+    def __init__(self, name="BasicAttacl", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack",
+                 limit="tbd",  description="", damage=5, damage_tag=""):  # there's probably a better way to do this.
 
         self.damage = damage  # Unique to this skill.
         # for future functionality.  Just ignore it for now.
