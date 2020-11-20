@@ -8,13 +8,16 @@ import asyncio
 
 class BasicAttack(card.Skill):  # Custom Class
 
-    def __init__(self, name="BasicAttacl", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack",
-                 limit="tbd", description="none", damage=5, damage_tag=""):  # there's probably a better way to do this.
+    def __init__(self, name="BasicAttacl", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", description=""
+                 limit="tbd",  damage=5, damage_tag=""):  # there's probably a better way to do this.
 
         self.damage = damage  # Unique to this skill.
         # for future functionality.  Just ignore it for now.
         self.damage_tag = damage_tag
         super().__init__(name, trigger, target, type, limit, description)
+
+    def get_description(self):
+        return "Deal {damage} {tag} damage to target.".format(damage=self.damage, tag=self.damage_tag)
 
     async def doSkill(self, user, target, game_ref):
         """
@@ -42,8 +45,8 @@ class BasicAttack(card.Skill):  # Custom Class
                                                          dictionary["damage"]))
             print(
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
-            dictionary["incoming_damage"]=dictionary["damage"]
-            dictionary= await entity.check_effects('during', 'as_target', dictionary, game_ref)
+            dictionary["incoming_damage"] = dictionary["damage"]
+            dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
             if True:  # here, it would check for some kind of effect. for record.
                 entity.add_damage(dictionary["incoming_damage"])
         print("OPERATION HAS BEEN DONE.")
@@ -56,8 +59,12 @@ class BasicHeal(card.Skill):
 
     def __init__(self, name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", limit="",
                  description="", heal_amount=1):
-        super().__init__(name, trigger, target, type, limit, description)
         self.heal_amount = heal_amount
+
+        super().__init__(name, trigger, target, type, limit, description)
+
+    def get_description(self):
+        return "Heal {heal_amount} hp to target.".format(heal_amount=self.heal_amount)
 
     async def doSkill(self, user, target, game_ref):
 
@@ -81,10 +88,13 @@ class BasicHeal(card.Skill):
 # It is of type other because its effective area is not relevant to the board.
 class BasicShield(card.Skill):
     def __init__(self, name="BasicShield", trigger="auto", target=("This", "Self", "x1"), type="other", limit="",
-                 description="Reduce Damage From a incoming Attack by a set amount", shield_amount=1):
+                 description=", shield_amount=1):
         # This is the amount of damage reduced from the attack when the shield is activated.
         self.shield_amount = shield_amount
         super().__init__(name, trigger, target, type, limit, description)
+
+    def get_description(self):
+        return "Applies a shield effect that will reduce incoming damage by {shield}.".format(self.shield_amount)
 
     async def doSkill(self, user, target, game_ref):
         shield_dict = {}
@@ -100,10 +110,11 @@ class BasicShield(card.Skill):
         async def shield_effect(dictionary, game_ref, aug):
             if dictionary["type"] == 'attack':
                 if "incoming_damage" in dictionary:
-                    dictionary["incoming_damage"]=dictionary["incoming_damage"] - aug
-                    if dictionary["incoming_damage"]<0:
-                        dictionary["incoming_damage"]=0
-                    output = "Shield activated!  Damage reduced by {}...".format(aug)
+                    dictionary["incoming_damage"] = dictionary["incoming_damage"] - aug
+                    if dictionary["incoming_damage"] < 0:
+                        dictionary["incoming_damage"] = 0
+                    output = "Shield activated!  Damage reduced by {}...".format(
+                        aug)
                     await game_ref.send_announcement(output)
             return dictionary
 
@@ -111,11 +122,11 @@ class BasicShield(card.Skill):
         await game_ref.send_announcement(output)
 
         for entity in shield_dict["target"]:
-            output = "{} will take {} less damage!".format(entity.get_name(), str(shield_dict["shield_amount"]))
+            output = "{} will take {} less damage!".format(
+                entity.get_name(), str(shield_dict["shield_amount"]))
             await game_ref.send_announcement(output)
-            entity.add_effect(self.get_name(), 'during', 'as_target', shield_effect, shield_dict["shield_amount"], 'times_used', 1, 4)
-
-
+            entity.add_effect(self.get_name(), 'during', 'as_target',
+                              shield_effect, shield_dict["shield_amount"], 'times_used', 1, 4)
 
 
 # This class allows for attacks which are split into multiple parts.
@@ -131,6 +142,9 @@ class MultiAttack(card.Skill):
         self.damage = damage
         self.damage_tag = damage_tag
         super().__init__(name, trigger, target, type, limit, description)
+
+    def get_description(self):
+        return "Deals {damage} {tag} damage to the targets {attacks} times.".format(damage=self.damage, tag=self.damage_tag, tag=self.attacks)
 
     async def doSkill(self, user, target, game_ref):
 
@@ -158,7 +172,7 @@ class MultiAttack(card.Skill):
             if True:  # here, it would check for some kind of effect. for record.
                 for count in range(0, dictionary["attacks"]):
                     # Deals damage attacks times
-                    dictionary["incoming_damage"]=dictionary["damage"]
-                    dictionary= await entity.check_effects('during', 'as_target', dictionary, game_ref)
+                    dictionary["incoming_damage"] = dictionary["damage"]
+                    dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
                     entity.add_damage(dictionary["incoming_damage"])
         print("OPERATION HAS BEEN DONE.")

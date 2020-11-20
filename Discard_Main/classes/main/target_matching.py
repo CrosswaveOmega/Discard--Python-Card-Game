@@ -81,9 +81,9 @@ def match_with_target_data(targetdata, user, game_ref):
     posA = user.get_position()
     for other in inital_targets:
         posB = other.get_position()
-        if posA.is_equal(posB) == False:
-            if match_shape_and_dist(posA, posB, targetdata["shape"], targetdata["dist"]):
-                shape_pass.append(other)
+        #if posA.is_equal(posB) == False: #Don't match if the coordinates are the same
+        if match_shape_and_dist(posA, posB, targetdata["shape"], targetdata["dist"]):
+            shape_pass.append(other)
     # get_number_of_entities
     number = match_amount(targetdata["amount"])
 

@@ -108,7 +108,7 @@ class Skill():
             *target)  # What the skill will target.  Split into Type, Distance, Scope, Amount, and Limit.  Stored as dictionary.
         self.type = type  # The type of skill.
         self.limit = limit  # When the skill can not be used.
-        self.description = description  # What the skill will say it does.
+        self.description = description  # What the skill will say it does.  THIS IS IMPORTATNT
 
     def get_name(self):
         return self.name
@@ -126,6 +126,9 @@ class Skill():
 
     def get_target_data(self):
         return self.target_value
+
+    def get_description(self):
+        return self.description
 
     def make_target_string(self):
         target = self.target_value
@@ -145,7 +148,7 @@ class Skill():
 
         name = self.name
         target = self.make_target_string()
-        desc = self.description
+        desc = self.get_description()
         print(type, name, target, desc)
         return trigger, type, name, target, desc
 

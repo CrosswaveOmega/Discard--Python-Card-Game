@@ -69,8 +69,8 @@ class TestCreature1(card.CreatureCard):
         summonb = 2
         summong = 2
         # Defining Skills.
-        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type",
-                             limit="limit", description="Deal 12 damage.", damage=12)
+        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack",
+                             limit="limit", damage=12)
         # CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
         skill2 = None
         # CustomSkill3("Custom Name 3", "trigger", "target", "type", "limit", "Type description here.")
@@ -105,10 +105,9 @@ class TestCreatureAlpha(card.CreatureCard):
         summong = 2
 
         # These are the creature's skills
-        skill1 = MultiAttack("Multi Attacks", "command", ("Rectilinear", "Enemy", "x3"), "attack", "limit",
-                             "description", damage=1, attacks=3, damage_tag="")
+        skill1 = MultiAttack(name="Multi Attacks", trigger="command", ("Rectilinear", "Enemy", "x3"), type="attack", limit="limit", damage=1, attacks=3, damage_tag="")
         skill2 = BasicShield(name="Shield", shield_amount=2)
-        skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
+        skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", limit="limit",
                            heal_amount=1)
 
         # This defines the creature's move style
@@ -139,12 +138,9 @@ class TestCreatureBeta(card.CreatureCard):
         summong = 3
 
         # These are the creature's skills
-        skill1 = MultiAttack("Multi Attacks", "command", ("Rectilinear", "Enemy", "x3"), "attack", "limit",
-                             "description", damage=1, attacks=3, damage_tag="")
-        skill2 = BasicShield("Shield", "command", ("Any", "Ally",
-                                                   "x1"), "limit", "description", shield_amount=2)
-        skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
-                           heal_amount=1)
+        skill1 = MultiAttack(name="Multi Attacks", trigger="command", target=("Rectilinear", "Enemy", "x3"), type="attack", limit="limit", damage=1, attacks=3, damage_tag="")
+        skill2 = BasicShield(name="Shield", trigger="command", target=("Any", "Ally", "x1"), limit="limit", description="description", shield_amount=2)
+        skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", limit="limit", description="description", heal_amount=1)
 
         # This defines the creature's move style
         move_style = "SAME COLUMN LIMIT 3"
@@ -174,12 +170,11 @@ class TestCreatureDelta(card.CreatureCard):
         summong = 1
 
         # These are the creature's skills
-        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit",
-                             "Type description here.", damage=5)
-        skill2 = BasicShield("Shield", "command", ("Any", "Ally",
-                                                   "x1"), "limit", "description", shield_amount=2)
-        skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
-                           heal_amount=1)
+        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type", limit="limit",
+                             description="Type description here.", damage=5)
+        skill2 = BasicShield(name="Shield", trigger="command", target=("Any", "Ally", "x1"), limit="limit", description="description", shield_amount=2)
+        skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", limit="limit", description="description", heal_amount=1)
+
 
         # This defines the creature's move style
         move_style = "SAME DIAGONAL LIMIT 2"
@@ -244,11 +239,12 @@ class TestCreature3(card.CreatureCard):
         summong = 3
 
         # These are the creature's skills
-        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit",
-                             "Type description here.", damage=8)
-        skill2 = BasicShield("Shield", "command", ("self", "Ally",
-                                                   "x1"), "limit", "description", shield_amount=1)
-        skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
+        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type", limit="limit",
+                             description="deal damage", damage=8)
+
+        skill2 = BasicShield(name="Shield", trigger="command", target=("This", "Self",
+                                                   "x1"), limit="limit", description="description", shield_amount=1)
+        skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", limit="limit", description="description",
                            heal_amount=3)
 
         # This defines the creature's move style
