@@ -32,26 +32,23 @@ class BasicAttack(card.Skill):  # Custom Class
         dictionary["user"] = user
         dictionary["target"] = target
         dictionary["type"] = 'attack'
-        print("This skill should do " + str(self.damage) +
-              "Damage to everything in the target parameter.")
-        print(self.damage)
+        print('before')
 
         dictionary["damage"] = self.damage
         dictionary["tag"] = self.damage_tag
 
+        print('during')
         for entity in dictionary["target"]:
             await game_ref.send_announcement(
                 "{} uses {} on {} for {} damage.".format(user.get_name(), self.get_name(), entity.get_name(),
                                                          dictionary["damage"]))
-            print(
-                "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
             dictionary["incoming_damage"] = dictionary["damage"]
             dictionary["continue"]=True
             dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
 
             if dictionary["continue"]:  # here, it would check for some kind of effect. for record.
                 entity.add_damage(dictionary["incoming_damage"])
-        print("OPERATION HAS BEEN DONE.")
+        print('after')
 
 
 # BasicHeal is a skill which replaces lost HP on a game piece.

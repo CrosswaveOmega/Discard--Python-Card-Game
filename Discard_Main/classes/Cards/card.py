@@ -159,6 +159,32 @@ class Skill():
         # Game_ref is a refrence to the Card_Duel's helper class.
         # Use a dictionary
         print("Fill this in.")
+        dictionary = {}  # Initialization of dictionary
+        dictionary["user"] = user
+        dictionary["target"] = target
+        dictionary["type"] = 'type of skill here'
+
+
+        print('before')
+
+        dictionary["unique attribute a"] = "a skill's unique attribute should go here."
+        dictionary["unique attribure b"] = "Another unique attribute should go here"
+        dictionary = await user.check_effects('before', 'as_user', dictionary, game_ref) #Apply before effects by user
+
+        print('during')
+
+        for entity in dictionary["target"]:
+            await game_ref.send_announcement("{} uses {} on {} with effect {} and {}.".format(user.get_name(), self.get_name(), entity.get_name())) #announcement
+            dictionary["unique attribute a incoming"] = dictionary["unique attribute a"]
+            dictionary["continue"]=True
+            dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref) #apply during effects by target
+            if dictionary["continue"]:
+                print("DO SOMETHING WITH 'entity' HERE!")
+
+        print('after')
+
+        dictionary = await user.check_effects('after', 'as_user', dictionary, game_ref) #apply after effects by user
+
 
 
 class CreatureCard(CardBase):
