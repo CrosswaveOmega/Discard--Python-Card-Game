@@ -310,7 +310,7 @@ class CreatureCard(CardBase):
         custom = ""
         if (self.custom != ""):
             custom = "-`" + self.custom + "`"
-        line1 = "{}|`{:32}`|`HP:{:4}`|`SPD:{:3}`|{}{}{}|`{}` {}".format(self.icon, self.name, self.hp, self.speed, r, b,
+        line1 = "{}|`{:25}`|`HP:{:4}`|`SPD:{:3}`|{}{}{}|`{}` {}".format(self.icon, self.name, self.hp, self.speed, r, b,
                                                                         g, id_hex, custom)
         return line1
         # return self.icon + "|" + self.name + "|" + self.type + "|"+ self.hp + "|"+ self.speed + "|"+ str(self.ID)

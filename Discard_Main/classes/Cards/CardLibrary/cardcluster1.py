@@ -105,7 +105,7 @@ class TestCreatureAlpha(card.CreatureCard):
         summong = 2
 
         # These are the creature's skills
-        skill1 = MultiAttack(name="Multi Attacks", trigger="command", ("Rectilinear", "Enemy", "x3"), type="attack", limit="limit", damage=1, attacks=3, damage_tag="")
+        skill1 = MultiAttack(name="Multi Attacks", trigger="command", target=("Rectilinear", "Enemy", "x3"), type="attack", limit="limit", damage=1, attacks=3, damage_tag="")
         skill2 = BasicShield(name="Shield", shield_amount=2)
         skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", limit="limit",
                            heal_amount=1)
@@ -138,7 +138,7 @@ class TestCreatureBeta(card.CreatureCard):
         summong = 3
 
         # These are the creature's skills
-        skill1 = MultiAttack(name="Multi Attacks", trigger="command", target=("Rectilinear", "Enemy", "x3"), type="attack", limit="limit", damage=1, attacks=3, damage_tag="")
+        skill1 = MultiAttack(name="Multi Attacks", trigger="command", target=("Rectilinear", "Enemy", "x3"), type="attack", limit="limit", damage=4, attacks=3, damage_tag="")
         skill2 = BasicShield(name="Shield", trigger="command", target=("Any", "Ally", "x1"), limit="limit", description="description", shield_amount=2)
         skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", limit="limit", description="description", heal_amount=1)
 

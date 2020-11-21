@@ -13,9 +13,7 @@ from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 from .classes.Cards.cardretrieval import CardRetrievalClass
-from .classes.discordhelper.tiebreaker import make_tiebreaker, card_multimatch
-from .classes.discordhelper.pagesystem import *
-from .classes.discordhelper.universal_functions import *
+from .classes.discordhelper import *
 from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
@@ -139,10 +137,10 @@ class CardCogBattle(commands.Cog):
         thisDuel.addPlayer(player1)
         thisDuel.addPlayer(player2)
         # Start Card_Duel
-        testPiece = Leader(player1, "MY_NAME", position_notation="C1")
+        testPiece = Leader(player1, player1.get_user_name(), position_notation="C1")
         testPiece.set_image()
 
-        testPiece2 = Leader(player2, "MY_NAME", position_notation="C5")
+        testPiece2 = Leader(player2, player2.get_user_name(), position_notation="C5")
         testPiece2.set_image()
 
         player1.set_leader(testPiece)
