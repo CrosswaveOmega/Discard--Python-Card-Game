@@ -50,6 +50,7 @@ class Piece:
         self.effects = {}
     def toggle_active(self):
         self.active=not self.active
+
     def add_effect(self, effect_name, time, context, function, arg, disable, disable_arg, level=0):
         print("added_effect")
         self.effects[effect_name]=Effect(time, context, function, arg, disable, disable_arg, level)
@@ -63,14 +64,24 @@ class Piece:
             if effect.disable_check():
                 to_disable.append(effect_name)
                 await game_ref.send_announcement("{} wore off.".format(effect_name))
-            print("Ok")
-        print("ok")
+            #print("Ok")
+        #print("ok")
         for effect_name in to_disable:
             self.effects.pop(effect_name)
         return dictionary
 
+    def get_effect_names(self):
+        effectlist=""
+        if(len(self.effects)<=0):
+            return "Normal"
+        for effect_name, effect in self.effects.items():
+            effectlist=effectlist+effect_name+"\n"
+        return effectlist
+
     def set_game_id(self, new_id):
         self.game_id = new_id
+    def get_game_id(self):
+        return self.game_id
 
     def generate_options(self):
         # creates a new dictionary of all options.
@@ -106,9 +117,15 @@ class Piece:
             await self.player.send_announcement("Moved {} to {}".format(self.get_name(), option))
             return True
         return False
+    async def do_auto_skills(self):
+        pass
 
     async def get_action(self, game_ref):  # Add other args accordingly.
-        self.player.gain_summon_points()
+        if(type=="Leader"):
+            self.player.gain_summon_points()
+            await game_ref.update_all()
+        if(type=="Creature"):
+            await self.do_auto_skills(game_ref)
         options = self.generate_options()
         my_turn = True
         await game_ref.send_announcement("{}'s turn".format(self.get_name()))
@@ -137,7 +154,7 @@ class Piece:
         if (action == "MOVE"):
             completed = await self.do_move(game_ref)
         elif (action == "END"):
-            await self.player.send_announcement("Ending Turn.")
+            #await self.player.send_announcement("Ending Turn.")
             my_turn = False
         elif (action=="invalidmessage"):
             await self.player.send_announcement("unrecognized input.  Try again.")
@@ -246,6 +263,37 @@ class Creature(Piece):
         actions["SKILL"] = 1
         actions["END"] = 1
         return actions
+    async def do_auto_skills(self, game_ref):
+        #This command is for auto skills if available
+        skill_list = []
+        if (self.skill_1 != None):
+            if (self.skill_1.trigger == "auto"):
+                skill_list.append(self.skill_1)
+        if (self.skill_2 != None):
+            if (self.skill_2.trigger == "auto"):
+                skill_list.append(self.skill_2)
+        if (self.skill_3 != None):
+            if (self.skill_3.trigger == "auto"):
+                skill_list.append(self.skill_3)
+        for skill in skill_list:
+            target_list, amount = match_with_target_data(skill.get_target_data(), self, game_ref)
+            selected_targets = []
+            get_targets=True
+            if (len(target_list) <= amount):
+                #set selected_targets to the target_list if the amount
+                #of targets is less than the amount.
+                selected_targets= target_list
+                get_targets=False
+            if(get_targets):
+                for i in range(0, amount):
+                    target = await self.player.select_piece(target_list, "Select a target for {}.".format(skill.get_name()))
+                    if (target == "back" or target == "timeout" or option=="invalidmessage"):
+                        break
+                    selected_targets.append(target)
+            await skill.doSkill(self, selected_targets, game_ref)
+            print("End of Skill")
+            game_ref.set_update()
+            await game_ref.send_user_updates()
 
     async def skill_option(self, game_ref):
         """Processing of skill."""
@@ -276,17 +324,22 @@ class Creature(Piece):
                 skill = self.skill_3
 
         target_list, amount = match_with_target_data(skill.get_target_data(), self, game_ref)
-        if (len(target_list) <= amount):
-            await skill.doSkill(self, target_list, game_ref)
-            return True
-
         selected_targets = []
-        for i in range(0, amount):
-            target = await self.player.select_piece(target_list, "Select a target.")
-            if (target == "back" or target == "timeout" or option=="invalidmessage"):
-                return False
-            selected_targets.append(target)
+        get_targets=True
+        if (len(target_list) <= amount):
+            #set selected_targets to the target_list if the amount
+            #of targets is less than the amount.
+            selected_targets= target_list
+            get_targets=False
+
+        if(get_targets):
+            for i in range(0, amount):
+                target = await self.player.select_piece(target_list, "Select a target.")
+                if (target == "back" or target == "timeout" or option=="invalidmessage"):
+                    return False
+                selected_targets.append(target)
         await skill.doSkill(self, selected_targets, game_ref)
+        print("End of Skill")
         game_ref.set_update()
         await game_ref.send_user_updates()
         return True
@@ -309,6 +362,9 @@ class Creature(Piece):
         Speed="Speed:{}".format(self.get_speed())
         pos="Position:{}".format(self.get_position().get_notation())
         desc="{}\n{}\n{}".format(HP, Speed, pos)
+        statuses=self.get_effect_names()
+        embed.add_field(name="Statuses",
+                        value=statuses, inline=True)
         embed.description = desc
         color=discord.Colour(0x7289da)
         if(self.get_team()==1):
@@ -364,6 +420,7 @@ HOP X 1 Y 1"""
         actions["MOVE"] = self.move_limit
         actions["DRAW"] = 1
         actions["SUMMON"] = 1
+        actions["STRUGGLE"] = 1
         actions["END"] = 1
         return actions
 
@@ -378,6 +435,8 @@ HOP X 1 Y 1"""
             # Draw one card.  Add it to the hand.
         elif (action == "SUMMON"):
             completed = await self.player.get_summon_action(game_ref, self.get_summon_spaces(game_ref.get_grid()))
+            if completed:
+                my_turn = False
             #summon a creature
         else:
             my_turn, completed=await super().process_option(game_ref, action)
@@ -396,7 +455,15 @@ HOP X 1 Y 1"""
         if(self.get_team()==2):
             color=discord.Colour(0x2305c2)
         embed.colour=color
+
         embed.set_thumbnail(url=self.player.get_avatar_url())
+
+        spstr=self.player.get_summon_point_string()
+        embed.set_footer(text=spstr)
+        statuses=self.get_effect_names()
+        embed.add_field(name="Status",
+                        value=statuses, inline=True)
+
 
         return embed
 

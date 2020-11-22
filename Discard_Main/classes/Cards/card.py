@@ -72,7 +72,10 @@ class CardBase():  # Wip.
         #    self.type = custom.type
 
     def to_DiscordEmbed(self):
-        print("TBD")
+        embed = discord.Embed(title="{icon} {card_name}".format(icon=self.icon, card_name=self.name),
+              colour=discord.Colour(0x7289da),
+              description="This card is invalid.")
+        return embed
 
 
 """

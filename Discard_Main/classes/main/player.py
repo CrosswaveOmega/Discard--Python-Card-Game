@@ -21,9 +21,10 @@ from ..DiscordPlayerInputOutputSystem import *
 
 # The player class.  FOR THE GAME.
 class Player():
-    def __init__(self, player_type="", deck=[], team=1):
+    def __init__(self, player_type="", deck=[], team=1, name="Default"):
         self.PlayerType = player_type
         self.id = "Play"  # I don't know why we have this one.
+        self.name= name
         self.deck = deck  # Should be a list of cards. Initalization prior might be useful.
         self.hand = []  # Cards in hand.
         self.graveyard = []  # All cards in the graveyard.
@@ -34,7 +35,13 @@ class Player():
         self.summon_r = 0.0
         self.summon_b = 0.0
         self.summon_g = 0.0
+
+        self.status="OK"
         # Initialize any other gameplay variables here as we need them.
+    def set_status(self, status="OK"):
+        self.status=status
+    def get_status(self):
+        return self.status
 
     def gain_summon_points(self):
         # exactly how to gain Summon points, I still have no idea.
@@ -53,6 +60,8 @@ class Player():
 
     def set_leader(self, leader):
         self.leader = leader
+    def get_leader(self, leader):
+        self.leader = leader
 
     def get_PlayerType(self):
         return self.PlayerType
@@ -70,8 +79,13 @@ class Player():
 
     async def select_card(self, options=[], prompt=""):
         pass
+
     def card_to_graveyard(self, card):
         self.graveyard.append(card)
+
+    def shuffle_deck(self):
+        random.shuffle(self.deck)
+
     def draw_card(self):
         if (len(self.deck) >= 1):
             card = self.deck.pop()
@@ -114,9 +128,16 @@ class Player():
 
     def get_team(self):
         return self.team
+    def get_name(self):
+        return self.name
 
     def buffer(self):
         return True
+
+    def get_summon_point_string(self):
+        mana = " Red={}  Blue= {} Green= {}".format(str(round(self.summon_r, 2)), str(round(self.summon_b, 2)),
+                                                        str(round(self.summon_g, 2)))
+        return mana
 
     def to_embed(self, view):
         hand_disp = len(self.hand)
@@ -133,7 +154,7 @@ class Player():
         deckgrave="**Deck:**{}\n\n**Graveyard**:{}".format(len(self.deck), len(self.graveyard))
         embed.add_field(name="Leader", value=self.leader.string_status(), inline=True)
         embed.add_field(name="Mana", value=mana, inline=True)
-        embed.add_field(name="-", value=str(len(self.deck)), inline=True)
+        embed.add_field(name="-", value=deckgrave, inline=True)
         # embed.add_field(name="custom", value="Custom was applied.",)
         return embed
     async def local_commands(self, action, game_ref):
@@ -146,11 +167,12 @@ class DiscordPlayer(Player):
     def __init__(self, deck=[], team=1, dpios=None):
         player_type = "Discord"
         self.dpios = dpios
-        super().__init__(player_type="Discord", deck=deck, team=team)
+        super().__init__(player_type="Discord", deck=deck, team=team, name=self.dpios.get_user_name())
     def get_user_name(self):
         return self.dpios.get_user_name()
     def get_avatar_url(self):
         return self.dpios.get_avatar_url()
+
 
     def has_something_in_buffer(self):
         return self.dpios.has_something_in_buffer()
@@ -172,6 +194,9 @@ class DiscordPlayer(Player):
             await self.dpios.send_order(p=False, i=True, c=False)
         elif (action == "CURRENT"):
             await self.dpios.send_order(p=False, i=False, c=True)
+        elif (action == "QUIT"):
+            my_turn= False
+            self.set_status("QUIT")
         return my_turn, completed
     async def select_piece(self, options=[], prompt="Select a piece"):
         option = await self.dpios.get_user_piece(options, prompt)

@@ -24,3 +24,26 @@ async def inventory_entry_to_card_object(bot, inventory_card):
         customobject = await CustomRetrievalClass().getByID(custom, bot)  # Test
         newcard.apply_custom(custom=customobject)
     return newcard
+
+
+async def Create_Room_And_Role(auth, bot, guild, number, letter):  # A example command.
+    battle_role_name="battle role {} {}".format(str(number), letter)
+    channel_name="room {} {}".format(str(number), letter)
+    roles = guild.roles
+    channels= guild.channels
+    role=None
+    for r in roles:
+        if r.name==battle_role_name:
+            role=r
+    if (role!=None):
+        role=await guild.create_role(name=battle_role_name, hoist=True, reason="For Battle")
+
+    overwrites={
+    guild.default_role: discord.PermissionOverwrite(read_messages=False),
+    guild.me: discord.PermissionOverwrite(read_messages=True),
+    role: discord.PermissionOverwrite(read_messages=True)
+    }
+
+    newchannel= await guild.create_text_channel(name=channel_name, overwrites=overwrites, position=0)
+    await author.add_roles(role)
+    return role, channel

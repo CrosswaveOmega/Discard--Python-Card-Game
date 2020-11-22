@@ -47,9 +47,40 @@ class DebugCog(commands.Cog):
             choices=[]
             choices.append(["no", "", '❌'])
             choices.append(["yes", "", '✔️'])
-            message=await ctx.channel.send("Would you like do DUEL?!")
-            result = await make_tiebreaker(ctx, choices, message=message, timeout_enable=True, delete_after=True, remove_after=True, clear_after=False, timeout_time=60.0)
+            message=await mention.send("Would you like do DUEL?!")
+            result = await make_dmtiebreaker(bot, mention, choices, message=message, timeout_enable=True, delete_after=True, timeout_time=60.0)
             await ctx.channel.send(mention.name+" says "+result)
+
+    @commands.command()
+    async def Create_Room_And_Role(self, ctx, *args):  # A example command.
+        bot = ctx.bot  # The refrence to the bot object. https://discordpy.readthedocs.io/en/latest/ext/commands/api.htm?highlight=bot#bot
+        # The refrence to the message author.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=user#user
+        author = ctx.message.author
+        # the refrence to the channel this message was sent in.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=textchannel#textchannel
+        channel = ctx.message.channel
+        guild = channel.guild
+
+        number=1
+        battle_role_name="battle role "+ str(number)
+        channel_name="room "+str(number)
+        roles = guild.roles
+        role=None
+        for r in roles:
+            if r.name==battle_role_name:
+                role=r
+        if (role!=None):
+            role=await guild.create_role(name=battle_role_name, hoist=True, reason="For Battle")
+
+        overwrites={
+        guild.default_role: discord.PermissionOverwrite(read_messages=False),
+        guild.me: discord.PermissionOverwrite(read_messages=True),
+        role: discord.PermissionOverwrite(read_messages=True)
+        }
+
+        newchannel= await guild.create_text_channel(name=channel_name, overwrites=overwrites, position=0)
+        await author.add_roles(role)
+
+        await author.remove_roles(role)
 
 
 

@@ -20,7 +20,7 @@ class TestCard(card.CardBase):
         icon = "🎴"
         image = "NA"
         type = "None"
-        super().__init__(self.ID, name, icon, type, image)
+        super().__init__(self.ID, name, icon, type)
 
 
 class TestCard2(card.CardBase):
@@ -41,7 +41,7 @@ class TestCard2(card.CardBase):
         icon = "🎴"
         image = "NA"
         type = "None"
-        super().__init__(self.ID, name, icon, type, image)
+        super().__init__(self.ID, name, icon, type)
 
 
 class TestCreature1(card.CreatureCard):
@@ -60,7 +60,7 @@ class TestCreature1(card.CreatureCard):
         # (00000  to FFFFF, makes maximum of 1,048,576 cards.
         name = "Test Name For A Creature"
         icon = "🐻"
-        image = "NA"
+        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
         type = "None"
         hp = 10
         speed = 9  # Speed is 0-99.
@@ -204,7 +204,7 @@ class TestCreature2(card.CreatureCard):
         summong = 1
 
         # These are the creature's skills
-        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "type", "limit",
+        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "attack", "limit",
                              "Type description here.", damage=6)
         skill2 = BasicShield("Shield", "command", ("Any", "Ally", "x1"),
                              "passive", "limit", "Shield yourself or a ally.", shield_amount=1)

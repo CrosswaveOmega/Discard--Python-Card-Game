@@ -14,7 +14,7 @@ helpDictionary = {
 optionsDictionary = {
     "shape": ["Cardinal", "Diagonal", "Omni", "Adjacent", "Rectilinear", "Row", "Column", "Any", "Other", "This"],
     "dist": "",  # jUST A NUMBER
-    "scope": ["Enemy", "Ally", "Both", "Self", "Else"],
+    "scope": ["Enemy", "Ally", "Both", "Self", "Else", "Board"],
     "amount": ["Single", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "All"],
     "limit": ["None"]
 }

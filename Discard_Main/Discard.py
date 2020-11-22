@@ -30,24 +30,31 @@ configur.read('config.ini')
 class Card_Duel():
     """Where the game will be played."""
 
-    def __init__(self, bot):
+    def __init__(self, bot, image_channel=None):
         dicti = vars(Grid())
         print(json.dumps(dicti))
         self.game_id = 0
         self.val = 0
         self.players = []
         self.entity_list = []
+        self.entity_ID_count = 1
         self.bot = bot
+        if image_channel != None:
+            checkGuild = self.bot.get_guild(int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
+            self.image_channel = checkGuild.get_channel(int(configur.get("Default", 'bts_game_images')))
+
 
         self.mode = "Test"  # the "mode" of the game.  a simplified setting.
         self.settings = None  # Settings of the game.
         self.duel_helper = Card_Duel_Helper(self)
         self.grid = Grid(5, 5, self.duel_helper)
 
+
         self.grid_message = None  # The message containing the grid object
         self.gridchange = True
         self.grid_image_url = ""
         self.queue_preview = ""
+
 
         self.round = 0
         self.log = []  # Log of everything that happened.
@@ -103,6 +110,8 @@ class Card_Duel():
                 await player.get_dpios().send_announcement(content)
 
     def add_piece(self, piece):
+        piece.set_game_id=self.entity_ID_count
+        self.entity_ID_count=self.entity_ID_count+1
         self.entity_list.append(piece)
 
     def remove_piece(self, piece):
@@ -110,12 +119,22 @@ class Card_Duel():
 
     def entity_clear(self):
         """remove all entities with a hp less than zero."""
+        new_entity_list=[]
+        obituary=[]
         for entity in self.entity_list:
             if entity.get_hp() <= 0:
                 player = entity.player
                 if entity.type == "Creature":
                     player.card_to_graveyard(entity.get_card())
-                self.remove_piece(entity)
+                if entity.type == "Leader":
+                    player.set_status("DEFEAT")
+                obituary.append(entity.get_name() + " has perished!")
+            else:
+                new_entity_list.append(entity)
+        self.entity_list=new_entity_list
+        return obituary
+                #self.remove_piece(entity)
+
 
     async def update_all(self, resend_messages=False):
         """DPIOS HAS THREE MESSAGES.  THE PLAYER, THE GRID, AND THE CURRENT PIECE.  THIS RESENDS THEM."""
@@ -130,11 +149,8 @@ class Card_Duel():
 
     async def update_grid_image(self):
         # Refresh the grid image.
-        checkGuild = self.bot.get_guild(
-            int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
-        # Customs Channel.
-        image_channel = checkGuild.get_channel(
-            int(configur.get("Default", 'bts_game_images')))
+
+        print(self.gridchange)
         if (self.gridchange):
             pilgrid = self.grid.grid_to_PIL_array()
             img = make_image_from_grid(
@@ -142,7 +158,7 @@ class Card_Duel():
             with io.BytesIO() as image_binary:
                 img.save(image_binary, 'PNG')  # Returns pil object.
                 image_binary.seek(0)
-                image_msg = await image_channel.send(file=discord.File(fp=image_binary, filename='image.png'))
+                image_msg = await self.image_channel.send(file=discord.File(fp=image_binary, filename='image.png'))
                 self.grid_message = image_msg
             self.gridchange = False
         url = "p"
@@ -181,11 +197,31 @@ class Card_Duel():
                 await self.update_all()
                 await stack[i].get_action(self.duel_helper)
             current_piece.toggle_active()
-
         return stack  # stack will now contain entity_list from highest to lowest speed
+
+    async def check_winner(self):
+        #the winner is the one who wins
+        winner=[]
+        loser=[]
+        for player in self.players:
+            status =player.get_status()
+            if(status=="DEFEAT"):
+                await send_announcement("{}'s Leader has perished.  They have lost.".format(player.get_name()))
+                loser.append(player)
+            if(status=="QUIT"):
+                await send_announcement("{} has quit the match.".format(player.get_name()))
+                loser.append(player)
+        if(len(loser)>=1):
+            for player in self.player:
+                winner.append(player)
+        return winner, loser
+
+
 
     async def start_game(self):
         # Game Loop is here.
+        #return winner.
+        winner=None
         self.game_is_active = True
         while (self.game_is_active):
             print("PUT GAME LOOP HERE.")
@@ -193,13 +229,20 @@ class Card_Duel():
             await self.turn_queue(self.turn_sort())
             self.round = self.round + 1
             print(self.round)
-            self.entity_clear()
+            obituary=self.entity_clear()
+            for ob in obituary:
+                await self.send_announcement(ob)
+                self.grid_updated()
             await self.update_grid_image()
             await asyncio.sleep(0.02)
-            if (self.round > 5):
+            win, lose =await self.check_winner()
+            if len(win)>=1:
+                self.game_is_active = False
+                winner = win[0]
+            if (self.round > 10):
                 self.game_is_active = False
         await self.send_announcement("THE GAME IS OVER.")
-        print("TBD.")
+        return winner
 
     def to_embed(self):
         embed = discord.Embed(title="Game.", colour=discord.Colour(0x7289da))
@@ -246,6 +289,7 @@ class Card_Duel_Helper():
 
     async def send_user_updates(self):
         await self.__card_duel.update_grid_image()
-
+    async def update_all(self):
+        await self.__card_duel.update_all()
     async def resend_info_messages(self):
         await self.__card_duel.update_all()

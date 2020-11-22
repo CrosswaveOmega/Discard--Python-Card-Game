@@ -17,6 +17,8 @@ from .classes.discordhelper import *
 from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
+from .classes.userservices.useroperations import *
+
 from .classes.Cards.DeckBuilding import *
 from .classes.DiscordPlayerInputOutputSystem import *
 #from .classes.main import *
@@ -52,6 +54,114 @@ async def get_everything(bot, author, channel, team=1):
 
 class CardCogBattle(commands.Cog):
     """Commands for battle system goes here."""
+    @commands.command()
+    async def request_duel(self, ctx, *args):
+        """Start a duel with another person!"""
+        bot = ctx.bot  # The refrence to the bot object. https://discordpy.readthedocs.io/en/latest/ext/commands/api.htm?highlight=bot#bot
+            # The refrence to the message author.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=user#user
+        author = ctx.message.author
+            # the refrence to the channel this message was sent in.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=textchannel#textchannel
+        channel = ctx.message.channel
+        guild = channel.guild
+
+        mentions=ctx.message.mentions
+
+        user1=author
+        user2=None
+
+        for mention in mentions:
+            if author.id != mention.id:
+                choices=[]
+                choices.append(["no", "", '❌'])
+                choices.append(["yes", "", '✔️'])
+                message=await mention.send("{} has requested a duel with you.  Will you accept?".format(author.name))
+                result = await make_dmtiebreaker(bot, mention, choices, message=message, timeout_enable=True, delete_after=True, timeout_time=60.0)
+                #await ctx.channel.send(mention.name+" says "+result)
+                if (result=="yes"):
+                    user2=mention
+                else:
+                    await ctx.channel.send(mention.name+" has declined.")
+                    return None
+        if user2==None:
+            await ctx.channel.send("No other user was mentioned.")
+            return None
+        rolea, room1 = Create_Room_And_Role(user1, bot, guild, 1, 'a')
+        roleb, room2 = Create_Room_And_Role(user2, bot, guild, 1, 'b')
+
+        await room2.send("SAY SOMETHING HERE!")
+        await room1.send("SAY SOMETHING HERE!")
+
+        def check_message_1(m):
+            return m.author != bot.user and m.channel == room1
+
+        def check_message_2(m):
+            return m.author != bot.user and m.channel == room2
+
+        async def getMessageInChannel1():
+            msg = await bot.wait_for('message', check=check_message_1)
+            #print("Message ");
+            return msg.author
+
+        async def getMessageInChannel2():
+            msg = await bot.wait_for('message', check=check_message_2)
+            #print("Message ");
+            return msg.author
+        SingleUser = SingleUserProfile("arg")
+        messagetask1 = asyncio.create_task(getMessageInChannel1())
+        messagetask2 = asyncio.create_task(getMessageInChannel2())
+        tasklist = [messagetask1, messagetask2]
+
+        done, pending = await asyncio.wait(tasklist, return_when=asyncio.ALL_COMPLETED)
+        if messagetask1 in done:
+            room1.send("Reading you.")
+        if messagetask2 in done:
+            room2.send("Reading you.")
+
+        profile1, player1 = await get_everything(bot, user1, room1, team=1)
+        profile2, player2 = await get_everything(bot, user2, room2, team=2)
+        profiles=[profile1, profile2]
+        thisDuel = Card_Duel(bot)
+        thisDuel.addPlayer(player1)
+        thisDuel.addPlayer(player2)
+        # Start Card_Duel
+        testPiece = Leader(player1, player1.get_user_name(), position_notation="C1")
+        testPiece.set_image()
+
+        testPiece2 = Leader(player2, player2.get_user_name(), position_notation="C5")
+        testPiece2.set_image()
+
+        player1.set_leader(testPiece)
+        player2.set_leader(testPiece2)
+
+        thisDuel.add_piece(testPiece)
+        thisDuel.add_piece(testPiece2)
+
+        winner=await thisDuel.start_game()
+
+        await user1.remove_roles(rolea)
+        await user2.remove_roles(rolea)
+
+        if winner.get_user_name() == user1.name:
+            await add_coin(profile1, 20)
+            await incr_stars(channel, profile1)
+
+        if winner.get_user_name() == user2.name:
+            await add_coin(profile2, 20)
+            await incr_stars(channel, profile2)
+
+        for profile in profiles:
+            await add_exp_point(profile, 20)
+            await add_coin(profile)
+            await incr_level(channel, profile)
+            await incr_stars(channel, profile)
+        SingleUser.save_all()
+
+
+
+
+
+
+
     @commands.command()
     async def start_duel(self, ctx, *args):  # Start a duel
         '''

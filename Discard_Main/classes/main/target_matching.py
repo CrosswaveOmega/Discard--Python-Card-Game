@@ -63,8 +63,6 @@ def match_with_target_data(targetdata, user, game_ref):
     scope = targetdata["scope"]
     number = 0
     inital_targets = []
-    if(scope=="Ally"):
-        inital_targets.append(user)
     if (scope == "Self"):
         return [user]
     for entity in game_ref.get_entity_list():

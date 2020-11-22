@@ -361,6 +361,28 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
         await message_to_respond_to.delete()
     return output
 
+async def make_dmtiebreaker(bot, user, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False,
+                          clear_after=False, ignore_message=False, ignore_reaction=False, timeout_time=30.0):  # Add card.
+    '''
+    This function's sole purpose is to help with what I call a "tiebreaker."
+
+    It takes in a list of choices, and gets the user's input on them.
+
+    If a valid input was not sent, it returns None.
+
+    If timeout is specified, it will terminate after 15 or 30 seconds.
+
+
+    '''
+    # temporary fix.  I can't believe I missed this...
+    bot = bot
+    auth = user
+    channel = user
+
+    output = await make_internal_tiebreaker(bot, auth, channel, choices, message, timeout_enable, delete_after,
+                                            remove_after, clear_after, ignore_message, ignore_reaction, timeout_time)
+    return output
+
 
 async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False,
                           clear_after=False, ignore_message=False, ignore_reaction=False, timeout_time=30.0):  # Add card.
