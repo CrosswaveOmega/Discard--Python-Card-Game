@@ -6,6 +6,7 @@ import aiohttp
 import asyncio
 import csv
 import datetime
+import random
 from PIL import Image, ImageTk, ImageGrab, ImageDraw, ImageFont
 
 from discord.ext import commands, tasks
@@ -111,7 +112,7 @@ class DeckCog(commands.Cog):
             await channel.send(str("Please enter the command with the deck name."))
 
     @commands.command(pass_context=True)
-    async def changeDeckDescription(self, ctx, arg1, *, arg2):
+    async def changeDescription(self, ctx, arg1, *, arg2):
         '''
         syntax: changeDescription [Name][New_Deck_Description]
         [Name]: The current name of the deck
@@ -135,10 +136,10 @@ class DeckCog(commands.Cog):
         await channel.send(str("The deck does not exist."))
 
     @commands.command(pass_context=True)
-    async def addCardToDeck(self, ctx,
+    async def addToDeck(self, ctx,
                             *args):  # check if card exist in inventory, args can have custom name, card id, and card name
         '''
-        syntax: addCard [Name_of_deck][Card in inventory]
+        syntax: addToDeck [Name_of_deck][Card in inventory]
         [Name_of_deck]: The current name of the deck
         [Card in inventory]: The card you would like to add
 
@@ -181,9 +182,9 @@ class DeckCog(commands.Cog):
                 await channel.send(str("This card was not found in your inventory."))
 
     @commands.command(pass_context=True)
-    async def removeCardFromDeck(self, ctx, *args):
+    async def removeFromDeck(self, ctx, *args):
         '''
-        syntax: removeCard [Name_of_deck][Card in deck]
+        syntax: removeFromDeck [Name_of_deck][Card in deck]
         [Name_of_deck]: The current name of the deck
         [Card in deck]: The card you would like to remove
 
@@ -221,9 +222,9 @@ class DeckCog(commands.Cog):
                 await channel.send(str("The card is not in your deck."))
 
     @commands.command(pass_context=True)
-    async def multiAddToDeck(self, ctx, arg1, *, arg2):
+    async def multiAdd(self, ctx, arg1, *, arg2):
         '''
-        syntax: multi_add [Name_of_deck][Card in inventory 1][Card in inventory 2]...[Card in inventory n]
+        syntax: multiAdd [Name_of_deck][Card in inventory 1][Card in inventory 2]...[Card in inventory n]
         [Name_of_deck]: The current name of the deck
         [Card in inventory]...[Card in inventory n]: The n cards you would like to add to the deck
 
@@ -259,9 +260,9 @@ class DeckCog(commands.Cog):
             await channel.send(str("All the cards have been added to your deck!"))
 
     @commands.command(pass_context=True)
-    async def multiRemoveFromDeck(self, ctx, arg1, *, arg2):
+    async def multiRemove(self, ctx, arg1, *, arg2):
         '''
-        syntax: multi_remove [Name_of_deck][Card in inventory 1][Card in inventory 2]...[Card in inventory n]
+        syntax: multiRemove [Name_of_deck][Card in inventory 1][Card in inventory 2]...[Card in inventory n]
         [Name_of_deck]: The current name of the deck
         [Card in inventory]...[Card in inventory n]: The n cards you would like to remove from the deck
 
@@ -296,9 +297,9 @@ class DeckCog(commands.Cog):
         await channel.send(str("All the cards have been removed from your deck!"))
 
     @commands.command(pass_context=True)
-    async def viewAllDecks(self, ctx):
+    async def AllDecks(self, ctx):
         '''
-        syntax: viewAllDecks
+        syntax: AllDecks
 
         '''
         bot = ctx.bot
@@ -339,6 +340,7 @@ class DeckCog(commands.Cog):
                 await channel.send(str(i.get_deck_description()))
                 return
         await channel.send("The deck you've entered does not exist.")
+
     @commands.command(pass_context=True)
     async def updateDeckCards(self, ctx, *args):
         bot = ctx.bot
@@ -352,9 +354,9 @@ class DeckCog(commands.Cog):
 
 
     @commands.command(pass_context=True)
-    async def viewCardsInDeck(self, ctx, arg):
+    async def viewDeck(self, ctx, arg):
         '''
-        syntax: viewCardsInDeck [Name_of_deck]
+        syntax: viewDeck [Name_of_deck]
         [Name_of_deck]: The current name of the deck
 
         '''
@@ -386,3 +388,37 @@ class DeckCog(commands.Cog):
             await channel.send("NO CARDS IN DECK.")
         else:
             await channel.send(content=message_content)
+
+    @commands.command(pass_context=True)
+    async def randomAdd(self, ctx, arg):
+        '''
+        syntax: randomAdd [Name_of_deck]
+        [Name_of_deck]: The current name of the deck
+
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        deckName = arg
+        deck = None
+        for i in profile.get_decks():
+            if (i.get_deck_name() == deckName):
+                deck = i
+                break
+        if (deck == None):  # if the deck entered does not correspond with a deck name in user profile. End the operation
+            await channel.send(str("The deck you've entered does not exist."))
+            return
+        inventoryList = list(profile.get_cards().values())
+        random_entry = random.choice(inventoryList)
+        if(random_entry["inv_key"] in deck) == False:
+            deck.addToDeck(random_entry["inv_key"])
+        else:
+            while True:
+                random_entry = random.choice(inventoryList)
+                if(random_entry["inv_key"] in deck) == False:
+                    deck.addToDeck(random_entry["inv_key"])
+                    return
