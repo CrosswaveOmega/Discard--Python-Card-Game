@@ -73,6 +73,18 @@ class CardRetrievalClass():  # by no means what the final version should use.
         if (val != None):
             return val
         return False
+    def getMeanSpeed(self):
+        print("Starting...")
+        cards=CardRetrievalSingleton("GetAllCards").getAllCards()
+        total_speed=0
+        card_count=0
+        for card in cards:
+            if(card.get_type()=="Creature"):
+                total_speed=total_speed+card.get_speed()
+                card_count=card_count+1
+        average=total_speed/card_count
+        return int(average)
+
 
     def getAllCards(self):
         # list = []

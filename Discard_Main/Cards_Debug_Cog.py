@@ -198,4 +198,5 @@ class DebugCog(commands.Cog):
             channel.send("Card does not exist")
         else:
             profile.add_card(card_id)
+            channel.send("Card added without issue.")
         SingleUser.save_all()

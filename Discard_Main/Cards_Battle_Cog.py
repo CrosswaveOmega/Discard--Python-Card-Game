@@ -56,6 +56,7 @@ class CardCogBattle(commands.Cog):
     """Commands for battle system goes here."""
     @commands.command()
     async def request_duel(self, ctx, *args):
+        avgspeed=CardRetrievalClass().getMeanSpeed()
         """Start a duel with another person!"""
         bot = ctx.bot  # The refrence to the bot object. https://discordpy.readthedocs.io/en/latest/ext/commands/api.htm?highlight=bot#bot
             # The refrence to the message author.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=user#user
@@ -66,6 +67,7 @@ class CardCogBattle(commands.Cog):
 
         mentions=ctx.message.mentions
 
+        avgspeed=CardRetrievalClass().getMeanSpeed()
         user1=author
         user2=None
 
@@ -124,10 +126,10 @@ class CardCogBattle(commands.Cog):
         thisDuel.addPlayer(player1)
         thisDuel.addPlayer(player2)
         # Start Card_Duel
-        testPiece = Leader(player1, player1.get_user_name(), position_notation="C1")
+        testPiece = Leader(player1, player1.get_user_name(), position_notation="C1", avgspeed)
         testPiece.set_image()
 
-        testPiece2 = Leader(player2, player2.get_user_name(), position_notation="C5")
+        testPiece2 = Leader(player2, player2.get_user_name(), position_notation="C5", avgspeed)
         testPiece2.set_image()
 
         player1.set_leader(testPiece)
@@ -140,14 +142,14 @@ class CardCogBattle(commands.Cog):
 
         await user1.remove_roles(rolea)
         await user2.remove_roles(rolea)
+        if (winner!=None):
+            if winner.get_user_name() == user1.name:
+                await add_coin(profile1, 20)
+                await incr_stars(channel, profile1)
 
-        if winner.get_user_name() == user1.name:
-            await add_coin(profile1, 20)
-            await incr_stars(channel, profile1)
-
-        if winner.get_user_name() == user2.name:
-            await add_coin(profile2, 20)
-            await incr_stars(channel, profile2)
+            if winner.get_user_name() == user2.name:
+                await add_coin(profile2, 20)
+                await incr_stars(channel, profile2)
 
         for profile in profiles:
             await add_exp_point(profile, 20)
@@ -162,31 +164,31 @@ class CardCogBattle(commands.Cog):
 
 
 
-    @commands.command()
-    async def start_duel(self, ctx, *args):  # Start a duel
-        '''
-        syntax: start_duel
-        This function is for starting a CardDuel.
-
-
-        '''
-        bot = ctx.bot
-        author = ctx.message.author
-        channel = ctx.message.channel
-        # Get Users involved.
-        print("Get users.  For now, we only need to use the one who called this command.")
-        # Get Decks to be used.
-        print("Get deck of each player.")
-        player1Deck = []
-        # create DPIOS object
-        player1_DPIOS = DPIOS(channel, author)
-
-        # make DiscordPlayer class
-        player1 = DiscordPlayer(deck=player1Deck, team=1, dpios=player1_DPIOS)
-        # Make Card_Duel class
-        thisDuel = Card_Duel(bot)
-        thisDuel.addPlayer(player1)
-        # Start Card_Duel
+    # @commands.command()
+    # async def start_duel(self, ctx, *args):  # Start a duel
+    #     '''
+    #     syntax: start_duel
+    #     This function is for starting a CardDuel.
+    #
+    #
+    #     '''
+    #     bot = ctx.bot
+    #     author = ctx.message.author
+    #     channel = ctx.message.channel
+    #     # Get Users involved.
+    #     print("Get users.  For now, we only need to use the one who called this command.")
+    #     # Get Decks to be used.
+    #     print("Get deck of each player.")
+    #     player1Deck = []
+    #     # create DPIOS object
+    #     player1_DPIOS = DPIOS(channel, author)
+    #
+    #     # make DiscordPlayer class
+    #     player1 = DiscordPlayer(deck=player1Deck, team=1, dpios=player1_DPIOS)
+    #     # Make Card_Duel class
+    #     thisDuel = Card_Duel(bot)
+    #     thisDuel.addPlayer(player1)
+    #     # Start Card_Duel
 
     @commands.command()
     async def start_2_player_duel_test(self, ctx, *args):  # Start a duel
@@ -247,10 +249,11 @@ class CardCogBattle(commands.Cog):
         thisDuel.addPlayer(player1)
         thisDuel.addPlayer(player2)
         # Start Card_Duel
-        testPiece = Leader(player1, player1.get_user_name(), position_notation="C1")
+        avgspeed=CardRetrievalClass().getMeanSpeed()
+        testPiece = Leader(player1, player1.get_user_name(), position_notation="C1", speed=avgspeed)
         testPiece.set_image()
 
-        testPiece2 = Leader(player2, player2.get_user_name(), position_notation="C5")
+        testPiece2 = Leader(player2, player2.get_user_name(), position_notation="C5", speed=avgspeed)
         testPiece2.set_image()
 
         player1.set_leader(testPiece)
@@ -283,6 +286,7 @@ class CardCogBattle(commands.Cog):
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel
+        avgspeed=CardRetrievalClass().getMeanSpeed()
         # Get Users involved.
         SingleUser = SingleUserProfile("arg")
         profile1 = SingleUser.getByID(author.id)
@@ -305,7 +309,7 @@ class CardCogBattle(commands.Cog):
         thisDuel = Card_Duel(bot)
         thisDuel.addPlayer(player1)
         # Start Card_Duel
-        testPiece = Leader(player1, "MY_NAME", position_notation="B2")
+        testPiece = Leader(player1, "MY_NAME", position_notation="B2", speed=avgspeed)
         testPiece.set_image()
 
         player1.set_leader(testPiece)

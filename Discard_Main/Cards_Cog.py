@@ -121,6 +121,7 @@ class CardCog(commands.Cog):
 
     @commands.command(pass_context=True)
     async def inventory(self, ctx):
+        """Display all the cards in your inventory, as a list."""
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel
@@ -146,6 +147,7 @@ class CardCog(commands.Cog):
             await pages(ctx, list, perpage=10)
     @commands.command(pass_context=True)
     async def inventory_zoom(self, ctx):
+        """Display all the cards in your inventory, one at a time."""
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel

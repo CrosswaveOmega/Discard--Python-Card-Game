@@ -225,6 +225,8 @@ class CustomsCog(commands.Cog):
         [card_identifier] - can be custom_id, card_id, custom_name, or card_name
         [new name] - the new name of the card
         [new icon] - the new icon of the card.  Must be a emoji.
+
+        This command can accompany an attached image file.
         '''
         bot = ctx.bot
         author = ctx.message.author

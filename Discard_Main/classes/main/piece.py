@@ -379,11 +379,11 @@ class Leader(Piece):
     """Leader class.  This is the avatar of the players."""
     """Through the leader, the players will do most actions."""
 
-    def __init__(self, player, name, position_notation):
+    def __init__(self, player, name, position_notation, speed=50):
         self.player = player  # the player object this piece belongs to.
         self.name = name
         # Current HP= max_hp - damage.
-        speed = 50
+        #speed = 50
         move_style = "STEP 1"  # The multilined text
         move_limit = 1
         # Speed is 1-100.

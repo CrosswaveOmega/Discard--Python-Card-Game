@@ -371,6 +371,11 @@ class DeckCog(commands.Cog):
 
     @commands.command(pass_context=True)
     async def updateDeckCards(self, ctx, *args):
+        '''
+        syntax: updateDeckCards
+        reflect changes in inventory to your Deck.
+
+        '''
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel
