@@ -96,6 +96,7 @@ class Player():
             new_creature = Creature(card, self, position_not)
             self.hand.remove(card)
             game_ref.add_creature(new_creature)
+            await game_ref.send_user_updates()
 
             r, b, g = card.get_summoncost_tuple()
             await game_ref.send_announcement("{} Summoned to {}".format(card.get_name(), position_not))
@@ -129,13 +130,11 @@ class Player():
                               timestamp=datetime.datetime.now())
         mana = " Red= {}\n Blue= {}\n Green= {}".format(str(round(self.summon_r, 2)), str(round(self.summon_b, 2)),
                                                         str(round(self.summon_g, 2)))
+        deckgrave="**Deck:**{}\n\n**Graveyard**:{}".format(len(self.deck), len(self.graveyard))
         embed.add_field(name="Leader", value=self.leader.string_status(), inline=True)
         embed.add_field(name="Mana", value=mana, inline=True)
-        embed.add_field(name="Deck", value=str(len(self.deck)), inline=True)
+        embed.add_field(name="-", value=str(len(self.deck)), inline=True)
         # embed.add_field(name="custom", value="Custom was applied.",)
-        embed.add_field(name="Exp", value="0", inline=True)
-        embed.add_field(name="Level", value="0", inline=True)
-        embed.add_field(name="graveyard", value=str(len(self.graveyard)), inline=True)
         return embed
     async def local_commands(self, action, game_ref):
         return True, False
@@ -148,7 +147,8 @@ class DiscordPlayer(Player):
         player_type = "Discord"
         self.dpios = dpios
         super().__init__(player_type="Discord", deck=deck, team=team)
-
+    def get_user_name(self):
+        return self.dpios.get_user_name()
     def get_avatar_url(self):
         return self.dpios.get_avatar_url()
 

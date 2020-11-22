@@ -12,8 +12,9 @@ from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 from .classes.Cards.cardretrieval import CardRetrievalClass
-from .classes.discordhelper.tiebreaker import make_tiebreaker, card_multimatch
-from .classes.discordhelper.pagesystem import *
+
+from .classes.discordhelper import *
+
 from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
@@ -142,7 +143,30 @@ class CardCog(commands.Cog):
         if (len(list) == 0):
             await channel.send("NO CARDS IN INVENTORY.")
         else:
-            await pages(ctx, list)
+            await pages(ctx, list, perpage=10)
+    @commands.command(pass_context=True)
+    async def inventory_zoom(self, ctx):
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        list = []
+        for key, card in profile.get_cards().items():
+            newCard=await inventory_entry_to_card_object(bot, card)
+
+            list.append(newCard)
+        message_content = ""
+
+        # for i in list:
+        #    message_content=message_content+str(i)+"\n"
+
+        if (len(list) == 0):
+            await channel.send("NO CARDS IN INVENTORY.")
+        else:
+            await pages_of_embeds(ctx, list)
             # await channel.send(content=message_content)
 
     @commands.command(pass_context=True)

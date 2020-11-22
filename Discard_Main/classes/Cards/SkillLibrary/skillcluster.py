@@ -32,26 +32,23 @@ class BasicAttack(card.Skill):  # Custom Class
         dictionary["user"] = user
         dictionary["target"] = target
         dictionary["type"] = 'attack'
-        print("This skill should do " + str(self.damage) +
-              "Damage to everything in the target parameter.")
-        print(self.damage)
+        print('before')
 
         dictionary["damage"] = self.damage
         dictionary["tag"] = self.damage_tag
 
+        print('during')
         for entity in dictionary["target"]:
             await game_ref.send_announcement(
                 "{} uses {} on {} for {} damage.".format(user.get_name(), self.get_name(), entity.get_name(),
                                                          dictionary["damage"]))
-            print(
-                "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
             dictionary["incoming_damage"] = dictionary["damage"]
             dictionary["continue"]=True
             dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
 
             if dictionary["continue"]:  # here, it would check for some kind of effect. for record.
                 entity.add_damage(dictionary["incoming_damage"])
-        print("OPERATION HAS BEEN DONE.")
+        print('after')
 
 
 # BasicHeal is a skill which replaces lost HP on a game piece.
@@ -78,8 +75,8 @@ class BasicHeal(card.Skill):
         print("The target piece can be healed by " +
               str(self.heal_amount) + " at most.")
         for entity in heal_dict["target"]:
-            dictionary["continue"]=True
-            if dictionary["continue"]=True:  # here, it would check for some kind of effect. for record.
+            heal_dict["continue"]=True
+            if heal_dict["continue"]:  # here, it would check for some kind of effect. for record.
                 await game_ref.send_announcement("The" + entity.get_name() + " piece can be healed by " + str(self.heal_amount) + " at most.")
                 entity.heal_damage(heal_dict["heal_amount"])
 
@@ -89,13 +86,13 @@ class BasicHeal(card.Skill):
 # It is of type other because its effective area is not relevant to the board.
 class BasicShield(card.Skill):
     def __init__(self, name="BasicShield", trigger="auto", target=("This", "Self", "x1"), type="other", limit="",
-                 description=", shield_amount=1):
+                 description="", shield_amount=1):
         # This is the amount of damage reduced from the attack when the shield is activated.
         self.shield_amount = shield_amount
         super().__init__(name, trigger, target, type, limit, description)
 
     def get_description(self):
-        return "Applies a shield effect that will reduce incoming damage by {shield}.".format(self.shield_amount)
+        return "Applies a shield effect that will reduce incoming damage by {shield}.".format(shield=self.shield_amount)
 
     async def doSkill(self, user, target, game_ref):
         shield_dict = {}
@@ -145,7 +142,7 @@ class MultiAttack(card.Skill):
         super().__init__(name, trigger, target, type, limit, description)
 
     def get_description(self):
-        return "Deals {damage} {tag} damage to the targets {attacks} times.".format(damage=self.damage, tag=self.damage_tag, tag=self.attacks)
+        return "Deals {damage} {tag} damage to target {attacks} times.".format(damage=self.damage, tag=self.damage_tag, attacks=self.attacks)
 
     async def doSkill(self, user, target, game_ref):
 
@@ -161,7 +158,7 @@ class MultiAttack(card.Skill):
         print(self.damage)
 
         dictionary["damage"] = self.damage
-        dictionary["attacks"] = self.damage
+        dictionary["attacks"] = self.attacks
         dictionary["tag"] = self.damage_tag
         print("during")
         for entity in dictionary["target"]:
@@ -175,7 +172,7 @@ class MultiAttack(card.Skill):
             dictionary["incoming_damage"] = dictionary["damage"]
             dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
             dictionary["continue"]=True
-            if True:  # here, it would check for some kind of effect. for record.
+            if dictionary["continue"]:  # here, it would check for some kind of effect. for record.
                 for count in range(0, dictionary["incoming_attacks"]):
                     # Deals damage attacks time
                     entity.add_damage(dictionary["incoming_damage"])

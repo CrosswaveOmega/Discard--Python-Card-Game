@@ -12,6 +12,7 @@ from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 from .classes.Cards.cardretrieval import CardRetrievalClass
+from .classes.discordhelper import *
 
 from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
@@ -30,6 +31,28 @@ class DebugCog(commands.Cog):
         """Command to fix names."""
         await CustomRetrievalClass().resync_names(ctx.bot)
         await ctx.channel.send("Sync Completed")
+
+    @commands.command()
+    async def GetPing(self, ctx, *args):  # A example command.
+        bot = ctx.bot  # The refrence to the bot object. https://discordpy.readthedocs.io/en/latest/ext/commands/api.htm?highlight=bot#bot
+        # The refrence to the message author.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=user#user
+        author = ctx.message.author
+        # the refrence to the channel this message was sent in.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=textchannel#textchannel
+        channel = ctx.message.channel
+
+        mentions = ctx.message.mentions
+        for mention in mentions:
+            userid=mention.id
+            await ctx.channel.send("id is "+str(userid))
+            choices=[]
+            choices.append(["no", "", '❌'])
+            choices.append(["yes", "", '✔️'])
+            message=await ctx.channel.send("Would you like do DUEL?!")
+            result = await make_tiebreaker(ctx, choices, message=message, timeout_enable=True, delete_after=True, remove_after=True, clear_after=False, timeout_time=60.0)
+            await ctx.channel.send(mention.name+" says "+result)
+
+
+
 
     @commands.command()
     async def save(self, ctx, *args):  # A example command.

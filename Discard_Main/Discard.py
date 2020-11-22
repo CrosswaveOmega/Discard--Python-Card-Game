@@ -167,7 +167,8 @@ class Card_Duel():
             queue.append(i)
         stack = []
         for i in range(len(queue)):
-            self.queue_preview = str([piece.get_name() for piece in queue])
+            self.queue_preview = [piece.get_name() for piece in queue]
+            self.queue_preview.reverse()
             current_piece = queue.pop()
             print(queue)
             self.current_piece = current_piece
@@ -202,9 +203,12 @@ class Card_Duel():
 
     def to_embed(self):
         embed = discord.Embed(title="Game.", colour=discord.Colour(0x7289da))
+        print(self.queue_preview)
         embed.description = "Round: {} \n, queue = {}".format(
-            self.round, self.queue_preview)
+            self.round, str(self.queue_preview))
         embed.set_image(url="{imgurl}".format(imgurl=self.grid_image_url))
+        embed.set_footer(
+            text="{}".format(str(self.queue_preview)))
         return embed
 
 

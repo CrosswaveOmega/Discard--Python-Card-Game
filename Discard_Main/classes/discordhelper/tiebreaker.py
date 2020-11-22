@@ -15,20 +15,13 @@ from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 from ..Cards.cardretrieval import CardRetrievalClass
 from ..Cards.custom import CustomRetrievalClass
-
-
+"""
 def card_multimatch_with_type(profile, to_match="", match_by_custom_name=True, match_by_card_id=True,
                               match_by_custom_id=True):
-    """
-    returns: type of match, match result
-    """
     print("TODO: ADD MATCH BY INV KEY.")
-    list1 = profile.get_inv_cards_by_custom_name(
-        str(to_match))  # returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
-    list2 = profile.get_inv_cards_by_id(
-        int(to_match, 16))  # returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
-    custom = profile.check_customs_by_id(
-        str(to_match))  # returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
+    list1 = profile.get_inv_cards_by_custom_name(str(to_match))  # returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
+    list2 = profile.get_inv_cards_by_id(int(to_match, 16))  # returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
+    custom = profile.check_customs_by_id(str(to_match))  # returns {"card_id":card_id, "custom":[custom id if applicable], "inv_key":new_key_name}
     if (len(list1) >= 1 and match_by_custom_name):
         return "custom_name", list1
     elif (len(list2) >= 1 and match_by_card_id):
@@ -55,21 +48,10 @@ def card_multimatch(profile, to_match="", match_by_custom_name=True, match_by_ca
     elif custom != None:
         return custom
     return None
-
+"""
 
 async def make_tiebreaker_with_inventory_entries(ctx, inventory_entries):
-    # choices=[
-    # ["Case 0","0","<:_0:754494641050615809>"],
-    # ["Case 1","1","<:_1:754494641096622153>"],
-    # ["Case 2","2","<:_2:754494640752951307>"],
-    # ["Case 3","3","<:_3:754494641264394301>"],
-    # ["Case 4","4","<:_4:754494641117855792>"],
-    # ["Case 5","5","<:_5:754494641084301472>"],
-    # ["Case 6","6","<:_6:754494640865935391>"],
-    # ["Case 7","7","<:_7:754494640870129712>"],
-    # ["Case 8","8","<:_8:754494641151148032>"],
-    # ["Case 9","9","<:_9:754494641105272842>"]
-    # ]
+
     emoji_list = [
         "<:_0:754494641050615809>",
         "<:_1:754494641096622153>",
@@ -255,7 +237,7 @@ async def make_internal_tiebreaker_with_buffer(bot, auth, channel, choices, buff
 
 async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, timeout_enable=False, delete_after=False,
                                    remove_after=False, clear_after=False, ignore_message=False,
-                                   ignore_reaction=False):  # Add card.
+                                   ignore_reaction=False, timeout_time=30.0):  # Add card.
     output = None
 
     emoji_list = [
@@ -296,13 +278,12 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
         message_dict[ch[1]] = ch[0]
         emoji_dict[ch[2]] = ch[0]
         if not (ch[2] in currentReactions):
-            reaction_tasks.append(asyncio.create_task(
-                add_react(message_to_respond_to, ch[2])))
+                await add_react(message_to_respond_to, ch[2])
             # await add_react(message_to_respond_to,ch[2])
         else:
             await message_to_respond_to.remove_reaction(ch[2], auth)
     #
-    done, pending = await asyncio.wait(reaction_tasks, return_when=asyncio.ALL_COMPLETED)
+    #one, pending = await asyncio.wait(reaction_tasks, return_when=asyncio.ALL_COMPLETED)
 
     def check(m):
         return m.author == auth and m.channel == channel
@@ -322,7 +303,7 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
         return result
 
     async def timeoutfunction():  # Get a reaction.
-        await asyncio.sleep(30.0)
+        await asyncio.sleep(timeout_time)
         return "timeout"
 
     messagetask = asyncio.create_task(getMessage())
@@ -341,9 +322,9 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
 
     # <a:stopwatch:774741008495542284>
     # <a:stopwatch_15:774741008793337856>
-    oldcont = cont
-    cont = oldcont + "<a:stopwatch:774741008495542284>"
-    await message_to_respond_to.edit(content=cont, embed=embed)
+    #oldcont = cont
+    #cont = oldcont + "<a:stopwatch:774741008495542284>"
+    #await message_to_respond_to.edit(content=cont, embed=embed)
     done, pending = await asyncio.wait(tasklist,
                                        return_when=asyncio.FIRST_COMPLETED)  # there's probably a better way to do this.
     if messagetask in done:
@@ -373,7 +354,7 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
         messagetask.cancel()
         reactiontask.cancel()
         output = timeouttask.result()
-    await message_to_respond_to.edit(content=oldcont, embed=embed)
+#    await message_to_respond_to.edit(content=oldcont, embed=embed)
     if clear_after:
         await message_to_respond_to.clear_reactions()
     if delete_after:
@@ -382,7 +363,7 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
 
 
 async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False,
-                          clear_after=False, ignore_message=False, ignore_reaction=False):  # Add card.
+                          clear_after=False, ignore_message=False, ignore_reaction=False, timeout_time=30.0):  # Add card.
     '''
     This function's sole purpose is to help with what I call a "tiebreaker."
 
@@ -400,5 +381,5 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
     channel = ctx.message.channel
 
     output = await make_internal_tiebreaker(bot, auth, channel, choices, message, timeout_enable, delete_after,
-                                            remove_after, clear_after, ignore_message, ignore_reaction)
+                                            remove_after, clear_after, ignore_message, ignore_reaction, timeout_time)
     return output

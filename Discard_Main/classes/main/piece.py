@@ -90,7 +90,7 @@ class Piece:
         sent_mess = None
         if(not buffer):
             img = await game_ref.make_move_preview(move_options)
-            if(player.PlayerType=="Discord"):
+            if(self.player.PlayerType=="Discord"):
                 sent_mess = await self.player.get_dpios().send_pil_image(img)
 
         option = await self.player.select_option(move_options)
@@ -287,6 +287,8 @@ class Creature(Piece):
                 return False
             selected_targets.append(target)
         await skill.doSkill(self, selected_targets, game_ref)
+        game_ref.set_update()
+        await game_ref.send_user_updates()
         return True
 
     async def process_option(self, game_ref, action):
@@ -303,7 +305,17 @@ class Creature(Piece):
 
     def get_embed(self):
         embed = self.card.to_DiscordEmbed(use_image=False)
-        embed.description = "{}/{}".format(self.get_hp(), self.max_hp)
+        HP="HP:{}".format(self.hp_fraction())
+        Speed="Speed:{}".format(self.get_speed())
+        pos="Position:{}".format(self.get_position().get_notation())
+        desc="{}\n{}\n{}".format(HP, Speed, pos)
+        embed.description = desc
+        color=discord.Colour(0x7289da)
+        if(self.get_team()==1):
+            color=discord.Colour(0xff2e47)
+        if(self.get_team()==2):
+            color=discord.Colour(0x2305c2)
+        embed.colour=color
         return embed
 
 
@@ -372,8 +384,18 @@ HOP X 1 Y 1"""
         return my_turn, completed
 
     def get_embed(self):
-        embed = discord.Embed(title="{}".format("Leader"), colour=discord.Colour(0x7289da),
-                              description="{}/{}".format(self.get_hp(), self.max_hp))
+        HP="HP:{}".format(self.hp_fraction())
+        Speed="Speed:{}".format(self.get_speed())
+        pos="Position:{}".format(self.get_position().get_notation())
+        desc="{}\n{}\n{}".format(HP, Speed, pos)
+        embed = discord.Embed(title="{}".format(self.get_name()), colour=discord.Colour(0x7289da),
+                              description=desc)
+        color=discord.Colour(0x7289da)
+        if(self.get_team()==1):
+            color=discord.Colour(0xff2e47)
+        if(self.get_team()==2):
+            color=discord.Colour(0x2305c2)
+        embed.colour=color
         embed.set_thumbnail(url=self.player.get_avatar_url())
 
         return embed

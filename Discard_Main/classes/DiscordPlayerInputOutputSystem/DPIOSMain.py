@@ -15,11 +15,12 @@ from ..discordhelper.tiebreaker import *
 
 
 class DPIOS:
-    # Fil in later.
+    # To Do- Make Better Buffer system.
     def __init__(self, textchannel, user, bot):
         self.textchannel = textchannel  # Text channel to send input to.
         self.user = user
         self.bot = bot
+        self.announceCount=0
 
         self.input_buffer = []
         print("tbd")
@@ -42,6 +43,10 @@ class DPIOS:
     def get_avatar_url(self):
         """returns the avatar url of the user"""
         return self.user.avatar_url
+    def get_user_name(self):
+        """returns the avatar url of the user"""
+        return self.user.name
+
 
     # INPUT
     async def get_user_choice(self, choice_list, prompt="Select a choice."):
@@ -109,6 +114,10 @@ class DPIOS:
         """get command from user.  Same as Tiebreaker.
         actions is a single list of strings.  Prompt is the prompt.
         """
+        if len(self.input_buffer)<=0:
+            if(self.announceCount>15):
+                await self.send_order()
+                self.announceCount=0
         choices = []
         local_commands = ["OVERVIEW", "BOARD", "PLAYER", "CURRENT"]
         numberlist = ["1️⃣", "2️⃣", "3️⃣", "4️⃣",
@@ -140,6 +149,7 @@ class DPIOS:
             self.current_msg = await self.textchannel.send("Current", embed=self.current_embed)
 
     async def send_announcement(self, announcement):
+        self.announceCount=self.announceCount+1
         await self.textchannel.send(announcement)
 
     async def update_current_message(self, embed):

@@ -13,7 +13,8 @@ from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 from .classes.Cards.cardretrieval import CardRetrievalClass
-from .classes.discordhelper.tiebreaker import make_tiebreaker, card_multimatch
+from .classes.discordhelper import *
+#from .classes.discordhelper.tiebreaker import make_tiebreaker, card_multimatch
 from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
@@ -379,7 +380,8 @@ class DeckCog(commands.Cog):
             await channel.send(str("The deck you've entered does not exist."))
             return
         for card in deck.get_deck_cards():
-            cardobj = CardRetrievalClass().getByID(int(card["card_id"], 16))
+            cardobj=await inventory_entry_to_card_object(bot, card)
+            #cardobj = CardRetrievalClass().getByID(int(card["card_id"], 16))
             list.append(cardobj)
         message_content = ""
         for j in list:
