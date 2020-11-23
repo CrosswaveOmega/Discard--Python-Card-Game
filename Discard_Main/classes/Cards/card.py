@@ -171,7 +171,7 @@ class Skill():
         print('before')
 
         dictionary["unique attribute a"] = "a skill's unique attribute should go here."
-        dictionary["unique attribure b"] = "Another unique attribute should go here"
+        dictionary["unique attribute b"] = "Another unique attribute should go here"
         dictionary = await user.check_effects('before', 'as_user', dictionary, game_ref) #Apply before effects by user
 
         print('during')
