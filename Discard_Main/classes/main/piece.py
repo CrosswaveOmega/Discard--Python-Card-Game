@@ -121,10 +121,10 @@ class Piece:
         pass
 
     async def get_action(self, game_ref):  # Add other args accordingly.
-        if(type=="Leader"):
+        if(self.type=="Leader"):
             self.player.gain_summon_points()
             await game_ref.update_all()
-        if(type=="Creature"):
+        if(self.type=="Creature"):
             await self.do_auto_skills(game_ref)
         options = self.generate_options()
         my_turn = True
@@ -219,14 +219,18 @@ class Piece:
         return self.player.get_team()
 
     def string_status(self):
-        result = "{},{}/{}".format(self.name, self.get_hp(), self.get_hp())
+        team=self.get_team()
+        icons=['🟥', '🟦']
+        icon=icons[team-1]
+        result = "[{}|{}|HP:{}|SPD:{}]".format(icon,self.name, self.hp_fraction(), self.get_speed())
         return result
 
     def get_position(self):
         return self.position
 
-    def get_embed():
+    def get_embed(self):
         pass
+
 
     # To Do- String Rep.  Rep will be Icon, Name, and Position
 
@@ -426,7 +430,7 @@ HOP X 1 Y 1"""
         actions["MOVE"] = self.move_limit
         actions["DRAW"] = 1
         actions["SUMMON"] = 1
-        actions["STRUGGLE"] = 1
+        #actions["STRUGGLE"] = 1
         actions["END"] = 1
         return actions
 

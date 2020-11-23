@@ -39,10 +39,11 @@ class Card_Duel():
         self.entity_list = []
         self.entity_ID_count = 1
         self.bot = bot
-        if image_channel != None:
+        if image_channel == None:
             checkGuild = self.bot.get_guild(int(configur.get("Default", 'bts_server')))  # Behind The Scenes server
             self.image_channel = checkGuild.get_channel(int(configur.get("Default", 'bts_game_images')))
-
+        else:
+            self.image_channel=image_channel
 
         self.mode = "Test"  # the "mode" of the game.  a simplified setting.
         self.settings = None  # Settings of the game.
@@ -206,13 +207,13 @@ class Card_Duel():
         for player in self.players:
             status =player.get_status()
             if(status=="DEFEAT"):
-                await send_announcement("{}'s Leader has perished.  They have lost.".format(player.get_name()))
+                await self.send_announcement("{}'s Leader has perished.  They have lost.".format(player.get_name()))
                 loser.append(player)
             if(status=="QUIT"):
-                await send_announcement("{} has quit the match.".format(player.get_name()))
+                await self.send_announcement("{} has quit the match.".format(player.get_name()))
                 loser.append(player)
         if(len(loser)>=1):
-            for player in self.player:
+            for player in self.players:
                 winner.append(player)
         return winner, loser
 
@@ -245,10 +246,13 @@ class Card_Duel():
         return winner
 
     def to_embed(self):
-        embed = discord.Embed(title="Game.", colour=discord.Colour(0x7289da))
+        titlestr="Round {}".format(self.round)
+        embed = discord.Embed(title=titlestr, colour=discord.Colour(0x7289da))
         print(self.queue_preview)
-        embed.description = "Round: {} \n, queue = {}".format(
-            self.round, str(self.queue_preview))
+        all_statuses=""
+        for piece in self.entity_list:
+            all_statuses=all_statuses + piece.string_status() + " "
+        embed.description = "```{}```".format(all_statuses)
         embed.set_image(url="{imgurl}".format(imgurl=self.grid_image_url))
         embed.set_footer(
             text="{}".format(str(self.queue_preview)))

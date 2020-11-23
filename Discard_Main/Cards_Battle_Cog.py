@@ -50,7 +50,7 @@ async def get_everything(bot, author, channel, team=1):
     await player_DPIOS.send_order()
     player = DiscordPlayer(deck=playerDeck, team=team, dpios=player_DPIOS)
     return profile, player
-
+battles=1
 
 class CardCogBattle(commands.Cog):
     """Commands for battle system goes here."""
@@ -87,9 +87,9 @@ class CardCogBattle(commands.Cog):
         if user2==None:
             await ctx.channel.send("No other user was mentioned.")
             return None
-        rolea, room1 = Create_Room_And_Role(user1, bot, guild, 1, 'a')
-        roleb, room2 = Create_Room_And_Role(user2, bot, guild, 1, 'b')
-
+        rolea, room1 = Create_Room_And_Role(user1, bot, guild, battles, 'a')
+        roleb, room2 = Create_Room_And_Role(user2, bot, guild, battles, 'b')
+        battles=battles+1
         await room2.send("SAY SOMETHING HERE!")
         await room1.send("SAY SOMETHING HERE!")
 
@@ -139,7 +139,7 @@ class CardCogBattle(commands.Cog):
         thisDuel.add_piece(testPiece2)
 
         winner=await thisDuel.start_game()
-
+        battles=battles-1
         await user1.remove_roles(rolea)
         await user2.remove_roles(rolea)
         if (winner!=None):

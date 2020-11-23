@@ -64,7 +64,7 @@ def match_with_target_data(targetdata, user, game_ref):
     number = 0
     inital_targets = []
     if (scope == "Self"):
-        return [user]
+        return [user], 1
     for entity in game_ref.get_entity_list():
         team_equal = (user.get_team() == entity.get_team())
         if scope == "Enemy" and not (team_equal):

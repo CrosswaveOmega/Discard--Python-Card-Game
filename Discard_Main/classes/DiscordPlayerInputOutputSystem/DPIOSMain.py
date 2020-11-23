@@ -115,11 +115,11 @@ class DPIOS:
         actions is a single list of strings.  Prompt is the prompt.
         """
         if len(self.input_buffer)<=0:
-            if(self.announceCount>15):
+            if(self.announceCount>10):
                 await self.send_order()
                 self.announceCount=0
         choices = []
-        local_commands = ["OVERVIEW", "BOARD", "PLAYER", "CURRENT"]
+        local_commands = ["OVERVIEW", "BOARD", "PLAYER", "CURRENT", "QUIT"]
         numberlist = ["1️⃣", "2️⃣", "3️⃣", "4️⃣",
                       "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
         defchoice = ["exit", [""], '🔚']
@@ -142,10 +142,16 @@ class DPIOS:
     # OUTPUT
     async def send_order(self, p=True, i=True, c=True):
         if p:
+            if self.player_msg!=None:
+                await self.player_msg.delete()
             self.player_msg = await self.textchannel.send("Player", embed=self.player_embed)
         if i:
+            if self.image_msg!=None:
+                await self.image_msg.delete()
             self.image_msg = await self.textchannel.send("Image", embed=self.image_embed)
         if c:
+            if self.current_msg!=None:
+                await self.current_msg.delete()
             self.current_msg = await self.textchannel.send("Current", embed=self.current_embed)
 
     async def send_announcement(self, announcement):
