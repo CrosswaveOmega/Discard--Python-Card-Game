@@ -159,7 +159,7 @@ class CardCog(commands.Cog):
         for key, card in profile.get_cards().items():
             newCard=await inventory_entry_to_card_object(bot, card)
 
-            list.append(newCard)
+            list.append((newCard, key))
         message_content = ""
 
         # for i in list:
@@ -168,7 +168,7 @@ class CardCog(commands.Cog):
         if (len(list) == 0):
             await channel.send("NO CARDS IN INVENTORY.")
         else:
-            await pages_of_embeds(ctx, list)
+            await pages_of_embeds(ctx, list, True, profile)
             # await channel.send(content=message_content)
 
     @commands.command(pass_context=True)

@@ -74,8 +74,9 @@ async def pages(ctx, display=[], perpage=5, header="new", content="new"):
             spot = largest_spot
 
 
-async def pages_of_embeds(ctx, display=[]):
+async def pages_of_embeds(ctx, display=[], deck_mode=False, profile=None):
     # seems self explanitory
+    bot=ctx.bot
     spot = 0
     running = True
     perpage=1
@@ -88,10 +89,20 @@ async def pages_of_embeds(ctx, display=[]):
     # <a:stopwatch:774737394594218035>
     # <a:stopwatch_15:774737457371152396>
 
-    message = await ctx.channel.send(content="Your Cards")
+    #
+    #
+    message = await ctx.channel.send(content="Cards")
     while running:
         page = (spot // perpage) + 1
-        emb=display[page-1].to_DiscordEmbed()
+        key=""
+        if deck_mode:
+            ent=display[page-1]
+
+            c, k=display[page-1]
+            emb=c.to_DiscordEmbed()
+            key=k
+        else:
+            emb=display[page-1].to_DiscordEmbed()
         emb.set_author(
             name=" Page {}/{}, {} total".format(page, maxpages, length))
 
@@ -107,6 +118,10 @@ async def pages_of_embeds(ctx, display=[]):
         choices.append(["back", "", '◀️'])
         choices.append(["next", "", '▶️'])
         choices.append(["last", "", '⏭️'])
+        if(deck_mode):
+
+            choices.append(["add_to_deck", "", '<:add_to_deck:780476387098099722>'])
+            choices.append(["remove_from_deck", "", '<:remove_from_deck:780476387148169236>'])
         # for i in range(0,c):
         #    choices.append([str(i),"", numberlist[i]])
         result = await make_tiebreaker(ctx, choices, message=message, timeout_enable=True, ignore_message=True,
@@ -128,3 +143,21 @@ async def pages_of_embeds(ctx, display=[]):
             spot = 0
         if result == "last":
             spot = largest_spot
+        if result == "add_to_deck":
+            if profile!=None:
+                decks = profile.get_decks()
+                if len(decks)>=1:
+                    playerDeck = profile.get_decks()[0]
+                    deckName=playerDeck.get_deck_name()
+                    await ctx.invoke(bot.get_command('addToDeck'), deckName, key)
+                else:
+                    await ctx.channel.send("You never made a deck.  User the >createDeck command to make one.")
+        if result == "remove_from_deck":
+            if profile!=None:
+                decks = profile.get_decks()
+                if len(decks)>=1:
+                    playerDeck = profile.get_decks()[0]
+                    deckName=playerDeck.get_deck_name()
+                    await ctx.invoke(bot.get_command('removeFromDeck'), deckName, key)
+                else:
+                    await ctx.channel.send("You never made a deck.  User the >createDeck command to make one.")

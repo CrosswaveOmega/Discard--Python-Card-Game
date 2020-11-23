@@ -197,7 +197,7 @@ class TestCreature3(card.CreatureCard):
         summong = 3
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type", limit="limit",
+        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", limit="limit",
                              description="deal damage", damage=8)
 
         skill2 = BasicShield(name="Shield", trigger="command", target=("This", "Self",
@@ -233,7 +233,7 @@ class TestCreature4(card.CreatureCard):
         summong = 4
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type", limit="limit",
+        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", limit="limit",
                              description="deal damage", damage=8)
 
         skill2 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", limit="limit", description="description",

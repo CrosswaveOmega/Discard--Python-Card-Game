@@ -162,7 +162,10 @@ class UserProfile:
                     count = count + 1
         self.cards[new_key_name] = {
             "card_id": card_id, "custom": None, "inv_key": new_key_name}
-
+    def check_key(self, key):
+        if key in self.cards:
+            return True
+        return False
     def get_inventory_entry_by_key(self, key):
         return self.cards[key]
 
@@ -186,6 +189,16 @@ class UserProfile:
         print("Getting Return List")
         print(json.dumps(returnList))
         return returnList
+    def get_inv_cards_by_customid(self, custom_id):
+        returnList = []  # Duplicates exist.  (Returns the dictionary value.)
+        for key_name, card_value in self.cards.items():
+            if custom_id == card_value["custom"]:
+                tuple = (key_name, card_value)
+                returnList.append(card_value)
+        print("Getting Return List")
+        print(json.dumps(returnList))
+        return returnList
+
 
     def get_inv_cards_by_custom_name(self, name):
         # Duplicates exist.  (Returns a tuple with the key_name)

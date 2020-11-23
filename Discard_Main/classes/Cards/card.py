@@ -134,18 +134,26 @@ class Skill():
         return self.description
 
     def make_target_string(self):
+        #for the representation on the card embed.
         target = self.target_value
         print(json.dumps(target))
-        strin = "{shape} range {dist}, {scope}, {amount}".format(shape=target["shape"], dist=target["dist"],
-                                                                 scope=target["scope"], amount=target["amount"])
+        shape=target["shape"]
+        dist=target["dist"]
+        scope=target["scope"]
+        amount=target["amount"]
+        rang=""
+        if(int(dist)>=2):
+            rang= "range " +str(dist)
+        strin = "{shape} {dist}, {scope}, {amount}".format(shape=shape, dist=rang, scope=scope, amount=amount)
         return strin
 
     def get_text_tuple(self):
+        #for it's representation on the card.
         trigger = "B"
         if (self.trigger == 'command'):
-            trigger = '8️⃣'
+            trigger = '🔘'
         elif (self.trigger == 'auto'):
-            trigger = '✳️'
+            trigger = '✳️️'
 
         type = self.type
 
@@ -321,7 +329,7 @@ class CreatureCard(CardBase):
     def to_DiscordEmbed(self, use_image=True):
         embed = discord.Embed(title="{icon} {card_name}".format(icon=self.icon, card_name=self.name),
                               colour=discord.Colour(0x7289da),
-                              description="HP: {hp} \n Speed: {speed}```we could let users place a description here.```".format(
+                              description="**HP:** {hp} \n **Speed:** {speed}".format(
                                   hp=self.hp, speed=self.speed))
         print("Image", self.image)
         if (self.image != None and self.image != "None"):

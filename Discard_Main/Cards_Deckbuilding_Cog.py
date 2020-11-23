@@ -171,6 +171,7 @@ class DeckCog(commands.Cog):
                 if (deck == None):  # if the deck entered does not correspond with a deck name in user profile. End the operation
                     await channel.send(str("The deck you've entered does not exist."))
                     return
+                print(cardvalue)
                 if (deck.inDeck(cardvalue) == False):
                     deck.addToDeck(
                         cardvalue)  # to be updated when card_multimatch is finished, looks for the unique card_id if given either the same card name. *Use tiebreaker
