@@ -1,4 +1,5 @@
 from .notationhelp import space_notation_to_value, to_notation
+import math
 # ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
 
 
@@ -46,6 +47,11 @@ class Position():
     def get_chessboard_distance(self, other):
         x_dist, y_dist = self.get_horizontal_and_vertical_distance(other)
         return max(x_dist, y_dist)
+
+    def get_plane_distance(self, other):
+        x_dist, y_dist = self.get_horizontal_and_vertical_distance(other)
+        sum=(x_dist**2) + (y_dist**2)
+        return math.sqrt(sum)
 
     def get_rectilinear_distance(self, other):
         x_dist, y_dist = self.get_horizontal_and_vertical_distance(other)

@@ -10,7 +10,8 @@ class Effect:
         context is where the skill will trigger.
         function is a passed in method of what it will do.
         function arg is a arg for it.
-        disable_check is how it will disable
+        disable_condition is how it will disable.  Right now the only condition is "times_used"
+        disable_arg is a modifier for disable_condition
         """
         self.times_used=0
         self.time=time

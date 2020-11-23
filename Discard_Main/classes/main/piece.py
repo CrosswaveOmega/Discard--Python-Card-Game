@@ -209,6 +209,12 @@ class Piece:
     def get_image(self):
         return self.image
 
+    def compute_distance_to(self, other_pos, dist_type="Rectilinear"):
+        thisposition=self.get_position()
+        if(dist_type=="Rectilinear"):
+            return thisposition.get_rectilinear_distance(other_pos)
+        return 0
+
     def get_team(self):
         return self.player.get_team()
 

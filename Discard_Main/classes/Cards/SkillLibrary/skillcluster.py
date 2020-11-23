@@ -37,16 +37,20 @@ class BasicAttack(card.Skill):  # Custom Class
         dictionary["damage"] = self.damage
         dictionary["tag"] = self.damage_tag
 
+        statement="{} uses {}!".format(user.get_name(), self.get_name())
+        await game_ref.send_announcement(statement)
+        dictionary = await user.check_effects('before', 'as_user', dictionary, game_ref)
+
         print('during')
         for entity in dictionary["target"]:
-            await game_ref.send_announcement(
-                "{} uses {} on {} for {} damage.".format(user.get_name(), self.get_name(), entity.get_name(),
-                                                         dictionary["damage"]))
+
             dictionary["incoming_damage"] = dictionary["damage"]
+            dictionary["range_to"]=user.compute_distance_to(entity.get_position())
             dictionary["continue"] = True
             dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
 
             if dictionary["continue"]:  # here, it would check for some kind of effect. for record.
+                to_send="{} suffers damage of {}!".format(entity.get_name(),dictionary["incoming_damage"])
                 entity.add_damage(dictionary["incoming_damage"])
         print('after')
 
@@ -78,7 +82,7 @@ class BasicHeal(card.Skill):
             heal_dict["continue"] = True
             if heal_dict["continue"]:  # here, it would check for some kind of effect. for record.
                 await game_ref.send_announcement(
-                    "The" + entity.get_name() + " piece can be healed by " + str(self.heal_amount) + " at most.")
+                    "The " + entity.get_name() + " piece was healed by " + str(self.heal_amount) + ".")
                 entity.heal_damage(heal_dict["heal_amount"])
 
 
@@ -155,28 +159,34 @@ class MultiAttack(card.Skill):
         dictionary["target"] = target
         dictionary["type"] = 'attack'
         print("before")
-        print("This skill should do " + str(self.damage) +
-              "Damage to everything in the target parameter.")
-        print(self.damage)
 
         dictionary["damage"] = self.damage
         dictionary["attacks"] = self.attacks
         dictionary["tag"] = self.damage_tag
+        output = "{} uses {}!".format(user.get_name(), self.get_name())
+        await game_ref.send_announcement(output)
+        dictionary = await user.check_effects('before', 'as_user', dictionary, game_ref)
+
         print("during")
+        output="Attacking {} times.".format(dictionary["attacks"])
+        await game_ref.send_announcement(output)
         for entity in dictionary["target"]:
-            output = "{} uses {} on {}!  Dealing {} damage {} times!".format(user.get_name(
-            ), self.get_name(), entity.get_name(), dictionary["damage"], dictionary["attacks"])
-            await game_ref.send_announcement(output)
+
 
             print(
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
+
+            await game_ref.send_announcement(output)
             dictionary["incoming_attacks"] = dictionary["attacks"]
             dictionary["incoming_damage"] = dictionary["damage"]
+            dictionary["range_to"]=user.compute_distance_to(entity.get_position())
             dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
             dictionary["continue"] = True
             if dictionary["continue"]:  # here, it would check for some kind of effect. for record.
                 for count in range(0, dictionary["incoming_attacks"]):
                     # Deals damage attacks time
+                    output="{} suffered damage of {}!".format(entity.get_name(), dictionary["incoming_damage"])
+                    await game_ref.send_announcement(output)
                     entity.add_damage(dictionary["incoming_damage"])
         print("after")
         print("OPERATION HAS BEEN DONE.")
@@ -221,5 +231,46 @@ class BoostAttack(card.Skill):
             output = "{} will give {} more damage!".format(
                 entity.get_name(), str(boost_dict["boost_amount"]))
             await game_ref.send_announcement(output)
-            entity.add_effect(self.get_name(), 'during', 'as_target',
+            entity.add_effect(self.get_name(), 'before', 'as_user',
                               boost_effect, boost_dict["boost_amount"], 'times_used', 1, 4)
+
+class Spike(card.Skill):
+    def __init__(self, name="Spike", trigger="auto", target=("This", "Self", "x1"), type="other", limit="",
+                 description="", damage_returned=3):
+        #
+        self.damage_returned = damage_returned
+        super().__init__(name, trigger, target, type, limit, description)
+
+    def get_description(self):
+        return "Deal {} damage to any close range attacker.".format(boost=self.damage_returned)
+
+    async def doSkill(self, user, target, game_ref):
+        spike_dictionary = {}
+        spike_dictionary["user"] = user
+        spike_dictionary["target"] = target
+        spike_dictionary["type"] = 'other'
+        spike_dictionary["damage_returned"] = self.damage_returned
+
+        async def spike_attack(dictionary, game_ref, boost):
+            #time: 'during'
+            #context: 'as_target'
+            if dictionary["type"] == 'attack':
+                if dictionary["range_to"] in dictionary:
+                    if dictionary["range_to"] <= 1:
+                        #dictionary["damage"] = dictionary["damage"] + boost
+                        dictionary["user"].add_damage(boost)
+                        dictionary["continue"] = False
+                        output = "Ouch, spike activated.  {} damage was returned instead.".format(
+                            boost)
+                        await game_ref.send_announcement(output)
+            return dictionary
+
+        output = "{} uses {}!".format(user.get_name(), self.get_name())
+        await game_ref.send_announcement(output)
+
+        for entity in spike_dictionary["target"]:
+            #output = "{} will give {} more damage!".format(
+            #    entity.get_name(), str(boost_dict["boost_amount"]))
+            #await game_ref.send_announcement(output)
+            entity.add_effect(self.get_name(), 'during', 'as_target',
+                              spike_attack, spike_dictionary["boost_amount"], 'times_used', 3, 4)
