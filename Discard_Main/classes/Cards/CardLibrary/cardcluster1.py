@@ -212,3 +212,39 @@ class TestCreature3(card.CreatureCard):
         super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
                          summoncost_b=summonb, summoncost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
+
+
+class TestCreature4(card.CreatureCard):
+    # This is test creature 3, so its ID is 3 for now.
+    ID = 0x00004
+
+    def __init__(self):
+        self.ID = 0x00004
+        name = "creature 4"
+        icon = "🐻"
+        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
+        type = ""
+        hp = 5
+        speed = 4
+
+        # The summoning cost of this creature
+        summonr = 4
+        summonb = 4
+        summong = 4
+
+        # These are the creature's skills
+        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type", limit="limit",
+                             description="deal damage", damage=8)
+
+        skill2 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", limit="limit", description="description",
+                           heal_amount=2)
+        skill3 = BoostAttack(name="Attack Boost", trigger="auto", target=("This", "Self", "x1"), type="other", limit="",
+                 description="", boost_amount=1)
+
+        # This defines the creature's move style
+        move_style = """STEP 2"""
+        movelimit = 1
+
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
+                         summoncost_b=summonb, summoncost_g=summong,
+                         skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
