@@ -247,7 +247,7 @@ class CustomsCog(commands.Cog):
             profile = SingleUser.getByID(user_id)
             custom_id = await custom_id_from_match(ctx, profile, data_to_match)
             if (custom_id == None):
-                channel.send("Custom Id Not Found.")
+                await channel.send("Custom Id Not Found.")
                 return
             custom = await CustomRetrievalClass().getByID(custom_id, bot)
             custom.name = new_name

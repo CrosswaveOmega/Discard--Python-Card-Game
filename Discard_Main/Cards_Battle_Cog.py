@@ -126,10 +126,10 @@ class CardCogBattle(commands.Cog):
         thisDuel.addPlayer(player1)
         thisDuel.addPlayer(player2)
         # Start Card_Duel
-        testPiece = Leader(player1, player1.get_user_name(), position_notation="C1", avgspeed)
+        testPiece = Leader(player1, player1.get_user_name(), position_notation="C1", speed=avgspeed)
         testPiece.set_image()
 
-        testPiece2 = Leader(player2, player2.get_user_name(), position_notation="C5", avgspeed)
+        testPiece2 = Leader(player2, player2.get_user_name(), position_notation="C5", speed=avgspeed)
         testPiece2.set_image()
 
         player1.set_leader(testPiece)
