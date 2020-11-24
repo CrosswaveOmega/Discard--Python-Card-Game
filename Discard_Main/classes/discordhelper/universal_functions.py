@@ -35,15 +35,15 @@ async def Create_Room_And_Role(auth, bot, guild, number, letter):  # A example c
     for r in roles:
         if r.name==battle_role_name:
             role=r
-    if (role!=None):
+    if (role==None):
         role=await guild.create_role(name=battle_role_name, hoist=True, reason="For Battle")
-
+    print(role)
     overwrites={
     guild.default_role: discord.PermissionOverwrite(read_messages=False),
     guild.me: discord.PermissionOverwrite(read_messages=True),
     role: discord.PermissionOverwrite(read_messages=True)
     }
 
-    newchannel= await guild.create_text_channel(name=channel_name, overwrites=overwrites, position=0)
-    await author.add_roles(role)
-    return role, channel
+    newchannel= await guild.create_text_channel(name=channel_name, overwrites=overwrites)
+    await auth.add_roles(role)
+    return role, newchannel

@@ -215,7 +215,6 @@ class TestCreature3(card.CreatureCard):
 
 
 class TestCreature4(card.CreatureCard):
-    # This is test creature 3, so its ID is 3 for now.
     ID = 0x00004
 
     def __init__(self):
@@ -243,6 +242,73 @@ class TestCreature4(card.CreatureCard):
 
         # This defines the creature's move style
         move_style = """STEP 2"""
+        movelimit = 1
+
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
+                         summoncost_b=summonb, summoncost_g=summong,
+                         skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
+
+
+class Sharpshooter(card.CreatureCard):
+    ID = 0x00005
+
+    def __init__(self):
+        self.ID = 0x00005
+        name = "Sharpshooter"
+        icon = "🐻"
+        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
+        type = ""
+        hp = 3
+        speed = 21
+
+        # The summoning cost of this creature
+        summonr = 2
+        summonb = 5
+        summong = 3
+
+        # These are the creature's skills
+        skill1 = BasicAttack(name="Snipe ", trigger="command", target=("Rectilinear", "Enemy", "x1", "4"), type="attack", limit="limit",
+                             description="deal damage", damage=8, damage_tag="bullet")
+
+        skill2 = BasicAttack(name="Showdown", trigger="command", target=("Rectilinear", "Enemy", "x9", "4"), type="attack", limit="limit",
+                             description="deal damage to group.", damage=2, damage_tag="bullet")
+        skill3 = BoostAttack(name="Attack Boost", trigger="auto", target=("This", "Self", "x1"), type="other", limit="",
+                 description="", boost_amount=1)
+
+        # This defines the creature's move style
+        move_style = """STEP 2"""
+        movelimit = 1
+
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
+                         summoncost_b=summonb, summoncost_g=summong,
+                         skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
+
+class Spiney(card.CreatureCard):
+    ID = 0x00006
+
+    def __init__(self):
+        self.ID = 0x00006
+        name = "Spiney"
+        icon = "🐻"
+        image = "https://media.discordapp.net/attachments/780514923075469313/780515725365346354/Spiny_Artwork_-_New_Super_Mario_Bros.png"
+        type = ""
+        hp = 7
+        speed = 2
+
+        # The summoning cost of this creature
+        summonr = 4
+        summonb = 4
+        summong = 2
+
+        # These are the creature's skills
+        skill1 = BasicAttack(name="Bash", trigger="command", target=("Rectilinear", "Enemy", "x1"), type="attack", limit="limit",
+                             description="deal damage", damage=1, damage_tag="spike")
+        skill2 = Spike(name="Spikes", trigger="auto", target=("This", "Self", "x1"), type="other", limit="",
+                 description="", damage_returned=4)
+        skill3 = None
+
+        # This defines the creature's move style
+        move_style = """STEP 1"""
         movelimit = 1
 
         super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,

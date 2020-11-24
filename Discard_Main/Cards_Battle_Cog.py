@@ -87,8 +87,10 @@ class CardCogBattle(commands.Cog):
         if user2==None:
             await ctx.channel.send("No other user was mentioned.")
             return None
-        rolea, room1 = Create_Room_And_Role(user1, bot, guild, battles, 'a')
-        roleb, room2 = Create_Room_And_Role(user2, bot, guild, battles, 'b')
+        battles=1
+        rolea, room1 = await Create_Room_And_Role(user1, bot, guild, battles, 'a')
+        roleb, room2 = await Create_Room_And_Role(user2, bot, guild, battles, 'b')
+
         battles=battles+1
         await room2.send("SAY SOMETHING HERE!")
         await room1.send("SAY SOMETHING HERE!")

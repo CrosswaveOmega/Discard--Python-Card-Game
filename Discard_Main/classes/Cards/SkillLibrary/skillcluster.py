@@ -51,6 +51,7 @@ class BasicAttack(card.Skill):  # Custom Class
 
             if dictionary["continue"]:  # here, it would check for some kind of effect. for record.
                 to_send="{} suffers damage of {}!".format(entity.get_name(),dictionary["incoming_damage"])
+                await game_ref.send_announcement(to_send)
                 entity.add_damage(dictionary["incoming_damage"])
         print('after')
 
@@ -171,12 +172,9 @@ class MultiAttack(card.Skill):
         output="Attacking {} times.".format(dictionary["attacks"])
         await game_ref.send_announcement(output)
         for entity in dictionary["target"]:
-
-
             print(
                 "HERE, IT SHOULD CHECK FOR ANYTHING THAT WOULD effect the skill's activation.  CURRENTLY, IT IS NOT IMPLEMENTED.")
-
-            await game_ref.send_announcement(output)
+            #await game_ref.send_announcement(output)
             dictionary["incoming_attacks"] = dictionary["attacks"]
             dictionary["incoming_damage"] = dictionary["damage"]
             dictionary["range_to"]=user.compute_distance_to(entity.get_position())
@@ -242,7 +240,7 @@ class Spike(card.Skill):
         super().__init__(name, trigger, target, type, limit, description)
 
     def get_description(self):
-        return "Deal {} damage to any close range attacker.".format(boost=self.damage_returned)
+        return "Deal {} damage to any close range attacker.".format(self.damage_returned)
 
     async def doSkill(self, user, target, game_ref):
         spike_dictionary = {}

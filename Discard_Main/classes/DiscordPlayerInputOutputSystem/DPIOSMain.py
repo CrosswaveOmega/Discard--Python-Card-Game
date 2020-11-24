@@ -115,7 +115,7 @@ class DPIOS:
         actions is a single list of strings.  Prompt is the prompt.
         """
         if len(self.input_buffer)<=0:
-            if(self.announceCount>10):
+            if(self.announceCount>5):
                 await self.send_order()
                 self.announceCount=0
         choices = []
