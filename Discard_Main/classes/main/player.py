@@ -93,6 +93,22 @@ class Player():
             return "Added {} to hand.".format(str(card))
         return "Your deck is empty."
 
+    async def get_focus_action(self, game_ref, focus_value=1.5):
+        valid_options = ["RED", "BLUE", "GREEN"]
+        valuetoadd=focus_value
+        choice = await self.select_option(valid_options, "Where would you like to focus?")
+        if (choice == 'back' or choice == 'timeout' or choice=="invalidmessage"):
+            if(choice=="invalidmessage"):
+                await self.send_announcement("unrecognized string was sent in.")
+            return False
+        if choice=="RED":
+            self.summon_r = self.summon_r + 1.5
+        if choice=="BLUE":
+            self.summon_b = self.summon_b + 1.5
+        if choice=="GREEN":
+            self.summon_g = self.summon_g + 1.5
+        return True
+
     async def get_summon_action(self, game_ref, summon_locations):
         valid_options = []
         for card in self.hand:
@@ -160,7 +176,8 @@ class Player():
     async def local_commands(self, action, game_ref):
         return True, False
     async def send_embed_to_user(self):
-        await asyncio.sleep(1)
+        pass
+        #await asyncio.sleep(1)
 
 
 class DiscordPlayer(Player):

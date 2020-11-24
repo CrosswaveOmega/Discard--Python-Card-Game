@@ -58,7 +58,10 @@ async def custom_id_from_match(ctx, profile, data_to_match):
     type_of_match, matched_data = card_multimatch_with_type(profile, data_to_match)
     if (type_of_match == "custom_name" or type_of_match == "card_id"):
         print(type_of_match, matched_data)
-        inventory_entry = await make_tiebreaker_with_inventory_entries(ctx, matched_data)
+        if(len(matched_data)>1):
+            inventory_entry = await make_tiebreaker_with_inventory_entries(ctx, matched_data)
+        elif(len(matched_data)==1):
+            inventory_entry=matched_data[0]
         # matched Data is list.
         if (inventory_entry == "timeout"):
             channel.send("Timeout, terminating task.")
@@ -258,6 +261,10 @@ class CustomsCog(commands.Cog):
             for attach in ctx.message.attachments:
                 await upload_new_image(bot, author, channel, attach, custom_id)
             await channel.send("Name Updated.")
+        else:
+            emb=changeDisplayAllHelp()
+            await channel.send(embed=emb)
+            #help_message
 
     @commands.command(pass_context=True)
     # A very rudimentary card retrieval system.

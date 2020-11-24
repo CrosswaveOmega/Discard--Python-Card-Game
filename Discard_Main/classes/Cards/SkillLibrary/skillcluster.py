@@ -1,4 +1,5 @@
 from .. import card
+from .effectcluster import GetCommonEffect
 import aiohttp
 import asyncio
 
@@ -32,6 +33,7 @@ class BasicAttack(card.Skill):  # Custom Class
         dictionary["user"] = user
         dictionary["target"] = target
         dictionary["type"] = 'attack'
+
         print('before')
 
         dictionary["damage"] = self.damage
@@ -272,3 +274,46 @@ class Spike(card.Skill):
             #await game_ref.send_announcement(output)
             entity.add_effect(self.get_name(), 'during', 'as_target',
                               spike_attack, spike_dictionary["boost_amount"], 'times_used', 3, 4)
+
+class FreezeAttack(card.Skill):
+    def __init__(self, name="Freeze", trigger="", target=("Adjacent", "Enemy", "x1"), type="attack", limit="",
+                 description="", damage=3, time_frozen=1):
+        #
+        self.damage = damage
+        self.time_frozen = time_frozen
+        super().__init__(name, trigger, target, type, limit, description)
+
+    def get_description(self):
+        return "Deal {} damage to any close range attacker, and freeze them for {} turns.".format(self.damage)
+
+    async def doSkill(self, user, target, game_ref):
+        dictionary = {}
+        dictionary["user"] = user
+        dictionary["target"] = target
+        dictionary["type"] = 'attack'
+
+        print('before')
+
+        dictionary["damage"] = self.damage
+        dictionary["time_frozen"] = self.time_frozen
+        statement="{} uses {}!".format(user.get_name(), self.get_name())
+        await game_ref.send_announcement(statement)
+        dictionary = await user.check_effects('before', 'as_user', dictionary, game_ref)
+
+        print('during')
+        for entity in dictionary["target"]:
+
+            dictionary["incoming_damage"] = dictionary["damage"]
+            dictionary["range_to"]=user.compute_distance_to(entity.get_position())
+            dictionary["continue"] = True
+            dictionary = await entity.check_effects('during', 'as_target', dictionary, game_ref)
+
+            if dictionary["continue"]:  # here, it would check for some kind of effect. for record.
+                to_send="{} suffers damage of {}!".format(entity.get_name(),dictionary["incoming_damage"])
+                await game_ref.send_announcement(to_send)
+                entity.add_damage(dictionary["incoming_damage"])
+                name, eff =GetCommonEffect.FreezeData(1, dictionary["time_frozen"])
+                entity.add_effect_direct(name, eff)
+                to_send="{} suffers is frozen!".format(entity.get_name(),dictionary["incoming_damage"])
+                await game_ref.send_announcement(to_send)
+        print('after')

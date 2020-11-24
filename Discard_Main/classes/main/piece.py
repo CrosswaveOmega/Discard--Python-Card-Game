@@ -51,9 +51,12 @@ class Piece:
     def toggle_active(self):
         self.active=not self.active
 
-    def add_effect(self, effect_name, time, context, function, arg, disable, disable_arg, level=0):
+    def add_effect(self, effect_name, time, context, function, arg, disable, disable_arg, level=0, description=""):
         print("added_effect")
-        self.effects[effect_name]=Effect(time, context, function, arg, disable, disable_arg, level)
+        self.add_effect_direct(effect_name, Effect(time, context, function, arg, disable, disable_arg, level, description))
+
+    def add_effect_direct(self, effect_name, effect):
+        self.effects[effect_name]=effect
 
     async def check_effects(self, time, context, dictionary, game_ref):
         dicton=dictionary
@@ -61,6 +64,8 @@ class Piece:
         for effect_name, effect in self.effects.items():
             if effect.check_trigger(time, context):
                 dictionary=await effect.execute(dictionary, game_ref)
+            if (time == 'after' and context=='turn'):
+                effect.add_turn()
             if effect.disable_check():
                 to_disable.append(effect_name)
                 await game_ref.send_announcement("{} wore off.".format(effect_name))
@@ -69,6 +74,7 @@ class Piece:
         for effect_name in to_disable:
             self.effects.pop(effect_name)
         return dictionary
+
 
     def get_effect_names(self):
         effectlist=""
@@ -83,16 +89,18 @@ class Piece:
     def get_game_id(self):
         return self.game_id
 
-    def generate_options(self):
-        # creates a new dictionary of all options.
-        # Universal opitons are: MOVE, ... END.
-        actions = {}
-        actions["MOVE"] = self.move_limit
-        actions["END"] = 1
-        return actions
-
     def get_name(self):
         return self.name
+
+    def generate_options(self, actions={}):
+        # creates a new dictionary of all options.
+        # Universal opitons are: MOVE, ... END.
+        actions["MOVE"] = self.move_limit
+        actions["END"] = 1
+
+        #check effects
+        return actions
+
 
     async def do_move(self, game_ref):
         move_options = self.get_move_options(game_ref.get_grid())
@@ -121,12 +129,14 @@ class Piece:
         pass
 
     async def get_action(self, game_ref):  # Add other args accordingly.
+        """this does a piece's turn."""
         if(self.type=="Leader"):
             self.player.gain_summon_points()
-            await game_ref.update_all()
+
         if(self.type=="Creature"):
             await self.do_auto_skills(game_ref)
         options = self.generate_options()
+        options=await self.check_effects('before', 'command_setting', options, None)
         my_turn = True
         await game_ref.send_announcement("{}'s turn".format(self.get_name()))
         while my_turn:
@@ -135,14 +145,18 @@ class Piece:
                 if item > 0:
                     choices.append(key)
             await self.player.send_embed_to_user()
+            await game_ref.update_all()
             action = await self.player.select_command(choices)
             my_turn, completed = await self.process_option(game_ref, action)
             if (completed):
                 if action in options:
                     options[action] = options[action] - 1
+            await game_ref.update_all()
 
-        await asyncio.sleep(0.1)
+        #await asyncio.sleep(0.1)
         await game_ref.send_announcement("Turn end.")
+        await self.check_effects('after', 'turn', {}, game_ref)
+        print("End OF TURN.")
         return None
         # universal options.
 
@@ -265,13 +279,11 @@ class Creature(Piece):
     def get_card(self):
         return self.card
 
-    def generate_options(self):
+    def generate_options(self, actions={}):
         # creates a new dictionary of all options.
         # Universal opitons are: MOVE, ... END.
-        actions = {}
-        actions["MOVE"] = self.move_limit
         actions["SKILL"] = 1
-        actions["END"] = 1
+        actions = super().generate_options(actions)
         return actions
     async def do_auto_skills(self, game_ref):
         #This command is for auto skills if available
@@ -423,15 +435,16 @@ HOP X 1 Y 1"""
                 grid.get_all_movements_in_range(self.position, line))
         return summon_options
 
-    def generate_options(self):
+    def generate_options(self, actions={}):
         # creates a new dictionary of all options.
         # Universal opitons are: MOVE, ... END.
-        actions = {}
-        actions["MOVE"] = self.move_limit
+
+        #actions["MOVE"] = self.move_limit
         actions["DRAW"] = 1
         actions["SUMMON"] = 1
-        #actions["STRUGGLE"] = 1
-        actions["END"] = 1
+        actions["FOCUS"] = 1
+        #actions["END"] = 1
+        actions = super().generate_options(actions)
         return actions
 
     async def process_option(self, game_ref, action):
@@ -442,7 +455,8 @@ HOP X 1 Y 1"""
             feedbackstr=self.player.draw_card()
             await self.player.send_announcement(feedbackstr)
             completed = True
-            # Draw one card.  Add it to the hand.
+        elif (action == "FOCUS"):
+            completed=await self.player.get_focus_action(game_ref)
         elif (action == "SUMMON"):
             completed = await self.player.get_summon_action(game_ref, self.get_summon_spaces(game_ref.get_grid()))
             if completed:

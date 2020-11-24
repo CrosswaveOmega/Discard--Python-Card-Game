@@ -144,15 +144,15 @@ class DPIOS:
         if p:
             if self.player_msg!=None:
                 await self.player_msg.delete()
-            self.player_msg = await self.textchannel.send("Player", embed=self.player_embed)
+            self.player_msg = await self.textchannel.send(embed=self.player_embed)
         if i:
             if self.image_msg!=None:
                 await self.image_msg.delete()
-            self.image_msg = await self.textchannel.send("Image", embed=self.image_embed)
+            self.image_msg = await self.textchannel.send(embed=self.image_embed)
         if c:
             if self.current_msg!=None:
                 await self.current_msg.delete()
-            self.current_msg = await self.textchannel.send("Current", embed=self.current_embed)
+            self.current_msg = await self.textchannel.send(embed=self.current_embed)
 
     async def send_announcement(self, announcement):
         self.announceCount=self.announceCount+1
@@ -164,14 +164,14 @@ class DPIOS:
         if(self.current_msg == None):
             self.current_msg = await self.textchannel.send("Newly_sent", embed=embed)
         else:
-            await self.current_msg.edit(content="$", embed=embed)
+            await self.current_msg.edit(embed=embed)
 
     async def update_player_message(self, embed):
         self.player_embed = embed
         if(self.player_msg == None):
             self.player_msg = await self.textchannel.send("Newly_sent", embed=embed)
         else:
-            await self.player_msg.edit(content="$", embed=embed)
+            await self.player_msg.edit(embed=embed)
 
     async def update_grid_message(self, embed):
         # updates the grid image.
@@ -181,7 +181,7 @@ class DPIOS:
         if(self.image_msg == None):
             self.image_msg = await self.textchannel.send("Newly_sent", embed=embed)
         else:
-            await self.image_msg.edit(content="$", embed=embed)
+            await self.image_msg.edit(embed=embed)
 
     async def send_pil_image(self, pil):
         # sends pil image, but saves it to a image_binary first

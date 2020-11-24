@@ -99,6 +99,7 @@ class Card_Duel():
     async def send_current_piece_embed(self, current):
         """UPDATE ALL DPIOS OF PLAYERS.  CHANGES EMBED FOR THE CURRENT CREATURE"""
         print(self.round)
+        current=self.current_piece
         for player in self.players:
             if (player.get_PlayerType() == "Discord"):
                 await player.get_dpios().update_current_message(current.get_embed())
@@ -109,6 +110,47 @@ class Card_Duel():
         for player in self.players:
             if (player.get_PlayerType() == "Discord"):
                 await player.get_dpios().send_announcement(content)
+
+
+    async def update_grid_image(self, do_after=True):
+        # Refresh the grid image.
+        print(self.gridchange)
+        if (self.gridchange):
+            pilgrid = self.grid.grid_to_PIL_array()
+            img = make_image_from_grid(
+                pilgrid, self.grid.columns, self.grid.rows)
+            with io.BytesIO() as image_binary:
+                img.save(image_binary, 'PNG')  # Returns pil object.
+                image_binary.seek(0)
+                image_msg = await self.image_channel.send(file=discord.File(fp=image_binary, filename='image.png'))
+                self.grid_message = image_msg
+            for attach in self.grid_message.attachments:
+                self.grid_image_url = attach.url
+                print(self.grid_image_url)
+            self.gridchange = False
+        if do_after:
+            await self.send_grid_update()
+
+    async def update_all(self, resend_messages=False, conc=False):
+        """DPIOS HAS THREE MESSAGES.  THE PLAYER, THE GRID, AND THE CURRENT PIECE.  THIS RESENDS THEM."""
+        for player in self.players:
+            if (player.get_PlayerType() == "Discord"):
+                if(resend_messages):
+                    await player.get_dpios().send_order()
+                if conc:
+                    asyncio.ensure_future(player.send_embed_to_user())
+                else:
+                    await player.send_embed_to_user()
+
+        await self.update_grid_image(do_after=False)
+        if conc:
+            asyncio.ensure_future(self.send_grid_update())
+            if self.current_piece != None:
+                asyncio.ensure_future(self.send_current_piece_embed(self.current_piece))
+        else:
+            await self.send_grid_update()
+            if self.current_piece != None:
+                await self.send_current_piece_embed(self.current_piece)
 
     def add_piece(self, piece):
         piece.set_game_id=self.entity_ID_count
@@ -137,36 +179,7 @@ class Card_Duel():
                 #self.remove_piece(entity)
 
 
-    async def update_all(self, resend_messages=False):
-        """DPIOS HAS THREE MESSAGES.  THE PLAYER, THE GRID, AND THE CURRENT PIECE.  THIS RESENDS THEM."""
-        for player in self.players:
-            if (player.get_PlayerType() == "Discord"):
-                if(resend_messages):
-                    await player.get_dpios().send_order()
-                await player.send_embed_to_user()
-        await self.update_grid_image()
-        if self.current_piece != None:
-            await self.send_current_piece_embed(self.current_piece)
 
-    async def update_grid_image(self):
-        # Refresh the grid image.
-
-        print(self.gridchange)
-        if (self.gridchange):
-            pilgrid = self.grid.grid_to_PIL_array()
-            img = make_image_from_grid(
-                pilgrid, self.grid.columns, self.grid.rows)
-            with io.BytesIO() as image_binary:
-                img.save(image_binary, 'PNG')  # Returns pil object.
-                image_binary.seek(0)
-                image_msg = await self.image_channel.send(file=discord.File(fp=image_binary, filename='image.png'))
-                self.grid_message = image_msg
-            self.gridchange = False
-        url = "p"
-        for attach in self.grid_message.attachments:
-            self.grid_image_url = attach.url
-            print(self.grid_image_url)
-        await self.send_grid_update()
 
     def turn_sort(self):
         def sortFunction(e):  # this is python.  We can have nested functions.
@@ -195,7 +208,7 @@ class Card_Duel():
             stack.append(current_piece)
             if(stack[i].get_hp() > 0):
                 current_piece.toggle_active()
-                await self.update_all()
+                await self.update_all(conc=True)
                 await stack[i].get_action(self.duel_helper)
             current_piece.toggle_active()
         return stack  # stack will now contain entity_list from highest to lowest speed
@@ -222,21 +235,27 @@ class Card_Duel():
     async def start_game(self):
         # Game Loop is here.
         #return winner.
+        for player in self.players:
+            player.shuffle_deck()
         winner=None
         self.game_is_active = True
         while (self.game_is_active):
             print("PUT GAME LOOP HERE.")
             # not sure if this is correct
             await self.turn_queue(self.turn_sort())
+            #queue IS OVER.
             self.round = self.round + 1
-            print(self.round)
+            print("Round ", self.round)
             obituary=self.entity_clear()
             for ob in obituary:
                 await self.send_announcement(ob)
                 self.grid_updated()
+            print("done_with obituary")
             await self.update_grid_image()
+            print("Grid image done.")
             await asyncio.sleep(0.02)
             win, lose =await self.check_winner()
+            print("Winners found.")
             if len(win)>=1:
                 self.game_is_active = False
                 winner = win[0]
@@ -293,7 +312,7 @@ class Card_Duel_Helper():
 
     async def send_user_updates(self):
         await self.__card_duel.update_grid_image()
-    async def update_all(self):
-        await self.__card_duel.update_all()
+    async def update_all(self, conc=False):
+        await self.__card_duel.update_all(conc=conc)
     async def resend_info_messages(self):
         await self.__card_duel.update_all()
