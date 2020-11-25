@@ -171,8 +171,7 @@ async def pages_of_embeds(ctx, display=[]):
     while running:
         page = (spot // perpage) + 1
         key=""
-        else:
-            emb=display[page-1]
+        emb=display[page-1]
         emb.set_author(
             name=" Page {}/{}, {} total".format(page, maxpages, length))
 
