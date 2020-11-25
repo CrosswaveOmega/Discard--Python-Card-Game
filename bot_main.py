@@ -32,9 +32,10 @@ from Discard_Main import Cards_Debug_Cog
 from Discard_Main import Cards_Battle_Cog
 from Discard_Main import Cards_Deckbuilding_Cog
 
+from Discard_Main.classes.discordhelper.customhelp import Chelp
 #from Discard_Main.classes.main.GridClass import Grid
 
-bot = commands.Bot(command_prefix='>')
+bot = commands.Bot(command_prefix='>', help_command=Chelp())
 
 
 async def opening():

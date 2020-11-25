@@ -314,6 +314,14 @@ class CreatureCard(CardBase):
     def get_move_limit(self):
         return self.move_limit
 
+    def get_shorthand_string(self):
+        r, b, g = self.make_compact_summon_cost()
+        id_hex = format(self.ID, "05X")
+        custom = ""
+        if (self.custom != ""):
+            custom = "-`" + self.custom + "`"
+        line1 = "[{}|`{}`|`HP:{}`|`SPD:{}`|`{}`{}]".format(self.icon, self.name, self.hp, self.speed, id_hex, custom)
+        return line1
     def __str__(self):
         # '{:10}|'.format(item)
         r, b, g = self.make_compact_summon_cost()
@@ -321,7 +329,7 @@ class CreatureCard(CardBase):
         custom = ""
         if (self.custom != ""):
             custom = "-`" + self.custom + "`"
-        line1 = "{}|`{:25}`|`HP:{:4}`|`SPD:{:3}`|{}{}{}|`{}` {}".format(self.icon, self.name, self.hp, self.speed, r, b,
+        line1 = "{}|`{:25}`|`HP:{:4}`|`SPD:{:3}`|{}{}{}|`{}`{}".format(self.icon, self.name, self.hp, self.speed, r, b,
                                                                         g, id_hex, custom)
         return line1
         # return self.icon + "|" + self.name + "|" + self.type + "|"+ self.hp + "|"+ self.speed + "|"+ str(self.ID)

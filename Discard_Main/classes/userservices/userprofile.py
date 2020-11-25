@@ -111,7 +111,9 @@ class UserProfile:
         self.coins = 0
         self.stars = 0
         self.decks = []  # Max 99.
-        # To do: Work out saving/loading for decks.
+        # To do: Work out saving/loading for decks. -DONE!
+
+        self.primary_deck = ""
 
         if(dictionary_to_use != None):
             for i, v in dictionary_to_use.items():
@@ -139,6 +141,18 @@ class UserProfile:
     def get_decks(self):
         print(self.decks)
         return self.decks
+
+    def get_deck_by_name(self, deckName):
+        for i in self.get_decks():
+            if (i.get_deck_name() == deckName):
+                return i
+        return None
+    def get_primary_deck(self):
+        decks=self.get_decks()
+
+        if len(decks)>=1:
+            return decks[self.primary_deck]
+        return None
 
     def apply_custom(self, key, cipher_id):
         if key in self.cards:

@@ -421,7 +421,8 @@ class DeckCog(commands.Cog):
         if (len(list) == 0):
             await channel.send("NO CARDS IN DECK.")
         else:
-            await channel.send(content=message_content)
+            embed=await deck.to_embed(list)
+            await channel.send(content="", embed=embed)
 
     @commands.command(pass_context=True)
     async def randomAdd(self, ctx, arg):

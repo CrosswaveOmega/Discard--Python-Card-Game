@@ -41,7 +41,9 @@ async def get_everything(bot, author, channel, team=1):
     profile = SingleUser.getByID(id)
     playerDeck = []
     print("Right now, it only gets the first deck of the user.")
-    playerDeck_RAW = profile.get_decks()[0]  # inventory entries.
+    playerDeck_RAW = profile.get_primary_deck()  # inventory entries.
+    if playerDeck_RAW == None:
+        return False, False
     for deck_card in playerDeck_RAW.get_deck_cards():
         newcard = await inventory_entry_to_card_object(bot, deck_card)
         playerDeck.append(newcard)
@@ -123,6 +125,7 @@ class CardCogBattle(commands.Cog):
 
         profile1, player1 = await get_everything(bot, user1, room1, team=1)
         profile2, player2 = await get_everything(bot, user2, room2, team=2)
+
         profiles=[profile1, profile2]
         thisDuel = Card_Duel(bot)
         thisDuel.addPlayer(player1)

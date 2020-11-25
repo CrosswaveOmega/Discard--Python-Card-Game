@@ -14,16 +14,15 @@ from discord import Webhook, AsyncWebhookAdapter
 from ..Cards.cardretrieval import CardRetrievalClass
 from ..Cards.custom import CustomRetrievalClass
 
-#I have no idea how to impliment a better help function.
 
 def changeDisplayAllHelp():
     name="changeDisplayAll"
     desc= "Changes the name, icon, and image of a card in your inventory"
+    usage="[card_id] [new_name] <emoji>"
     parameters="""
     [card_id] : the card id of the card in your inventory you want to edit.
     [new_name] : The new name of the card, surrounded in single or double quotes.
     <emoji> : Optional.  A new icon for this card.
-
     Upload a image with this command to set that as the new image of the card!
     """
     example="""
@@ -39,7 +38,7 @@ def changeDisplayAllHelp():
     embed = discord.Embed(title="help: {}".format(name),
                           colour=discord.Colour(0x7289da),
                           description=desc)
-    embed.add_field(name="Usage",value="**>{}**, [card_id] [new_name] <emoji>".format(name), inline=False)
+    embed.add_field(name="Usage",value="**>{}** {}".format(name, usage), inline=False)
 
     embed.add_field(name="parameters",value="{}".format(parameters), inline=False)
     embed.add_field(name="Example",value="{}".format(example), inline=False)

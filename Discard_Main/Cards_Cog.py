@@ -168,7 +168,7 @@ class CardCog(commands.Cog):
         if (len(list) == 0):
             await channel.send("NO CARDS IN INVENTORY.")
         else:
-            await pages_of_embeds(ctx, list, True, profile)
+            await pages_of_cards(ctx, list, True, profile)
             # await channel.send(content=message_content)
 
     @commands.command(pass_context=True)
@@ -184,7 +184,7 @@ class CardCog(commands.Cog):
         diction_profile = profile.to_dictionary()
         number = None
         embed = discord.Embed(title="Card Profile", colour=discord.Colour(0xce48e9),
-                              description=" I dunno what should be the description.  Stuff I guess.  Makes it look a bit WIIIDER.",
+                              description="Your current profile.",
                               timestamp=datetime.datetime.now())
         embed.set_image(url=author.avatar_url)
         print(author.avatar_url)
@@ -278,7 +278,7 @@ class CardCog(commands.Cog):
 
         print("NOTE: NEED TO MAKE CARD EMBED FORMAT CLASS IN CARD.PY")
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, hidden=True)
     # A very rudimentary card retrieval system.
     async def addCustomold(self, ctx, *args):
         '''
@@ -316,7 +316,7 @@ class CardCog(commands.Cog):
     @commands.command(pass_context=True)
     async def carddex_zoom(self, ctx, *args):
         '''
-        syntax: carddex
+        syntax: carddex_zoom
 
         Returns a list of every single card in the game.
         '''
@@ -329,12 +329,12 @@ class CardCog(commands.Cog):
             param1 = args[0]
         newcardlist = CardRetrievalClass().getAllCards()
         list = [card for card in newcardlist]
-        await pages_of_embeds(ctx, list)
+        await pages_of_cards(ctx, list)
         #await pages(ctx, list, header="Carddex", content="Below: Every Card Currently in the game.", perpage=10)
     # for card in newcardlist:
         #    await channel.send(str(card))
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, hidden=True)
     # A very rudimentary card retrieval system.
     async def cardGet(self, ctx, *args):
         '''

@@ -281,7 +281,8 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
                 await add_react(message_to_respond_to, ch[2])
             # await add_react(message_to_respond_to,ch[2])
         else:
-            await message_to_respond_to.remove_reaction(ch[2], auth)
+            #await message_to_respond_to.remove_reaction(ch[2], auth)
+            asyncio.ensure_future(message_to_respond_to.remove_reaction(ch[2], auth))
     #
     #one, pending = await asyncio.wait(reaction_tasks, return_when=asyncio.ALL_COMPLETED)
 
@@ -325,6 +326,7 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
     #oldcont = cont
     #cont = oldcont + "<a:stopwatch:774741008495542284>"
     #await message_to_respond_to.edit(content=cont, embed=embed)
+    print("Ready.")
     done, pending = await asyncio.wait(tasklist,
                                        return_when=asyncio.FIRST_COMPLETED)  # there's probably a better way to do this.
     if messagetask in done:

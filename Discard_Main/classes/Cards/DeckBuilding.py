@@ -1,3 +1,8 @@
+import discord
+import operator
+import aiohttp
+import asyncio
+
 from .CardLibrary import cardcluster1
 from .cardretrieval import *
 from .custom import *
@@ -36,6 +41,9 @@ class Deck():
 
     def get_deck_cards(self):
         return self.deck_cards
+
+    def get_card_count(self):
+         return len(self.deck_cards)
 
     def update_customs(self, user_inv):
         # update a deck's card customs.
@@ -98,3 +106,22 @@ class Deck():
         string = "{},{},{}".format(
             self.deck_name, self.deck_description, len(self.deck_cards))
         return string
+
+    async def to_embed(self, cards=[]):
+        embed = discord.Embed(title="Deck: {deck_name}".format(deck_name=self.get_deck_name()),
+              colour=discord.Colour(0x7289da),
+              description="**Description:** {}\n **Cards:** {}".format(self.get_deck_description(), self.get_card_count()))
+        this_set=""
+        count=0
+        for cardobj in cards:
+        #    cardobj=await inventory_entry_to_card_object(bot, card)
+            string=cardobj.get_shorthand_string() + "\n"
+            length=len(string)
+            if ( (len(this_set)+length)>1024):
+                embed.add_field(name=str(count), value=this_set, inline=False)
+                this_set=""
+                count=count+1
+            this_set = this_set + string
+        embed.add_field(name=str(count), value=this_set, inline=False)
+
+        return embed
