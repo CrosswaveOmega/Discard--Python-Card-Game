@@ -87,6 +87,7 @@ Skill Types
    • Action- Activated by the player, during the creatures turn.  Will usually END turn.
       ‣ Attack- This skill will do some kind of damage to an enemy/enemies, reducing their HP
       ‣ Support- This skill will have some kind of effect to the player's team
+   • Ailment- Inflicts a negative ailment on the target
    • Ability- Activated by the player, during the creatures turn.  Will not end turn, but are toggleable.
    • Counter- Skill will activate when creature has been attacked.
    • Reaction- Skill will activate when criteria has been met.

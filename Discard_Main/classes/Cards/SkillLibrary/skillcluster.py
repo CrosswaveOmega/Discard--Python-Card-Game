@@ -93,7 +93,7 @@ class BasicHeal(card.Skill):
 # BasicShield can shield a creature from different types of attacks which the creature might have better defence against
 # It is of type other because its effective area is not relevant to the board.
 class BasicShield(card.Skill):
-    def __init__(self, name="BasicShield", trigger="auto", target=("This", "Self", "x1"), type="other", limit="",
+    def __init__(self, name="BasicShield", trigger="auto", target=("This", "Self", "x1"), type="support", limit="",
                  description="", shield_amount=1):
         # This is the amount of damage reduced from the attack when the shield is activated.
         self.shield_amount = shield_amount
@@ -193,7 +193,7 @@ class MultiAttack(card.Skill):
 
 
 class BoostAttack(card.Skill):
-    def __init__(self, name="BoostAttack", trigger="auto", target=("This", "Self", "x1"), type="other", limit="",
+    def __init__(self, name="BoostAttack", trigger="auto", target=("This", "Self", "x1"), type="buff", limit="",
                  description="", boost_amount=1):
         #
         self.boost_amount = boost_amount
@@ -235,7 +235,7 @@ class BoostAttack(card.Skill):
                               boost_effect, boost_dict["boost_amount"], 'times_used', 1, 4)
 
 class Spike(card.Skill):
-    def __init__(self, name="Spike", trigger="auto", target=("This", "Self", "x1"), type="other", limit="",
+    def __init__(self, name="Spike", trigger="auto", target=("This", "Self", "x1"), type="counter", limit="",
                  description="", damage_returned=3):
         #
         self.damage_returned = damage_returned
@@ -276,7 +276,7 @@ class Spike(card.Skill):
                               spike_attack, spike_dictionary["boost_amount"], 'times_used', 3, 4)
 
 class FreezeAttack(card.Skill):
-    def __init__(self, name="Freeze", trigger="", target=("Adjacent", "Enemy", "x1"), type="attack", limit="",
+    def __init__(self, name="Freeze", trigger="", target=("Adjacent", "Enemy", "x1"), type="ailment_attack", limit="",
                  description="", damage=3, time_frozen=1):
         #
         self.damage = damage

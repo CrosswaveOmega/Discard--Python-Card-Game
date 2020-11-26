@@ -79,11 +79,14 @@ class CardRetrievalClass():  # by no means what the final version should use.
         cards = CardRetrievalSingleton("GetAllCards").getAllCards()
         total_speed = 0
         card_count = 0
+        print("Start")
         for card in cards:
             if(card.get_type() == "Creature"):
+                print(card.get_speed())
                 total_speed = total_speed + card.get_speed()
                 card_count = card_count + 1
         average = total_speed / card_count
+        print('end')
         return int(average)
 
     def getAllCards(self):

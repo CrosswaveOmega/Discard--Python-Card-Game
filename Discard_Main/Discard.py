@@ -48,7 +48,7 @@ class Card_Duel():
         self.mode = "Test"  # the "mode" of the game.  a simplified setting.
         self.settings = None  # Settings of the game.
         self.duel_helper = Card_Duel_Helper(self)
-        self.grid = Grid(5, 5, self.duel_helper)
+        self.grid = Grid(5, 6, self.duel_helper)
 
 
         self.grid_message = None  # The message containing the grid object

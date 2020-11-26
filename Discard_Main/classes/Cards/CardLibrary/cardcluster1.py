@@ -27,14 +27,22 @@ class TestCreature1(card.CreatureCard):
         summonb = 2
         summong = 2
         # Defining Skills.
-        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack",
+        skill1 = BasicAttack(name="Strong Bash", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack",
                              limit="limit", damage=12)
         # CustomSkill2("Custom Name 2", "trigger", "target", "type", "limit", "Type description here.")
         skill2 = None
         # CustomSkill3("Custom Name 3", "trigger", "target", "type", "limit", "Type description here.")
         skill3 = None
         # Defining move Style.
-        movestyle = "STEP 2"
+        movestyle ="""HOP X 1 Y 2
+HOP X 2 Y 1
+HOP X -1 Y 2
+HOP X -2 Y 1
+HOP X 1 Y -2
+HOP X 2 Y -1
+HOP X -1 Y -2
+HOP X -2 Y -1
+"""
         movelimit = 1
 
         super().__init__(self.ID, name, icon, image=image,
