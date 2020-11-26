@@ -28,6 +28,7 @@ class DPIOS:
         self.image_msg = None
         self.player_msg = None
         self.current_msg = None
+        self.grid_url = "https://media.discordapp.net/attachments/780514923075469313/781631060593213470/512px-AAA_SVG_Chessboard_and_chess_pieces_02.png"
         self.image_embed = embed = discord.Embed(
             title="place", colour=discord.Colour(0x7289da), description="New")
         self.player_embed = embed = discord.Embed(

@@ -149,10 +149,14 @@ class UserProfile:
         return None
     def get_primary_deck(self):
         decks=self.get_decks()
-
         if len(decks)>=1:
-            return decks[self.primary_deck]
+            if self.primary_deck != "":
+                return self.get_deck_by_name(self.primary_deck)
         return None
+    def set_primary_deck(self, deckname):
+        self.primary_deck=deckname
+    def get_primary_deck_name(self):
+        return self.primary_deck
 
     def apply_custom(self, key, cipher_id):
         if key in self.cards:

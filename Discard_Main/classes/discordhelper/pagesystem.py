@@ -138,22 +138,22 @@ async def pages_of_cards(ctx, display=[], deck_mode=False, profile=None):
             spot = largest_spot
         if result == "add_to_deck":
             if profile!=None:
-                decks = profile.get_decks()
-                if len(decks)>=1:
-                    playerDeck = profile.get_decks()[0]
+                deck = profile.get_primary_deck()
+                if deck!=None:
+                    playerDeck = deck
                     deckName=playerDeck.get_deck_name()
                     await ctx.invoke(bot.get_command('addToDeck'), deckName, key)
                 else:
-                    await ctx.channel.send("You never made a deck.  User the >createDeck command to make one.")
+                    await ctx.channel.send("You never set a primary deck.  User the >setPrimaryDeck command to set one.")
         if result == "remove_from_deck":
             if profile!=None:
-                decks = profile.get_decks()
-                if len(decks)>=1:
-                    playerDeck = profile.get_decks()[0]
+                deck = profile.get_primary_deck()
+                if deck!=None:
+                    playerDeck = deck
                     deckName=playerDeck.get_deck_name()
                     await ctx.invoke(bot.get_command('removeFromDeck'), deckName, key)
                 else:
-                    await ctx.channel.send("You never made a deck.  User the >createDeck command to make one.")
+                    await ctx.channel.send("You never set a primary deck.  User the >setPrimaryDeck command to set one.")
 
 async def pages_of_embeds(ctx, display=[]):
     # seems self explanitory

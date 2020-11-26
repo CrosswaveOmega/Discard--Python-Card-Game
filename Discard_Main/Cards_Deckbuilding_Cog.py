@@ -386,6 +386,34 @@ class DeckCog(commands.Cog):
         for i in profile.get_decks():
             i.update_customs(profile.get_cards())
 
+    @commands.command(pass_context=True)
+    async def setPrimaryDeck(self, ctx, arg):
+        '''
+        syntax: setPrimaryDeck [Name_of_deck]
+        Set a primary deck.  Primary Decks let you add cards using the >inventory_zoom command
+        [Name_of_deck]: The name of the deck you want to set as your Primary Deck.
+
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        deckName = arg
+        deck = None
+        list = []
+        for i in profile.get_decks():
+            if (i.get_deck_name() == deckName):
+                deck = i
+                break
+        if (deck == None):  # if the deck entered does not correspond with a deck name in user profile. End the operation
+            await channel.send(str("The deck you've entered does not exist."))
+            return
+        profile.set_primary_deck(deckName)
+        await channel.send(content="Primary Deck set to {}".format(deckName))
+
 
     @commands.command(pass_context=True)
     async def viewCardsInDeck(self, ctx, arg):
@@ -429,7 +457,7 @@ class DeckCog(commands.Cog):
         '''
         syntax: randomAdd [Name_of_deck]
         [Name_of_deck]: The current name of the deck
-
+        adds a random card in your inventory to the specified deck
         '''
         bot = ctx.bot
         author = ctx.message.author

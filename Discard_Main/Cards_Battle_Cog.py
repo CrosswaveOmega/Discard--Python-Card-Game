@@ -72,10 +72,18 @@ class CardCogBattle(commands.Cog):
         avgspeed=CardRetrievalClass().getMeanSpeed()
         user1=author
         user2=None
+        SingleUser = SingleUserProfile("arg")
+        if  SingleUser.getByID(user1.id).get_primary_deck()==None:
+            await channel.send("Please set a primary deck with the `setPrimaryDeck` command first.")
+            return
+
 
         for mention in mentions:
             if author.id != mention.id:
                 choices=[]
+                if  SingleUser.getByID(mention.id).get_primary_deck()==None:
+                    await channel.send("They did not set a primary deck.  Please ask them to set one with the `setPrimaryDeck` command")
+                    return
                 choices.append(["no", "", '❌'])
                 choices.append(["yes", "", '✔️'])
                 message=await mention.send("{} has requested a duel with you.  Will you accept?".format(author.name))
@@ -299,7 +307,7 @@ class CardCogBattle(commands.Cog):
         # Get Decks to be used.
         print("Get deck of each player.")
         player1Deck = []
-        player1Deck_RAW = profile1.get_decks()[0]
+        player1Deck_RAW = profile1.get_decks().get_primary_deck()
         for deck_card in player1Deck_RAW.get_deck_cards():
             newcard = await inventory_entry_to_card_object(bot, deck_card)
             player1Deck.append(newcard)

@@ -204,13 +204,15 @@ class Piece:
 
     def add_damage(self, damage_add=0):
         self.damage = self.damage + damage_add
-        print("Add Damage is incomplete.")
+        if self.damage > self.max_hp:
+            self.damage = self.max_hp
+        print("Damage added.")
 
     def heal_damage(self, damage_add=0):
         self.damage = self.damage - damage_add
         if (self.damage < 0):
             self.damage = 0
-        print("Add Damage is incomplete.")
+        print("Healed damage.")
 
     def change_position(self, new_position_notation):
         self.position = Position(notation=new_position_notation)
