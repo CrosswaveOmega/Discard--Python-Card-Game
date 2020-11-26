@@ -19,7 +19,7 @@ from .classes.Cards.custom import CustomRetrievalClass
 from .classes.imagemakingfunctions.imaging import *
 from .classes.userservices.userprofile import SingleUserProfile
 from .classes.Cards.DeckBuilding import *
-
+from .how_to_play.howtoplayembeds import make_how_to_play_embeds
 
 # from discord.ext.tasks import loop
 
@@ -97,11 +97,20 @@ class CardCog(commands.Cog):
     """Commands for cards."""
 
     @commands.command(pass_context=True, aliases=['stampV'])
-    async def stamp(self, ctx, *args):
+    async def stats(self, ctx, *args):
         bot = ctx.bot
         auth = ctx.message.author
         channel = ctx.message.channel
+        average = CardRetrievalClass().getMeanSpeed()
         leng = len(args)
+    @commands.command(pass_context=True, aliases=['how'])
+    async def how_to(self, ctx, *args):
+        bot = ctx.bot
+        auth = ctx.message.author
+        channel = ctx.message.channel
+        emb=make_how_to_play_embeds()
+        await pages_of_embeds(ctx, emb)
+    #    await ctx.channel.send(embed=emb)
 
     @commands.command(pass_context=True)
     async def numbertoimage(self, ctx, *args):
@@ -209,7 +218,7 @@ class CardCog(commands.Cog):
                             cardhead, card_list, customhead, custom_list),
                         inline=False)
 
-        deckhead = "Decks: {}".format(profile.get_deckcount())
+        deckhead = "Decks: {} PrimaryDeck: {}".format(profile.get_deckcount(), profile.get_primary_deck_name())
         deck_list = ''.join([' {},'.format(item.get_shorthand_rep())
                              for item in profile.get_decks()])
         deck_list = "{:400}".format(deck_list[:-1])

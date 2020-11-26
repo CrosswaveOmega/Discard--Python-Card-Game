@@ -1,0 +1,257 @@
+[
+    {
+      "title": "How to Play",
+      "description": "This game is divided up into **rounds.**  \n Each round is divided up into **turns.**\n\nA **round** consists of every piece taking one **turn.**\n\nThe order of each turn is determined at the start of the round based on their **Speed** stat.\n\n**Pieces** with a higher **speed** go first, pieces with a lower speed go **last.**\n\nAfter a turn ends, the game will allow the next piece to do their **turn.**  When all turns have ended, the round will end.",
+      "color": 7506394,
+      "fields": [
+        {
+          "name": "Round",
+          "value": "The unit by which the game's playtime is divided.  Every piece will have one turn during each round."
+        },
+        {
+          "name": "Turn",
+          "value": "A piece's turn is when a piece can do something during each round.  After"
+        },
+        {
+          "name": "Speed",
+          "value": "The value by which the order of turns are determined."
+        }
+      ],
+      "footer": {
+        "text": "how to play",
+        "icon_url": "https://cdn.discordapp.com/attachments/763799647889260546/781619505067458570/Catch_Card_SPM.png"
+      }
+    },
+    {
+      "title": "How to play: Pieces.",
+      "description": "A piece refers to anything the board.  \nEach piece has HP, SPEED, a Move Style, etc.",
+      "color": 1688774,
+      "fields": [
+        {
+          "name": "HP",
+          "value": "Health points.  This indicates how healthy a piece is.  When HP reaches zero, they will be unable to do anything on their turn.\nWhen each round ends, any piece with 0 HP will perish, and will be removed from the board.\nIf you leader's HP is zero at the end of a round, you will lose the game.",
+          "inline": true
+        },
+        {
+          "name": "Speed",
+          "value": "This stat determines the turn order of a creature.  For example, if one piece had a **speed** of 45 and *another piece* has a **speed** of 34, the piece with the speed of 45 will go first.\n",
+          "inline": true
+        },
+        {
+          "name": "Reading move style.",
+          "value": "`⬜⬜🟦⬜⬜`       `🟩`= the piece's current position.\n`⬜🟦🟦🟦⬜`       `🟦`= can walk to this space if there is nothing in the way.\n`🟦🟦🟩🟦🟦`       `🟥`= can move in STRAIGHT LINE this way, if nothing is in the way.\n`⬜🟦🟦🟦⬜`       `🟨`= can hop to this space, as long as nothing is in that space. \n`⬜⬜🟦⬜⬜`                     (Think a knight.)\nThe game will show you all the possible spots a piece can move to when you use the MOVE action.  Don't worry about calculating this."
+        }
+      ],
+      "footer": {
+        "text": "how to play",
+        "icon_url": "https://cdn.discordapp.com/attachments/763799647889260546/781619505067458570/Catch_Card_SPM.png"
+      }
+    },
+    {
+      "title": "How To Play: Leaders",
+      "description": "The leader piece is a extension of you, the player.  It's the most important piece in the game.  ",
+      "color": 2711766,
+      "fields": [
+        {
+          "name": "During Turn",
+          "value": "During your leader's turn, you can preform the following actions."
+        },
+        {
+          "name": "MOVE",
+          "value": "MOVE to any adjacent space one time.",
+          "inline": true
+        },
+        {
+          "name": "DRAW",
+          "value": "Draw one card from your deck and add it to your hand.",
+          "inline": true
+        },
+        {
+          "name": "FOCUS",
+          "value": "Add 1.5 of any summon point.",
+          "inline": true
+        },
+        {
+          "name": "SUMMON",
+          "value": "Summon a creature from hand to a space on the board 1 square away from this piece.\n**Notice: ends turn.**",
+          "inline": true
+        },
+        {
+          "name": "SPELL",
+          "value": "Use a spell card.  Not implemented yet.",
+          "inline": true
+        },
+        {
+          "name": "Note",
+          "value": "TBD",
+          "inline": true
+        },
+        {
+          "name": "Protip.",
+          "value": "If your Leader's HP is zero at the end of a round, you lose the game.  If you can somehow heal your leader before this, well... do it."
+        }
+      ],
+      "footer": {
+        "text": "how to play",
+        "icon_url": "https://cdn.discordapp.com/attachments/763799647889260546/781619505067458570/Catch_Card_SPM.png"
+      }
+    },
+    {
+      "title": "How to Play: Creatures",
+      "description": "If the Leader is the king, the Creature is the pawn.  ",
+      "color": 8489090,
+      "fields": [
+        {
+          "name": "During Turn",
+          "value": "During a creature's turn, they can preform the following actions."
+        },
+        {
+          "name": "MOVE",
+          "value": "Move according to the move style.  ",
+          "inline": true
+        },
+        {
+          "name": "SKILL",
+          "value": "Preform a skill.  See next page.",
+          "inline": true
+        },
+        {
+          "name": "Protip.",
+          "value": "If a **Creature's** HP is zero at the end of a round, they will be removed from the board, and the card used to summon them will be sent to their player's **graveyard.**"
+        }
+      ],
+      "footer": {
+        "text": "how to play",
+        "icon_url": "https://cdn.discordapp.com/attachments/763799647889260546/781619505067458570/Catch_Card_SPM.png"
+      }
+    },
+    {
+      "title": "How to play: Skills",
+      "description": "Skills are the actions that can be preformed by a creature.  Each creature typically has 1-3 skills, but each skill varies in what they do.",
+      "fields": [
+        {
+          "name": "Trigger",
+          "value": "How the skill is activated."
+        },
+        {
+          "name": "**command**",
+          "value": "- Skill must be activated by the player.",
+          "inline": true
+        },
+        {
+          "name": "**auto**",
+          "value": "- skill is used at the start of a turn.",
+          "inline": true
+        },
+        {
+          "name": "Limit",
+          "value": "What limits the skill's activation. More TBD"
+        },
+        {
+          "name": "Type",
+          "value": " • Attack-`This skill will do some kind of damage to a piece.`\n   ‣ Ailment- `Inflicts a negative ailment on the target`\n   • Support- `This skill will have some positive effect for the target.` \n   ‣ Buff- `Augments some value on the card.`\n  `More Types will be added as the game evolves.`"
+        },
+        {
+          "name": "Target",
+          "value": "What the skill will impact.  split into `Target Range`, `Target Scope`, `Target Amount`, and `Target Restrictions.`\nSee next page."
+        }
+      ],
+      "footer": {
+        "text": "how to play",
+        "icon_url": "https://cdn.discordapp.com/attachments/763799647889260546/781619505067458570/Catch_Card_SPM.png"
+      }
+    },
+    {
+      "title": "How To Play: Targeting",
+      "description": "A **target** is defined as anything a skill will impact.  \nThis is split into Target Range, Target Scope, Target Amount, and Target Restrictions.\n**Range:** The shape the skill will impact, along with the number of squares expanding from the user that the skill will impact.\n**Scope:** Which team the skill will impact.\n**Amount:** The amount of pieces the skill will impact.\n**Restrictions:** Sets by which the target is restricted. TBD.",
+      "fields": [
+        {
+          "name": "Range",
+          "value": "The shape the skill will impact, along with the number of squares expanding from the user that the skill will impact."
+        },
+        {
+          "name": "Cardinal",
+          "value": "\"Like a Rook.\nA Space to the immediate North, South, East, Or West.  No diagonals.\n\"\n",
+          "inline": true
+        },
+        {
+          "name": "Diagonal",
+          "value": "\"Like a Bishop.\nAny square diagonal to the current position.\"\n",
+          "inline": true
+        },
+        {
+          "name": "Omni",
+          "value": "\"Like a Queen.\nAny space that is perpindicular or diagonal to the user.\"\n",
+          "inline": true
+        },
+        {
+          "name": "Adjacent",
+          "value": "\"A space immedately  next to the user.\"\n**This**\nOnly impacts whatever is on the user's space.\n**Other**\nWhen the board doesn't matter.",
+          "inline": true
+        },
+        {
+          "name": "Rectilinear",
+          "value": "Like Fire Emblem. See below.\n```[_][_][2][_][_]\n[_][2][1][2][_]\n[2][1][U][1][2]\n[_][2][1][2][_]\n[_][_][2][_][_]```",
+          "inline": true
+        },
+        {
+          "name": "Row",
+          "value": "\n\"Anything in the same Row.\"\n**Column**\n\"Anything in the same Column.\"\n**Any**\n\"Anywhere on the board.\"\n\n",
+          "inline": true
+        },
+        {
+          "name": "Scope",
+          "value": "\n**Enemy** \nImpact the enemy team.\n**Ally**\n Impact your own team.\n**Both**\n It doesn't matter, impact everyone and everything regardless of team.\n**Self**\n Impact yourself.\n**Else** \nImpact something else entirely.",
+          "inline": true
+        },
+        {
+          "name": "Restrictions.",
+          "value": "How the target is restricted.  Usually impacts the spaces.\n`NOSELF` - will never target user.\n`ONEWAY`- use in only one direction.",
+          "inline": true
+        },
+        {
+          "name": "amount",
+          "value": "\"Single\", \"x1\", \n\"x2\", \n\"x3\", \n\"x4\", \n\"x5\", \n\"x6\", \n\"x7\", \n\"x8\", \n\"x9\", \n\"All\"",
+          "inline": true
+        }
+      ],
+      "footer": {
+        "text": "how to play",
+        "icon_url": "https://cdn.discordapp.com/attachments/763799647889260546/781619505067458570/Catch_Card_SPM.png"
+      }
+    },
+    {
+      "title": "How to play: Player Actions.",
+      "description": "What you have.\n",
+      "color": 15785301,
+      "fields": [
+        {
+          "name": "Hand ",
+          "value": "A list of cards you have access to at the current moment.  This is only visible to you and you alone.\n",
+          "inline": true
+        },
+        {
+          "name": "Deck",
+          "value": "All cards currently in your deck.  You can move cards to your hand by using the DRAW command.",
+          "inline": true
+        },
+        {
+          "name": "Graveyard",
+          "value": "All Cards that you own that have been removed from play.\n  ",
+          "inline": true
+        },
+        {
+          "name": "Summon Points/ Mana.",
+          "value": "Resource required to put cards into play.  In order to summon, you need a combinaiton of `🔴Red`, `🔵Blue`, and `🟢Green` Summon points.  Comes in 4 color coded flavors, and is generated before each turn..\n   • `🔴Red` Mana- First Type.  Also called `🍎 Apple` flavored.\n   • `🔵Blue` Mana- Second Type.  Also called  `🍇Berry` flavored.\n   • `🟢Green` Mana- Third Type.  Also called `🍈 Melon` flavored.\n   • `⚪ Universal` Mana- A Universal Type, can be used to substitute any flavor."
+        },
+        {
+          "name": "Protip.",
+          "value": "You gain mana each time it's your leader's turn."
+        }
+      ],
+      "footer": {
+        "text": "How to play",
+        "icon_url": "https://cdn.discordapp.com/attachments/763799647889260546/781619505067458570/Catch_Card_SPM.png"
+      }
+    }
+  ]
