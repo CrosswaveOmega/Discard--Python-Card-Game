@@ -1,6 +1,76 @@
 [
     {
-      "title": "How to Play",
+      "title": "How to Play: Your Turn",
+      "description": "When it's the turn of one of your pices, you will be asked for a command.\n  The commands you can use are dependent upon the piece you are controlling.\n You can use a command by either clicking on the corresponding reaction or by typing the name of the command in all caps.\n Once you select a command, you  may need to specify a option later.  You select options either by typing in their name (case sensitive) or by using a reaction.",
+      "color": 7506394,
+      "fields": [
+        {
+          "name": "MOVE",
+          "value": "Move to a new space on the board.  Requires Coordinates are in chessboard notation.",
+          "inline": true
+        },
+        {
+          "name": "SKILL",
+          "value": "Use a skill.  Uses the case sensitive names of the skills.",
+          "inline": true
+        },
+        {
+          "name": "DRAW",
+          "value": "Draw a card from your deck, and add it to your hand.",
+          "inline": true
+        },
+        {
+          "name": "FOCUS",
+          "value": "Add x1.5 of any mana type.",
+          "inline": true
+        },
+        {
+          "name": "SUMMON",
+          "value": "Summon a creature in your hand to a adjacent space.",
+          "inline": true
+        },
+        {
+          "name": "SPELL",
+          "value": "Use a spell card.  Not implimented yet.",
+          "inline": true
+        },
+        {
+          "name": "Local Commands",
+          "value": "There are some commands that are not shown.  They will be listed below."
+        },
+        {
+          "name": "OVERVIEW",
+          "value": "Resend the current status messages.",
+          "inline": true
+        },
+        {
+          "name": "QUIT",
+          "value": "Forfiet the match and quit.",
+          "inline": true
+        },
+        {
+          "name": "CHAT",
+          "value": "send a chat message.  Not implimented yet.",
+          "inline": true
+        },
+        {
+          "name": "Protip",
+          "value": "The END command ends your turn.",
+          "inline": false
+      },
+      {
+        "name": "Protip 2",
+        "value": "You can do multiple commands by typing them in the same message separated by spaces.",
+        "inline": false
+      }
+      ],
+      "footer": {
+        "text": "how to play",
+        "icon_url": "https://cdn.discordapp.com/attachments/763799647889260546/781619505067458570/Catch_Card_SPM.png"
+      }
+    },
+    {
+      "title": "How to Play: Turns and Rounds",
       "description": "This game is divided up into **rounds.**  \n Each round is divided up into **turns.**\n\nA **round** consists of every piece taking one **turn.**\n\nThe order of each turn is determined at the start of the round based on their **Speed** stat.\n\n**Pieces** with a higher **speed** go first, pieces with a lower speed go **last.**\n\nAfter a turn ends, the game will allow the next piece to do their **turn.**  When all turns have ended, the round will end.",
       "color": 7506394,
       "fields": [
@@ -213,7 +283,12 @@
           "name": "amount",
           "value": "\"Single\", \"x1\", \n\"x2\", \n\"x3\", \n\"x4\", \n\"x5\", \n\"x6\", \n\"x7\", \n\"x8\", \n\"x9\", \n\"All\"",
           "inline": true
-        }
+          },
+          {
+            "name": "Protip",
+            "value": "You don't have to specify a target if the number of pieces covered by shape is less than the value specified in amount.",
+            "inline": false
+          }
       ],
       "footer": {
         "text": "how to play",
