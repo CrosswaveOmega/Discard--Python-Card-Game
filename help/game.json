@@ -197,7 +197,7 @@
     },
     {
       "title": "How to play: Skills",
-      "description": "Skills are the actions that can be preformed by a creature.  Each creature typically has 1-3 skills, but each skill varies in what they do.",
+      "description": "Skills are the actions that can be performed by a creature.  Each creature typically has 1-3 skills, but each skill varies in what they do.",
       "fields": [
         {
           "name": "Trigger",
@@ -210,7 +210,7 @@
         },
         {
           "name": "**auto**",
-          "value": "- skill is used at the start of a turn.",
+          "value": "- Skill is used at the start of a turn.",
           "inline": true
         },
         {

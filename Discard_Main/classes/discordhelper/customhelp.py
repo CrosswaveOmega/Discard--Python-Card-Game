@@ -40,7 +40,15 @@ class Chelp(HelpCommand):
 
         #await super().send_bot_help(mapping)
     async def send_command_help(self, command):
+        ctx = self.context
+        bot = ctx.bot
+        channel = ctx.channel
         print("Fired.")
+        embed=discord.Embed(title="Help: {}".format(command.name),
+        colour=discord.Colour(0x7289da),
+        description="All commands")
+        embed.description=command.help
+        mess = await ctx.channel.send(embed=embed)
         await super().send_command_help(command)
 
     async def send_group_help(self, group):

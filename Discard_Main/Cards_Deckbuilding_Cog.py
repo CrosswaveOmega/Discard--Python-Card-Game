@@ -392,7 +392,7 @@ class DeckCog(commands.Cog):
         syntax: setPrimaryDeck [Name_of_deck]
         Set a primary deck.  Primary Decks let you add cards using the >inventory_zoom command
         [Name_of_deck]: The name of the deck you want to set as your Primary Deck.
-
+        <:Deck:782390648702763029>
         '''
         bot = ctx.bot
         author = ctx.message.author

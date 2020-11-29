@@ -30,7 +30,15 @@ from .how_to_play.howtoplayembeds import make_how_to_play_embeds
 
 class CardCog2(commands.Cog):
     """Commands for testing system goes here."""
-
+    @commands.command(pass_context=True, hidden=True)
+    async def get_emoji(self, ctx, *args):
+        bot=ctx.bot
+        channel=ctx.message.channel
+        leng=len(args)
+     #   print(str(val))
+        emoji=await ctx.message.guild.fetch_emojis()
+        for emoj in emoji:
+            print(str(emoj))
     @commands.command()
     async def pagetest(self, ctx, *args):  # Add card.
         '''
@@ -154,7 +162,7 @@ class CardCog(commands.Cog):
             await channel.send("NO CARDS IN INVENTORY.")
         else:
             await pages(ctx, list, perpage=10)
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, aliases=['inv_zoom'])
     async def inventory_zoom(self, ctx):
         """Display all the cards in your inventory, one at a time."""
         bot = ctx.bot
@@ -180,7 +188,7 @@ class CardCog(commands.Cog):
             await pages_of_cards(ctx, list, True, profile)
             # await channel.send(content=message_content)
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, aliases=['myProfile'])
     async def myprofile(self, ctx, *args):
         """Returns the User's Profile."""
         bot = ctx.bot
@@ -218,7 +226,7 @@ class CardCog(commands.Cog):
                             cardhead, card_list, customhead, custom_list),
                         inline=False)
 
-        deckhead = "Decks: {} PrimaryDeck: {}".format(profile.get_deckcount(), profile.get_primary_deck_name())
+        deckhead = "<:Deck:782390648702763029> Decks: {} PrimaryDeck: {}".format(profile.get_deckcount(), profile.get_primary_deck_name())
         deck_list = ''.join([' {},'.format(item.get_shorthand_rep())
                              for item in profile.get_decks()])
         deck_list = "{:400}".format(deck_list[:-1])
@@ -322,7 +330,7 @@ class CardCog(commands.Cog):
         newcardlist = CardRetrievalClass().getAllCards()
         list = [str(card) for card in newcardlist]
         await pages(ctx, list, header="Carddex", content="Below: Every Card Currently in the game.", perpage=10)
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, aliases=['cdex_zoom'])
     async def carddex_zoom(self, ctx, *args):
         '''
         syntax: carddex_zoom

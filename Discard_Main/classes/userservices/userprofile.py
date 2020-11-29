@@ -165,13 +165,18 @@ class UserProfile:
     def add_custom(self, cipher_id):
         # cipher id
         self.customs.append(cipher_id)
-
+    def has_card(self, card_id):
+        #check if user has card.
+        for key, card_value in self.cards.items():  # find first available spot if keyname is gone
+            if card_id == card_value["card_id"]:
+                return True
+        return False
     def add_card(self, card_id):
         current_length = len(self.cards)
         new_key_name = "key" + str(current_length)
         if new_key_name in self.cards:
             current_count = 0
-            for key, card_value in self.cards:  # find first available spot if keyname is gone
+            for key, card_value in self.cards.items():  # find first available spot if keyname is gone
                 if card_id == card_value["card_id"]:
                     returnList.append(key, card_value)
                     key_name = "key" + str(count)

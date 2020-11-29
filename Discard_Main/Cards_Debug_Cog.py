@@ -5,6 +5,7 @@ import json
 import aiohttp
 import asyncio
 import csv
+import random
 
 from PIL import Image, ImageTk, ImageGrab, ImageDraw, ImageFont
 
@@ -199,4 +200,33 @@ class DebugCog(commands.Cog):
         else:
             profile.add_card(card_id)
             await channel.send("Card added without issue.")
+        SingleUser.save_all()
+
+    @commands.command()
+    async def addRandomCard(self, ctx, *args):
+        '''
+        syntax: addRandomCard
+        add a random card to your inventory if you don't already have it.
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+
+        all_cards=CardRetrievalClass().getAllCards()
+        ids=[]
+        for card in all_cards:
+            id=card.get_ID()
+            if not profile.has_card(id):
+                ids.append(card)
+
+        if (len(ids)<= 0):
+            await channel.send("You have all the cards.")
+        else:
+            card_id=(random.choice(ids)).get_ID()
+            profile.add_card(card_id)
+            await channel.send("Card added.")
         SingleUser.save_all()

@@ -22,6 +22,8 @@ class DPIOS:
         self.bot = bot
         self.announceCount=0
 
+
+
         self.input_buffer = []
         print("tbd")
         # THE MESSAGES.
@@ -36,6 +38,13 @@ class DPIOS:
         self.current_embed = embed = discord.Embed(
             title="place", colour=discord.Colour(0x7289da), description="New")
 
+        self.emoji_pedia={}
+        self.emoji_pedia["MOVE"]="<:MOVE:782370461526655036>"
+        self.emoji_pedia["DRAW"]="<a:DRAW:782347650459631658>"
+        self.emoji_pedia["SKILL"]="<:SKILL:782348097434943499>"
+        self.emoji_pedia["SUMMON"]="<a:SUMMON:782367512599592960>"
+
+
     def has_something_in_buffer(self):
         if len(self.input_buffer) > 0:
             return True
@@ -47,6 +56,13 @@ class DPIOS:
     def get_user_name(self):
         """returns the avatar url of the user"""
         return self.user.name
+
+    def get_special_emoji(self, name):
+        if name in self.emoji_pedia:
+            return self.emoji_pedia[name]
+        return None
+
+
 
 
     # INPUT
@@ -132,6 +148,9 @@ class DPIOS:
         for i in range(0, len(actions)):
             name = actions[i]
             emoji = numberlist[i]
+            sp=self.get_special_emoji(str(name))
+            if(sp):
+                emoji=sp
             choices.append([actions[i], [str(name)], emoji])
             outputString = outputString + " {}[{}] ".format(emoji, name)
         for comm in local_commands:
