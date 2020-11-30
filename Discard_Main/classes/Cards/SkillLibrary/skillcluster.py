@@ -9,13 +9,13 @@ import asyncio
 
 class BasicAttack(card.Skill):  # Custom Class
 
-    def __init__(self, name="BasicAttacl", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack",
-                 limit="tbd", description="", damage=5, damage_tag=""):  # there's probably a better way to do this.
+    def __init__(self, name="BasicAttacl", trigger="command", target=("Adjacent", "Enemy", "x1"),
+                 type="attack", cooldown=1, fp_cost=0, description="", damage=5, damage_tag=""):  # there's probably a better way to do this.
 
         self.damage = damage  # Unique to this skill.
         # for future functionality.  Just ignore it for now.
         self.damage_tag = damage_tag
-        super().__init__(name, trigger, target, type, limit, description)
+        super().__init__(name, trigger, target, type, cooldown, fp_cost, description)
 
     def get_description(self):
         return "Deal {damage} {tag} damage to target.".format(damage=self.damage, tag=self.damage_tag)
@@ -63,11 +63,11 @@ class BasicAttack(card.Skill):  # Custom Class
 # BasicHeal cannot be used to buff a target beyond its assigned HP.
 class BasicHeal(card.Skill):
 
-    def __init__(self, name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", limit="",
-                 description="", heal_amount=1):
+    def __init__(self, name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"),
+                 type="support", cooldown=1, fp_cost=0, description="", heal_amount=1):
         self.heal_amount = heal_amount
 
-        super().__init__(name, trigger, target, type, limit, description)
+        super().__init__(name, trigger, target, type, cooldown, fp_cost, description)
 
     def get_description(self):
         return "Heal {heal_amount} hp to target.".format(heal_amount=self.heal_amount)
@@ -93,11 +93,11 @@ class BasicHeal(card.Skill):
 # BasicShield can shield a creature from different types of attacks which the creature might have better defence against
 # It is of type other because its effective area is not relevant to the board.
 class BasicShield(card.Skill):
-    def __init__(self, name="BasicShield", trigger="auto", target=("This", "Self", "x1"), type="support", limit="",
-                 description="", shield_amount=1):
+    def __init__(self, name="BasicShield", trigger="auto", target=("This", "Self", "x1"),
+                 type="support", cooldown=1, fp_cost=0, description="", shield_amount=1):
         # This is the amount of damage reduced from the attack when the shield is activated.
         self.shield_amount = shield_amount
-        super().__init__(name, trigger, target, type, limit, description)
+        super().__init__(name, trigger, target, type, cooldown, fp_cost, description)
 
     def get_description(self):
         return "Applies a shield effect that will reduce incoming damage by {shield}.".format(shield=self.shield_amount)
@@ -139,15 +139,16 @@ class BasicShield(card.Skill):
 # It can be used to attack multiple targets if desired as a part of one total attack sequence.
 # Each target is stored in a dictionary for look-up when dealing damage across each target.
 class MultiAttack(card.Skill):
-    def __init__(self, name="MultiAttack", trigger="command", target=("Rectilinear", "Enemy", "x3"), type="attack",
-                 limit="", description="", damage=1, attacks=3, damage_tag=""):
+    def __init__(self, name="MultiAttack", trigger="command", target=("Rectilinear", "Enemy", "x3"),
+                 type="attack", cooldown=1, fp_cost=0, description="",
+                 damage=1, attacks=3, damage_tag=""):
 
         # This is the amount of damage each single attack will do
         # This damage value will occur 3 times during the duration of the MultiAttack
         self.attacks = attacks
         self.damage = damage
         self.damage_tag = damage_tag
-        super().__init__(name, trigger, target, type, limit, description)
+        super().__init__(name, trigger, target, type, cooldown, fp_cost, description)
 
     def get_description(self):
         return "Deals {damage} {tag} damage to target {attacks} times.".format(damage=self.damage, tag=self.damage_tag,
@@ -193,11 +194,11 @@ class MultiAttack(card.Skill):
 
 
 class BoostAttack(card.Skill):
-    def __init__(self, name="BoostAttack", trigger="auto", target=("This", "Self", "x1"), type="buff", limit="",
-                 description="", boost_amount=1):
+    def __init__(self, name="BoostAttack", trigger="auto", target=("This", "Self", "x1"),
+                type="buff", cooldown=1, fp_cost=0, description="", boost_amount=1):
         #
         self.boost_amount = boost_amount
-        super().__init__(name, trigger, target, type, limit, description)
+        super().__init__(name, trigger, target, type, cooldown, fp_cost, description)
 
     def get_description(self):
         return "Applies a buff effect that will increase outgoing damage by {boost}.".format(boost=self.boost_amount)
@@ -235,11 +236,11 @@ class BoostAttack(card.Skill):
                               boost_effect, boost_dict["boost_amount"], 'times_used', 1, 4)
 
 class Spike(card.Skill):
-    def __init__(self, name="Spike", trigger="auto", target=("This", "Self", "x1"), type="counter", limit="",
-                 description="", damage_returned=3):
+    def __init__(self, name="Spike", trigger="auto", target=("This", "Self", "x1"),
+                 type="counter", cooldown=1, fp_cost=0, description="", damage_returned=3):
         #
         self.damage_returned = damage_returned
-        super().__init__(name, trigger, target, type, limit, description)
+        super().__init__(name, trigger, target, type, cooldown, fp_cost, description)
 
     def get_description(self):
         return "Deal {} damage to any close range attacker.".format(self.damage_returned)
@@ -276,12 +277,12 @@ class Spike(card.Skill):
                               spike_attack, spike_dictionary["boost_amount"], 'times_used', 3, 4)
 
 class FreezeAttack(card.Skill):
-    def __init__(self, name="Freeze", trigger="", target=("Adjacent", "Enemy", "x1"), type="ailment_attack", limit="",
-                 description="", damage=3, time_frozen=1):
+    def __init__(self, name="Freeze", trigger="", target=("Adjacent", "Enemy", "x1"),
+                 type="ailment_attack", cooldown=1, fp_cost=0, description="", damage=3, time_frozen=1):
         #
         self.damage = damage
         self.time_frozen = time_frozen
-        super().__init__(name, trigger, target, type, limit, description)
+        super().__init__(name, trigger, target, type, cooldown, fp_cost, description)
 
     def get_description(self):
         return "Deal {} damage to any close range attacker, and freeze them for {} turns.".format(self.damage)

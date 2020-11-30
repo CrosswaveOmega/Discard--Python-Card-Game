@@ -33,7 +33,7 @@ class DebugCog(commands.Cog):
         await CustomRetrievalClass().resync_names(ctx.bot)
         await ctx.channel.send("Sync Completed")
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def GetPing(self, ctx, *args):  # A example command.
         bot = ctx.bot  # The refrence to the bot object. https://discordpy.readthedocs.io/en/latest/ext/commands/api.htm?highlight=bot#bot
         # The refrence to the message author.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=user#user
@@ -52,7 +52,7 @@ class DebugCog(commands.Cog):
             result = await make_dmtiebreaker(bot, mention, choices, message=message, timeout_enable=True, delete_after=True, timeout_time=60.0)
             await ctx.channel.send(mention.name+" says "+result)
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def Create_Room_And_Role(self, ctx, *args):  # A example command.
         bot = ctx.bot  # The refrence to the bot object. https://discordpy.readthedocs.io/en/latest/ext/commands/api.htm?highlight=bot#bot
         # The refrence to the message author.  https://discordpy.readthedocs.io/en/latest/api.html?highlight=user#user
@@ -87,7 +87,7 @@ class DebugCog(commands.Cog):
 
 
     @commands.command()
-    async def save(self, ctx, *args):  # A example command.
+    async def save(self, ctx):  # A example command.
         """Command to ensure user data is saved."""
         editmess = await ctx.channel.send("Saving All Data...")
         SingleUser = SingleUserProfile("arg")
@@ -95,7 +95,7 @@ class DebugCog(commands.Cog):
         await editmess.edit(content="Saving All Data...\n ...Save Completed")
 
     @commands.command()
-    async def add_exp(self, ctx, *args):  # A example command.
+    async def add_exp(self, ctx):  # A example command.
         '''
         syntax: add_exp
         Add 10 exp to the user who invokes this command.
@@ -223,7 +223,7 @@ class DebugCog(commands.Cog):
                 await ctx.invoke(bot.get_command('add_card'), res['card_id'])
         else:
             await ctx.channel.send("Loop terminated.")
-    @commands.command()
+    @commands.command(hidden=True)
     async def callandresponsetest(self, ctx):
         '''
         syntax: callandresponcetest
@@ -257,10 +257,10 @@ class DebugCog(commands.Cog):
         SingleUser.save_all()
 
     @commands.command()
-    async def addRandomCard(self, ctx, *args):
+    async def addRandomCard(self, ctx):
         '''
         syntax: addRandomCard
-        add a random card to your inventory if you don't already have it.
+        add a random card to your inventory that you don't already have.
         '''
         bot = ctx.bot
         author = ctx.message.author

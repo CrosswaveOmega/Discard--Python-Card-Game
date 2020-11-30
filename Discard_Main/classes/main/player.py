@@ -35,6 +35,10 @@ class Player():
         self.summon_r = 0.0
         self.summon_b = 0.0
         self.summon_g = 0.0
+        self.summon_u = 0.0 #universal mana.
+
+        self.fp = 0 #Flower points.
+        self.max_fp = 20
 
         self.status="OK"
         # Initialize any other gameplay variables here as we need them.
@@ -42,7 +46,16 @@ class Player():
         self.status=status
     def get_status(self):
         return self.status
-
+    def get_fp(self):
+        return self.fp
+    def gain_fp(self, fp=1):
+        self.fp=self.fp+fp
+        if(self.fp>=self.max_fp):
+            self.fp=self.max_fp
+    def sub_fp(self, fp=1):
+        self.fp=self.fp-fp
+        if self.fp<=0:
+            self.fp=0
     def gain_summon_points(self):
         # exactly how to gain Summon points, I still have no idea.
         # this will give points randomly.

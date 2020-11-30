@@ -3,6 +3,7 @@ import operator
 import json
 import aiohttp
 import asyncio
+import re
 from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
@@ -97,6 +98,12 @@ Skill Types
    • Reaction- Skill will activate when criteria has been met.
    • Passive- Skill is automatically active.
    • TBD
+
+Skill Limit
+  Factors that limit the activation of a skill.
+  format: [limitType] [arg]
+  1: cooldown.  Internal cooldown value, counts down by 1 every turn.
+  2: FP: Requires the player's FP stat to be a certain amount.
 """
 
 """Target Format:
@@ -107,7 +114,7 @@ Skill Types
 class Skill():
     # This class is where every skill will decend from.
     def __init__(self, name="No name set.", trigger="command", target=("Adjacent", "Enemy", "x1"), type="tbd",
-                 limit="tbd", description="tbd"):
+                 cooldown=1, fp_cost=0, description="tbd"):
         print("tbd")
         self.name = name  # The name of the skill
         self.trigger = trigger  # How the skill will be activated.  Can be "command" or "auto"
@@ -115,18 +122,36 @@ class Skill():
         self.target_value = Args_To_Target(
             *target)  # What the skill will target.  Split into Type, Distance, Scope, Amount, and Limit.  Stored as dictionary.
         self.type = type  # The type of skill.
-        self.limit = limit  # When the skill can not be used.
+        self.limit = ""  # When the skill can not be used.
+        self.cooldown_var = 1 #skill cooldown.
+        self.fp_cost=0 #FP Cost, if applicable
         self.description = description  # What the skill will say it does.  THIS IS IMPORTATNT
+        self.cooldown = 0 #Internal cooldown.
+
 
     def get_name(self):
         return self.name
+    def get_FP_cost(self):
+        return self.fp_cost
 
     def get_trigger(self):
         return self.trigger
 
-    def can_use(self):
+    def decrement_cooldown(self, mod=1):
+        #subtract mod from cooldown
+        self.cooldown= self.cooldown - mod
+        if self.cooldown<=0:
+            self.cooldown=0
+
+    def can_use(self, fp=0):
         # Check if skill can be used.
-        return True
+        if self.cooldown==0 and fp>=self.get_FP_cost():
+            return True
+        return False
+
+
+    def limit_act(self):
+        self.cooldown=self.cooldown_var
 
     def __str__(self):
         print("TBD.")
@@ -327,7 +352,7 @@ class CreatureCard(CardBase):
     def __str__(self):
         # '{:10}|'.format(item)
         r, b, g = self.make_compact_summon_cost()
-        id_hex = format(self.ID, "05X")
+        id_hex = self.get_ID()
         custom = ""
         if (self.custom != ""):
             custom = "-`" + self.custom + "`"
@@ -349,7 +374,7 @@ class CreatureCard(CardBase):
 
         # , icon_url="""https://media.discordapp.net/attachments/763800266855415838/771803875946528788/image.png"""
         # embed.set_author(name="{CardType}".format(CardType=self.type))
-        id_hex = format(self.ID, "05X")
+        id_hex = self.get_ID()
         embed.set_footer(
             text="Card Id:{card_id} - Custom ID:{custom_id}".format(card_id=id_hex, custom_id=self.custom))
         if (self.skill_1 != None):

@@ -135,6 +135,7 @@ class Piece:
 
         if(self.type=="Creature"):
             await self.do_auto_skills(game_ref)
+        self.player.gain_fp()
         options = self.generate_options()
         options=await self.check_effects('before', 'command_setting', options, None)
         my_turn = True
@@ -289,14 +290,18 @@ class Creature(Piece):
         return actions
     async def do_auto_skills(self, game_ref):
         #This command is for auto skills if available
+        #Also fires the decr_cooldown method of each skill
         skill_list = []
         if (self.skill_1 != None):
+            self.skill_1.decrement_cooldown()
             if (self.skill_1.trigger == "auto"):
                 skill_list.append(self.skill_1)
         if (self.skill_2 != None):
+            self.skill_2.decrement_cooldown()
             if (self.skill_2.trigger == "auto"):
                 skill_list.append(self.skill_2)
         if (self.skill_3 != None):
+            self.skill_3.decrement_cooldown()
             if (self.skill_3.trigger == "auto"):
                 skill_list.append(self.skill_3)
         for skill in skill_list:
@@ -323,14 +328,15 @@ class Creature(Piece):
         """Processing of skill."""
 
         skill_list = []
+        fp=self.player.get_fp()
         if (self.skill_1 != None):
-            if (self.skill_1.trigger == "command"):
+            if (self.skill_1.trigger == "command" and self.skill1.can_use(fp) ):
                 skill_list.append(self.skill_1.get_name())
         if (self.skill_2 != None):
-            if (self.skill_2.trigger == "command"):
+            if (self.skill_2.trigger == "command" and self.skill2.can_use(fp) ):
                 skill_list.append(self.skill_2.get_name())
         if (self.skill_3 != None):
-            if (self.skill_3.trigger == "command"):
+            if (self.skill_3.trigger == "command" and self.skill3.can_use(fp) ):
                 skill_list.append(self.skill_3.get_name())
 
         option = await self.player.select_option(skill_list, "Select a skill")
@@ -363,6 +369,8 @@ class Creature(Piece):
                     return False
                 selected_targets.append(target)
         await skill.doSkill(self, selected_targets, game_ref)
+        self.player.sub_fp(skill.get_FP_cost())
+        skill.limit_act()
         print("End of Skill")
         game_ref.set_update()
         await game_ref.send_user_updates()
