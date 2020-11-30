@@ -183,7 +183,7 @@ class DebugCog(commands.Cog):
         SingleUser.save_all()
 
     @commands.command()
-    async def add_card(self, ctx, *args):
+    async def add_card(self, ctx, args):
         '''
         syntax: add_card [card_id]
         '''
@@ -194,7 +194,61 @@ class DebugCog(commands.Cog):
 
         user_id = author.id
         profile = SingleUser.getByID(user_id)
-        card_id = args[0]
+        card_id = args
+        card=CardRetrievalClass().getByID(int(card_id, 16))
+        if (card == False):
+            await channel.send("Card does not exist")
+        else:
+            profile.add_card(card.get_ID()) #Add as string.
+            await channel.send("Card added without issue.")
+        SingleUser.save_all()
+
+    @commands.command()
+    async def add_card_wizard(self, ctx):
+        '''
+        Same as add card, but requires no arguments.
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        call=CallandResponse()
+        call.add_field("card_id", "Enter the card id of the card you wish to add.", False)
+        comp, res=await call.field_loop(ctx)
+        if comp:
+            if "card_id" in res:
+                await ctx.invoke(bot.get_command('add_card'), res['card_id'])
+        else:
+            await ctx.channel.send("Loop terminated.")
+    @commands.command()
+    async def callandresponsetest(self, ctx):
+        '''
+        syntax: callandresponcetest
+        for testing the call and responce system.
+        '''
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        call=CallandResponce()
+        call.add_field("Name 1", "Prompt", False)
+        call.add_field("Beta 2", "Prompt", True)
+        comp, to_reutn=await call.field_loop(ctx)
+        if comp:
+            for i, v in to_reutn.items():
+                await channel.send("{}:{}".format(i,v))
+        else:
+            await ctx.channel.send("Loop terminated.")
+
+
+
+
         if (CardRetrievalClass().getByID(int(card_id, 16)) == False):
             await channel.send("Card does not exist")
         else:
@@ -220,6 +274,7 @@ class DebugCog(commands.Cog):
         ids=[]
         for card in all_cards:
             id=card.get_ID()
+            print("id")
             if not profile.has_card(id):
                 ids.append(card)
 
