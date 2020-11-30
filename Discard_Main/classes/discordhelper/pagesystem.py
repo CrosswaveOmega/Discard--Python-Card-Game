@@ -75,7 +75,7 @@ async def pages(ctx, display=[], perpage=5, header="new", content="new"):
 
 
 async def pages_of_cards(ctx, display=[], deck_mode=False, profile=None):
-    # seems self explanitory
+    # Makes page of card objects.
     bot=ctx.bot
     spot = 0
     running = True
@@ -91,8 +91,8 @@ async def pages_of_cards(ctx, display=[], deck_mode=False, profile=None):
         page = (spot // perpage) + 1
         key=""
         if deck_mode:
+            #In Deck Mode, It also stores the inventory key value.
             ent=display[page-1]
-
             c, k=display[page-1]
             emb=c.to_DiscordEmbed()
             key=k

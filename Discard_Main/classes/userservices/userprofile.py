@@ -177,12 +177,13 @@ class UserProfile:
         if new_key_name in self.cards:
             current_count = 0
             for key, card_value in self.cards.items():  # find first available spot if keyname is gone
-                if card_id == card_value["card_id"]:
-                    returnList.append(key, card_value)
-                    key_name = "key" + str(count)
-                    if not key_name in self.cards:
-                        new_key_name = key_name
-                    count = count + 1
+                key_name="key" + str(current_count)
+                #print(key_name)
+                if not key_name in self.cards: #This key_name is not in self.cards
+                    new_key_name=key_name
+                    self.cards[new_key_name] = {"card_id": card_id, "custom": None, "inv_key": new_key_name}
+                    return
+                current_count = current_count + 1
         self.cards[new_key_name] = {
             "card_id": card_id, "custom": None, "inv_key": new_key_name}
     def check_key(self, key):
