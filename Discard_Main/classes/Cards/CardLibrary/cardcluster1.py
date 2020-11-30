@@ -322,3 +322,34 @@ class Spiney(card.CreatureCard):
         super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
                          summoncost_b=summonb, summoncost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
+
+class Seven(card.CreatureCard):
+    ID = 0x00007
+
+    def __init__(self):
+        self.ID = 0x00007
+        name = "Seven"
+        icon = "🐻"
+        image = ""
+        type = ""
+        hp = 7
+        speed = 7
+
+        # The summoning cost of this creature
+        summonr = 1
+        summonb = 5
+        summong = 2
+
+        # These are the creature's skills
+        skill1 = BasicAttack(name="Bash", trigger="command", target=("Rectilinear", "Enemy", "x1"), type="attack", limit="limit",
+                             description="deal damage", damage=1, damage_tag="physical")
+        skill2 = FreezeAttack(name="Chill", target=("Diagonal", "5", "Enemy", "x1"))
+        skill3 = None
+
+        # This defines the creature's move style
+        move_style = """SAME DIAGONAL LIMIT 2"""
+        movelimit = 1
+
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
+                         summoncost_b=summonb, summoncost_g=summong,
+                         skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)

@@ -27,6 +27,7 @@ configur = ConfigParser()
 configur.read('config.ini')
 
 async def upload_new_image(bot, author, channel, attach, custom_id):
+    """Upload a new image to the bts_card_image_channel given an attachment object.  Sets a new image."""
     byte = await attach.read()
     fil = io.BytesIO(byte)  # file in attachments.
     with io.BytesIO() as image_binary:
@@ -219,6 +220,28 @@ class CustomsCog(commands.Cog):
             for attach in ctx.message.attachments:
                 await upload_new_image(bot, author, channel, attach, args[0])
 
+    @commands.command(pass_context=True, hidden=True)
+    async def changeDisplayAll_internal(self, ctx, data_to_match, new_name, new_icon=None, attach=None):
+        "This is a internal version of change display all."
+        bot = ctx.bot
+        author = ctx.message.author
+        channel = ctx.message.channel
+        SingleUser = SingleUserProfile("arg")
+        user_id = author.id
+        profile = SingleUser.getByID(user_id)
+        custom_id = await custom_id_from_match(ctx, profile, data_to_match)
+        if (custom_id == None):
+            await channel.send("Custom Id Not Found.")
+            return
+        custom = await CustomRetrievalClass().getByID(custom_id, bot)
+        custom.name = new_name
+        if new_icon != None:
+            custom.icon = new_icon
+        SingleUser.save_all()
+        await CustomRetrievalClass().updateCustomByID(custom, bot)
+        if attach != None:
+            await upload_new_image(bot, author, channel, attach, custom_id)
+        await channel.send("Name Updated.")
 
     @commands.command(pass_context=True)
     async def changeDisplayAll(self, ctx, *args):
@@ -229,14 +252,14 @@ class CustomsCog(commands.Cog):
         [new name] - the new name of the card
         [new icon] - the new icon of the card.  Must be a emoji.
 
-        This command can accompany an attached image file.
+        This command can accompany an attached image.
         '''
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel
         leng = len(args)
         data_to_match = None
-        new_icon = None
+        new_name = None
         new_icon = None
         if (leng >= 1):
             data_to_match = args[0]
@@ -245,22 +268,30 @@ class CustomsCog(commands.Cog):
         if (leng >= 3):
             new_icon = args[2]
         if (data_to_match != None and new_name != None):
-            SingleUser = SingleUserProfile("arg")
-            user_id = author.id
-            profile = SingleUser.getByID(user_id)
-            custom_id = await custom_id_from_match(ctx, profile, data_to_match)
-            if (custom_id == None):
-                await channel.send("Custom Id Not Found.")
-                return
-            custom = await CustomRetrievalClass().getByID(custom_id, bot)
-            custom.name = new_name
-            if new_icon != None:
-                custom.icon = new_icon
-            SingleUser.save_all()
-            await CustomRetrievalClass().updateCustomByID(custom, bot)
+            this_attach=None
             for attach in ctx.message.attachments:
-                await upload_new_image(bot, author, channel, attach, custom_id)
-            await channel.send("Name Updated.")
+                print("Attatchment Found")
+                this_attach=attach
+            await self.changeDisplayAll_internal(ctx, data_to_match, new_name, new_icon, this_attach)
+                # await upload_new_image(bot, author, channel, attach, custom_id)
+
+
+            # SingleUser = SingleUserProfile("arg")
+            # user_id = author.id
+            # profile = SingleUser.getByID(user_id)
+            # custom_id = await custom_id_from_match(ctx, profile, data_to_match)
+            # if (custom_id == None):
+            #     await channel.send("Custom Id Not Found.")
+            #     return
+            # custom = await CustomRetrievalClass().getByID(custom_id, bot)
+            # custom.name = new_name
+            # if new_icon != None:
+            #     custom.icon = new_icon
+            # SingleUser.save_all()
+            # await CustomRetrievalClass().updateCustomByID(custom, bot)
+            # for attach in ctx.message.attachments:
+            #     await upload_new_image(bot, author, channel, attach, custom_id)
+            # await channel.send("Name Updated.")
         else:
             emb=changeDisplayAllHelp()
             await channel.send(embed=emb)

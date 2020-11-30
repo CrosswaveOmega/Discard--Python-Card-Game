@@ -44,6 +44,10 @@ class CardBase():  # Wip.
     def get_image(self):
         return self.image
 
+    def get_ID(self):
+        id_hex = format(self.ID, "05X")
+        return id_hex
+
     def __str__(self):
         # r, b, g = self.make_compact_summon_cost()
         id_hex = format(self.ID, "05X")
@@ -229,9 +233,6 @@ class CreatureCard(CardBase):
         self.move_style = movestyle
         self.move_limit = movelimit
         super().__init__(self.ID, name, icon, type, image)
-
-    def get_ID(self):
-        return self.ID
 
     def get_name(self):
         return self.name

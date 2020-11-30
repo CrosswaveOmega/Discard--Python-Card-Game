@@ -148,6 +148,7 @@ class CardCog(commands.Cog):
         profile = SingleUser.getByID(user_id)
         list = []
         for key, card in profile.get_cards().items():
+            #print(card)
             newCard = CardRetrievalClass().getByID(int(card["card_id"], 16))
             if (card["custom"] != None):
                 custom = await CustomRetrievalClass().getByID(card["custom"], bot)
