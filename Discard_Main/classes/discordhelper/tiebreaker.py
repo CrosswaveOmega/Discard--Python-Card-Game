@@ -50,6 +50,7 @@ def card_multimatch(profile, to_match="", match_by_custom_name=True, match_by_ca
     return None
 """
 
+#todo-make into class.
 async def make_tiebreaker_with_inventory_entries(ctx, inventory_entries):
 
     emoji_list = [
@@ -237,7 +238,8 @@ async def make_internal_tiebreaker_with_buffer(bot, auth, channel, choices, buff
 
 async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, timeout_enable=False, delete_after=False,
                                    remove_after=False, clear_after=False, ignore_message=False,
-                                   ignore_reaction=False, timeout_time=30.0):  # Add card.
+                                   ignore_reaction=False, timeout_time=30.0, no_match_message=False,
+                                   get_message_raw=False):
     output = None
 
     emoji_list = [
@@ -255,8 +257,6 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
     message_dict = {}
     emoji_dict = {}
 
-    def Diff(li1, li2):  # for calculating set difference.
-        return (list(list(set(li1) - set(li2)) + list(set(li2) - set(li1))))
 
     message_to_respond_to = message
     if message == None:
@@ -295,7 +295,7 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
     async def getMessage():
         msg = await bot.wait_for('message', check=check)
         # print("Message ");
-        return msg.content
+        return msg
 
     async def getReaction():  # Get a reaction.
         rea, user = await bot.wait_for('reaction_add', check=checkReaction)
@@ -330,8 +330,12 @@ async def make_internal_tiebreaker(bot, auth, channel, choices, message=None, ti
     done, pending = await asyncio.wait(tasklist,
                                        return_when=asyncio.FIRST_COMPLETED)  # there's probably a better way to do this.
     if messagetask in done:
-        result = messagetask.result()
-        if (result in message_dict):
+        result =messagetask.result()
+        if (not get_message_raw):
+            result = result.content
+        if (no_match_message==True):
+            output=result
+        elif (result in message_dict):
             output = message_dict[result]
         else:
             print("Invalid Message")
@@ -373,7 +377,7 @@ async def make_dmtiebreaker(bot, user, choices, message=None, timeout_enable=Fal
     If a valid input was not sent, it returns None.
 
     If timeout is specified, it will terminate after 15 or 30 seconds.
-
+    this one is for dms.
 
     '''
     # temporary fix.  I can't believe I missed this...
@@ -387,7 +391,8 @@ async def make_dmtiebreaker(bot, user, choices, message=None, timeout_enable=Fal
 
 
 async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, delete_after=False, remove_after=False,
-                          clear_after=False, ignore_message=False, ignore_reaction=False, timeout_time=30.0):  # Add card.
+                          clear_after=False, ignore_message=False, ignore_reaction=False, timeout_time=30.0, no_match_message=False,
+                          get_message_raw=False):  # Add card.
     '''
     This function's sole purpose is to help with what I call a "tiebreaker."
 
@@ -395,7 +400,7 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
 
     If a valid input was not sent, it returns None.
 
-    If timeout is specified, it will terminate after 15 or 30 seconds.
+    If timeout is specified, it will terminate after 30 seconds, or by .
 
 
     '''
@@ -405,5 +410,5 @@ async def make_tiebreaker(ctx, choices, message=None, timeout_enable=False, dele
     channel = ctx.message.channel
 
     output = await make_internal_tiebreaker(bot, auth, channel, choices, message, timeout_enable, delete_after,
-                                            remove_after, clear_after, ignore_message, ignore_reaction, timeout_time)
+                                            remove_after, clear_after, ignore_message, ignore_reaction, timeout_time, no_match_message)
     return output
