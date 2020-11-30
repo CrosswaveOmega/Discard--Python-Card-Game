@@ -185,6 +185,7 @@ class Player():
         embed.add_field(name="Mana", value=mana, inline=True)
         embed.add_field(name="-", value=deckgrave, inline=True)
         # embed.add_field(name="custom", value="Custom was applied.",)
+        embed.set_footer(text="FP: {}".format(self.get_fp()))
         return embed
     async def local_commands(self, action, game_ref):
         return True, False
