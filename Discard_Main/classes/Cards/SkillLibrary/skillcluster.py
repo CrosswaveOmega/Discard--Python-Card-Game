@@ -285,7 +285,7 @@ class FreezeAttack(card.Skill):
         super().__init__(name, trigger, target, type, cooldown, fp_cost, description)
 
     def get_description(self):
-        return "Deal {} damage to any close range attacker, and freeze them for {} turns.".format(self.damage)
+        return "Deal {} damage to any close range attacker, and freeze them for {} turns.".format(self.damage, self.time_frozen)
 
     async def doSkill(self, user, target, game_ref):
         dictionary = {}

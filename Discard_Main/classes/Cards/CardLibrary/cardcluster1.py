@@ -72,10 +72,10 @@ class TestCreatureAlpha(card.CreatureCard):
 
         # These are the creature's skills
         skill1 = MultiAttack(name="Multi Attacks", trigger="command", target=(
-            "Rectilinear", "Enemy", "x3"), type="attack", cooldown=1, fp_cost=0,, damage=1, attacks=3, damage_tag="")
+            "Rectilinear", "Enemy", "x3"), type="attack", cooldown=1, fp_cost=0, damage=1, attacks=3, damage_tag="")
         skill2 = BasicShield(name="Shield", shield_amount=2)
         skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support",
-                           heal_amount=5, fpcos)
+                           heal_amount=5, fp_cost=4)
 
         # This defines the creature's move style
         move_style = "STEP 1"
@@ -106,11 +106,11 @@ class TestCreatureBeta(card.CreatureCard):
 
         # These are the creature's skills
         skill1 = MultiAttack(name="Multi Attacks", trigger="command", target=(
-            "Rectilinear", "Enemy", "x3"), type="attack", cooldown=1, fp_cost=0,, damage=4, attacks=3, damage_tag="")
+            "Rectilinear", "Enemy", "x3"), type="attack", cooldown=1, fp_cost=0, damage=4, attacks=3, damage_tag="")
         skill2 = BasicShield(name="Shield", trigger="command", target=(
-            "Any", "Ally", "x1"), cooldown=1, fp_cost=0,, description="description", shield_amount=2)
+            "Any", "Ally", "x1"), cooldown=1, fp_cost=0, description="description", shield_amount=2)
         skill3 = BasicHeal(name="BasicHeal", trigger="command", target=(
-            "Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0,, description="description", heal_amount=1)
+            "Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0, description="description", heal_amount=1)
 
         # This defines the creature's move style
         move_style = "SAME COLUMN LIMIT 3"
@@ -140,12 +140,12 @@ class TestCreatureDelta(card.CreatureCard):
         summong = 1
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type", cooldown=1, fp_cost=0,,
+        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type", cooldown=1, fp_cost=0,
                              description="Type description here.", damage=5)
         skill2 = BasicShield(name="Shield", trigger="command", target=(
-            "Any", "Ally", "x1"), cooldown=1, fp_cost=0,, description="description", shield_amount=2)
+            "Any", "Ally", "x1"), cooldown=1, fp_cost=0, description="description", shield_amount=2)
         skill3 = BasicHeal(name="BasicHeal", trigger="command", target=(
-            "Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0,, description="description", heal_amount=1)
+            "Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0, description="description", heal_amount=1)
 
         # This defines the creature's move style
         move_style = "SAME DIAGONAL LIMIT 2"
@@ -210,12 +210,12 @@ class TestCreature3(card.CreatureCard):
         summong = 3
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,,
+        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,
                              description="deal damage", damage=8)
 
         skill2 = BasicShield(name="Shield", trigger="command", target=("This", "Self",
-                                                                       "x1"), cooldown=1, fp_cost=0,, description="description", shield_amount=1)
-        skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0,, description="description",
+                                                                       "x1"), cooldown=1, fp_cost=0, description="description", shield_amount=1)
+        skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0, description="description",
                            heal_amount=3)
 
         # This defines the creature's move style
@@ -245,12 +245,12 @@ class TestCreature4(card.CreatureCard):
         summong = 4
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,,
+        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,
                              description="deal damage", damage=8)
 
-        skill2 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0,, description="description",
+        skill2 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0, description="description",
                            heal_amount=2)
-        skill3 = BoostAttack(name="Attack Boost", trigger="auto", target=("This", "Self", "x1"), type="other", cooldown=1, fp_cost=0,,
+        skill3 = BoostAttack(name="Attack Boost", trigger="auto", target=("This", "Self", "x1"), type="other", cooldown=1, fp_cost=0,
                              description="", boost_amount=1)
 
         # This defines the creature's move style
@@ -280,12 +280,12 @@ class Sharpshooter(card.CreatureCard):
         summong = 3
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Snipe ", trigger="command", target=("Rectilinear", "Enemy", "x1", "4"), type="attack", cooldown=1, fp_cost=0,,
+        skill1 = BasicAttack(name="Snipe ", trigger="command", target=("Rectilinear", "Enemy", "x1", "4"), type="attack", cooldown=1, fp_cost=0,
                              description="deal damage", damage=8, damage_tag="bullet")
 
-        skill2 = BasicAttack(name="Showdown", trigger="command", target=("Rectilinear", "Enemy", "x9", "4"), type="attack", cooldown=1, fp_cost=0,,
+        skill2 = BasicAttack(name="Showdown", trigger="command", target=("Rectilinear", "Enemy", "x9", "4"), type="attack", cooldown=1, fp_cost=0,
                              description="deal damage to group.", damage=2, damage_tag="bullet")
-        skill3 = BoostAttack(name="Attack Boost", trigger="auto", target=("This", "Self", "x1"), type="other", cooldown=1, fp_cost=0,,
+        skill3 = BoostAttack(name="Attack Boost", trigger="auto", target=("This", "Self", "x1"), type="other", cooldown=1, fp_cost=0,
                              description="", boost_amount=1)
 
         # This defines the creature's move style
@@ -315,9 +315,9 @@ class Spiney(card.CreatureCard):
         summong = 2
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Bash", trigger="command", target=("Rectilinear", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,,
+        skill1 = BasicAttack(name="Bash", trigger="command", target=("Rectilinear", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,
                              description="deal damage", damage=1, damage_tag="spike")
-        skill2 = Spike(name="Spikes", trigger="auto", target=("This", "Self", "x1"), type="other", cooldown=1, fp_cost=0,,
+        skill2 = Spike(name="Spikes", trigger="auto", target=("This", "Self", "x1"), type="other", cooldown=1, fp_cost=0,
                        description="", damage_returned=4)
         skill3 = None
 
@@ -348,7 +348,7 @@ class Seven(card.CreatureCard):
         summong = 2
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Bash", trigger="command", target=("Rectilinear", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,,
+        skill1 = BasicAttack(name="Bash", trigger="command", target=("Rectilinear", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,
                              description="deal damage", damage=1, damage_tag="physical")
         skill2 = FreezeAttack(name="Chill", target=(
             "Diagonal", "5", "Enemy", "x1"))
