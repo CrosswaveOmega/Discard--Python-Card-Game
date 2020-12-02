@@ -62,9 +62,10 @@ def match_with_target_data(targetdata, user, game_ref):
     # scope_pass
     scope = targetdata["scope"]
     number = 0
+    grouped= False
     inital_targets = []
     if (scope == "Self"):
-        return [user], 1
+        return [user], 1, False
     for entity in game_ref.get_entity_list():
         team_equal = (user.get_team() == entity.get_team())
         if scope == "Enemy" and not (team_equal):
@@ -87,4 +88,4 @@ def match_with_target_data(targetdata, user, game_ref):
 
     # get_limits... IRRELEVANT FOR NOW.
     final_pass = shape_pass
-    return final_pass, number
+    return final_pass, number, grouped

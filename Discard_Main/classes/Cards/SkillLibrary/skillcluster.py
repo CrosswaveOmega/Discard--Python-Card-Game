@@ -220,16 +220,18 @@ class BoostAttack(card.Skill):
                     dictionary["damage"] = dictionary["damage"] + boost
                     if dictionary["damage"] < 0:
                         dictionary["damage"] = 0
-                    output = "Boost activated!  Damage increased by {}...".format(
-                        boost)
+                    output = "Damage boost augments damage by {}, for {} damage!".format(
+                        boost, dictionary["damage"])
                     await game_ref.send_announcement(output)
             return dictionary
 
         output = "{} uses {}!".format(user.get_name(), self.get_name())
+        if self.trigger=="auto":
+            output="{}'s Auto skill {} was activated!".format(user.get_name(), self.get_name())
         await game_ref.send_announcement(output)
 
         for entity in boost_dict["target"]:
-            output = "{} will give {} more damage!".format(
+            output = "{}'s next attack will be augmented by {}.".format(
                 entity.get_name(), str(boost_dict["boost_amount"]))
             await game_ref.send_announcement(output)
             entity.add_effect(self.get_name(), 'before', 'as_user',
@@ -277,7 +279,7 @@ class Spike(card.Skill):
                               spike_attack, spike_dictionary["boost_amount"], 'times_used', 3, 4)
 
 class FreezeAttack(card.Skill):
-    def __init__(self, name="Freeze", trigger="", target=("Adjacent", "Enemy", "x1"),
+    def __init__(self, name="Freeze", trigger="command", target=("Adjacent", "Enemy", "x1"),
                  type="ailment_attack", cooldown=1, fp_cost=0, description="", damage=3, time_frozen=1):
         #
         self.damage = damage
@@ -313,8 +315,9 @@ class FreezeAttack(card.Skill):
                 to_send="{} suffers damage of {}!".format(entity.get_name(),dictionary["incoming_damage"])
                 await game_ref.send_announcement(to_send)
                 entity.add_damage(dictionary["incoming_damage"])
-                name, eff =GetCommonEffect.FreezeData(1, dictionary["time_frozen"])
+
+                name, eff =GetCommonEffect().FreezeData(arg=1, disable_arg=dictionary["time_frozen"])
                 entity.add_effect_direct(name, eff)
-                to_send="{} suffers is frozen!".format(entity.get_name(),dictionary["incoming_damage"])
+                to_send="{} is now frozen for {} turns!".format(entity.get_name(),dictionary["incoming_damage"], dictionary["time_frozen"])
                 await game_ref.send_announcement(to_send)
         print('after')

@@ -26,6 +26,13 @@ async def inventory_entry_to_card_object(bot, inventory_card):
     return newcard
 
 
+async def card_id_to_card_object(id):
+    "With a card id, returns a card."
+    newcard = CardRetrievalClass().getByID(int(id, 16))
+    return newcard
+
+
+
 async def Create_Room_And_Role(auth, bot, guild, number, letter):  # A example command.
     battle_role_name="battle role {} {}".format(str(number), letter)
     channel_name="room {} {}".format(str(number), letter)

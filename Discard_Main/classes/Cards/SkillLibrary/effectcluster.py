@@ -7,16 +7,24 @@ from ...main.effect import Effect
 
 class GetCommonEffect():
     #for common effects, this does not Initialize anything/
+    
     def FreezeData(self, arg=1, disable_arg=1):
+        #Stops the piece from doing anything this turn
         name="Freeze"
         time="before"
-        context="command_setting" #Stops the
+        print("DISABLE ARG ",disable_arg)
+        context="turn" #Stops the
         async def effect_res(dictionary, game_ref, arg):
-            for key, value in dictionary.items():
-                if key != "END":
-                    dictionary[key]=0
-            await self.game_ref.send_announcement("Frozen!  Can't move.")
+            #dictionary should just contain user.
+            if 'this_piece' in dictionary:
+                piece=dictionary['this_piece']
+                for key, value in piece.current_actions.items():
+                    if key != "END":
+                        piece.current_actions[key]=0
+                await game_ref.send_announcement("Frozen!  Can't move.")
+            else:
+                await game_ref.send_announcement("error, did not set 'this_piece'...")
             return dictionary
-        disable_condition="turns_passed"
+        disable_condition='turns_passed'
         description="Frozen for {} turns.".format(disable_arg)
-        return name, Effect(time, context, effect_res, arg, disable_condition, disable_check, level=3, description=description)
+        return name, Effect(time, context, effect_res, arg, disable_condition, disable_arg, level=3, description=description)

@@ -348,6 +348,25 @@ class CardCog(commands.Cog):
         newcardlist = CardRetrievalClass().getAllCards()
         list = [card for card in newcardlist]
         await pages_of_cards(ctx, list)
+    @commands.command(pass_context=True, hidden=True)
+    async def cardsall(self, ctx, *args):
+        '''
+        syntax: carddex_zoom
+
+        Returns a list of every single card in the game.
+        '''
+        bot = ctx.bot
+        auth = ctx.message.author
+        channel = ctx.message.channel
+        leng = len(args)
+        param1 = 0
+        if (leng >= 1):
+            param1 = args[0]
+        newcardlist = CardRetrievalClass().getAllCards()
+        list = [card for card in newcardlist]
+        for card in list:
+            await channel.send(embed=card.to_DiscordEmbed(use_image=False))
+    #    await pages_of_cards(ctx, list)
         #await pages(ctx, list, header="Carddex", content="Below: Every Card Currently in the game.", perpage=10)
     # for card in newcardlist:
         #    await channel.send(str(card))

@@ -52,6 +52,24 @@ async def get_everything(bot, author, channel, team=1):
     await player_DPIOS.send_order()
     player = DiscordPlayer(deck=playerDeck, team=team, dpios=player_DPIOS)
     return profile, player
+
+
+async def get_everything_for_test_user(bot, author, channel, team=1, deck=[],name="", commands=[]):
+    """Makes a test player """
+    print("get profile of user.")
+    SingleUser = SingleUserProfile("arg")
+    id=author.id
+    profile = SingleUser.getByID(id)
+    playerDeck = []
+    for deck_card in deck:
+        newcard = await card_id_to_card_object(deck_card)
+        playerDeck.append(newcard)
+        await channel.send(str(newcard))
+        print(newcard.get_image())
+    player_DPIOS = DPIOS(channel, author, bot)
+    await player_DPIOS.send_order()
+    player = TestPlayer(deck=playerDeck, team=team, dpios=player_DPIOS, name=name, command_series=commands)
+    return profile, player
 battles=1
 
 class CardCogBattle(commands.Cog):
@@ -285,6 +303,35 @@ class CardCogBattle(commands.Cog):
         bot = ctx.bot
         author = ctx.message.author
         channel = ctx.message.channel
+        avgspeed=CardRetrievalClass().getMeanSpeed()
+
+        SingleUser = SingleUserProfile("arg")
+        profile1 = SingleUser.getByID(author.id)
+
+
+        deck1=[ '0000A','00006', '00001', '00004', '0000B','00005','00007']
+        commandA=["DRAW", "MOVE", "D2", "FOCUS", "GREEN", "END", "DRAW", "FOCUS", "GREEN", "SUMMON", "Sharpshooter", "E2", "MOVE", "D3", "SKILL", "Showdown", "DRAW", "FOCUS", "BLUE", "END", "MOVE", "E3", "SKILL", "Snipe", "Seven", "SKILL", "Snipe", "Leader2"]
+        #deck1=['00007', '00005', '00006', '00001', '00004', '0000A', '0000B']
+        commandB=["DRAW","MOVE", "C4", "FOCUS", "BLUE", "END", "DRAW", "FOCUS", "BLUE", "SUMMON", "Seven", "B3", "DRAW", "FOCUS", "GREEN", "MOVE", "C5", "END", "MOVE", "C2", "SKILL", "Chill", "Leader1", "DRAW", "MOVE", "C4", "FOCUS", "BLUE", "SUMMON", "Beta", "D3"]
+        profile1, player1 = await get_everything_for_test_user(bot, author, channel, team=1, deck=deck1, name="Test 1", commands=commandA)
+        profile2, player2 = await get_everything_for_test_user(bot, author, channel, team=2, deck=deck1, name="Test 2", commands=commandB)
+        thisDuel = Card_Duel(bot)
+        thisDuel.addPlayer(player1)
+        thisDuel.addPlayer(player2)
+        testPiece = Leader(player1, "Leader1", position_notation="D1", speed=9)
+        testPiece.set_image()
+        player1.set_leader(testPiece)
+
+        testPiece2 = Leader(player2, "Leader2", position_notation="C5", speed=8)
+        testPiece2.set_image()
+        player2.set_leader(testPiece2)
+
+        thisDuel.add_piece(testPiece)
+        thisDuel.add_piece(testPiece2)
+
+        winner=await thisDuel.start_game(shuffle=False)
+
+
 
     @commands.command()
     async def start_test_duel(self, ctx, *args):  # Start a duel

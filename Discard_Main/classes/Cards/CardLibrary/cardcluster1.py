@@ -18,7 +18,7 @@ class TestCreature1(card.CreatureCard):
         # (00000  to FFFFF, makes maximum of 1,048,576 cards.
         name = "Test Name For A Creature"
         icon = "🐻"
-        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
+        image = "https://media.discordapp.net/attachments/780514923075469313/783759517070131200/default.png"
         type = "None"
         hp = 10
         speed = 9  # Speed is 0-99.
@@ -60,7 +60,7 @@ class TestCreatureAlpha(card.CreatureCard):
         self.ID = 0x0000A
         name = "Alpha"
         icon = "🐻"
-        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
+        image = "https://media.discordapp.net/attachments/780514923075469313/783759517070131200/default.png"
         type = ""
         hp = 5
         speed = 20
@@ -94,7 +94,7 @@ class TestCreatureBeta(card.CreatureCard):
         self.ID = 0x0000B
         name = "Beta"
         icon = "🐻"
-        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
+        image = "https://media.discordapp.net/attachments/780514923075469313/783759517070131200/default.png"
         type = ""
         hp = 15
         speed = 4
@@ -129,7 +129,7 @@ class TestCreatureDelta(card.CreatureCard):
         self.ID = 0x0000D
         name = "Delta"
         icon = "🐻"
-        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
+        image = "https://media.discordapp.net/attachments/780514923075469313/783759517070131200/default.png"
         type = ""
         hp = 9
         speed = 8
@@ -164,7 +164,7 @@ class TestCreature2(card.CreatureCard):
         self.ID = 0x00002
         name = "Creature2"
         icon = "🐻"
-        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
+        image = "https://media.discordapp.net/attachments/780514923075469313/783759517070131200/default.png"
         type = ""
         hp = 7
         speed = 9
@@ -175,11 +175,11 @@ class TestCreature2(card.CreatureCard):
         summong = 1
 
         # These are the creature's skills
-        skill1 = BasicAttack("Custom Name 1", "command", ("Adjacent", "Enemy", "x1"), "attack", "limit",
-                             "Type description here.", damage=6)
-        skill2 = BasicShield("Shield", "command", ("Any", "Ally", "x1"),
-                             "passive", "limit", "Shield yourself or a ally.", shield_amount=1)
-        skill3 = BasicHeal("BasicHeal", "command", ("Any", "Ally", "x1"), "support", "limit", "description",
+        skill1 = BasicAttack(name="Bash", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack",
+                             cooldown=1, damage=6)
+        skill2 = BasicShield(name="Shield", trigger="command", target=("Any", "Ally", "x1"),
+                             type="passive",  shield_amount=1)
+        skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"),
                            heal_amount=2)
 
         # This defines the creature's move style
@@ -199,7 +199,7 @@ class TestCreature3(card.CreatureCard):
         self.ID = 0x00003
         name = "creature 3"
         icon = "🐻"
-        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
+        image = "https://media.discordapp.net/attachments/780514923075469313/783759517070131200/default.png"
         type = ""
         hp = 9
         speed = 8
@@ -234,7 +234,7 @@ class TestCreature4(card.CreatureCard):
         self.ID = 0x00004
         name = "creature 4"
         icon = "🐻"
-        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
+        image = "https://media.discordapp.net/attachments/780514923075469313/783759517070131200/default.png"
         type = ""
         hp = 5
         speed = 4
@@ -269,18 +269,18 @@ class Sharpshooter(card.CreatureCard):
         self.ID = 0x00005
         name = "Sharpshooter"
         icon = "🐻"
-        image = "https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"
+        image = "https://media.discordapp.net/attachments/780514923075469313/783759517070131200/default.png"
         type = ""
         hp = 3
         speed = 21
 
         # The summoning cost of this creature
         summonr = 2
-        summonb = 5
-        summong = 3
+        summonb = 2
+        summong = 5
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Snipe ", trigger="command", target=("Rectilinear", "Enemy", "x1", "4"), type="attack", cooldown=1, fp_cost=0,
+        skill1 = BasicAttack(name="Snipe", trigger="command", target=("Rectilinear", "Enemy", "x1", "4"), type="attack", cooldown=1, fp_cost=0,
                              description="deal damage", damage=8, damage_tag="bullet")
 
         skill2 = BasicAttack(name="Showdown", trigger="command", target=("Rectilinear", "Enemy", "x9", "4"), type="attack", cooldown=1, fp_cost=0,
@@ -351,7 +351,7 @@ class Seven(card.CreatureCard):
         skill1 = BasicAttack(name="Bash", trigger="command", target=("Rectilinear", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,
                              description="deal damage", damage=1, damage_tag="physical")
         skill2 = FreezeAttack(name="Chill", target=(
-            "Diagonal", "5", "Enemy", "x1"))
+            "Rectilinear", "3", "Enemy", "x1"), cooldown=3, fp_cost=3, damage=3, time_frozen=3)
         skill3 = None
 
         # This defines the creature's move style

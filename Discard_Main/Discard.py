@@ -95,6 +95,8 @@ class Card_Duel():
         for player in self.players:
             if (player.get_PlayerType() == "Discord"):
                 await player.get_dpios().update_grid_message(embed)
+            if (player.get_PlayerType() == "Test"):
+                await player.get_dpios().update_grid_message(embed)
 
     async def send_current_piece_embed(self, current):
         """UPDATE ALL DPIOS OF PLAYERS.  CHANGES EMBED FOR THE CURRENT CREATURE"""
@@ -107,9 +109,14 @@ class Card_Duel():
     async def send_announcement(self, content):
         """UPDATE ALL DPIOS OF PLAYERS.  SENDS A ANNOUNCEMENT."""
         print(self.round)
+        sent=True
         for player in self.players:
             if (player.get_PlayerType() == "Discord"):
-                await player.get_dpios().send_announcement(content)
+                await player.send_announcement(content)
+            if (player.get_PlayerType() == "Test"):
+                await player.send_announcement(content, sent)
+                sent=False
+                
 
 
     async def update_grid_image(self, do_after=True):
@@ -232,11 +239,12 @@ class Card_Duel():
 
 
 
-    async def start_game(self):
+    async def start_game(self, shuffle=True):
         # Game Loop is here.
         #return winner.
-        for player in self.players:
-            player.shuffle_deck()
+        if shuffle:
+            for player in self.players:
+                player.shuffle_deck()
         winner=None
         self.game_is_active = True
         while (self.game_is_active):

@@ -63,7 +63,7 @@ class DPIOS:
         if(webhook==None):
             webhook=await text_channel.create_webhook(name="DUELHOOK_"+text_channel.name, reason="For sending a message in this channel.")
         newContent=message_content
-        mess=await webhook.send(content=newContent, username=display_username,avatar_url=avatar_url, embeds=embed, wait=True)
+        mess=await webhook.send(content=newContent, username=display_username,avatar_url=avatar_url, embeds=embed)
         return mess
     def has_something_in_buffer(self):
         if len(self.input_buffer) > 0:
@@ -189,7 +189,6 @@ class DPIOS:
         avatar="https://cdn.discordapp.com/attachments/780514923075469313/783805708180389888/pixel-64x64_1.png"
         embeds=[self.player_embed, self.image_embed, self.current_embed]
         if(self.webhook_message!=None):
-            print("Webhook Message Found")
             await self.webhook_message.delete()
         self.webhook_message = await self.postMessageAsWebhook(content, name, avatar, embeds)
         # if p:

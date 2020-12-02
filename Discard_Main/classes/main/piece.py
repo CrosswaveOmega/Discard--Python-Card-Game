@@ -45,7 +45,7 @@ class Piece:
         self.display_image = img
         self.image = None
 
-        self.current_options = {}
+        self.current_actions = {}
 
         self.effects = {}
     def toggle_active(self):
@@ -92,8 +92,8 @@ class Piece:
     def get_name(self):
         return self.name
 
-    def generate_options(self, actions={}):
-        # creates a new dictionary of all options.
+    def generate_commands(self, actions={}):
+        # creates a new dictionary of all action options.
         # Universal opitons are: MOVE, ... END.
         actions["MOVE"] = self.move_limit
         actions["END"] = 1
@@ -122,9 +122,10 @@ class Piece:
             self.change_position(option)
             game_ref.set_update()
             await game_ref.send_user_updates()
-            await self.player.send_announcement("Moved {} to {}".format(self.get_name(), option))
+            await game_ref.send_announcement("Moved {} to {}".format(self.get_name(), option))
             return True
         return False
+
     async def do_auto_skills(self):
         pass
 
@@ -136,13 +137,14 @@ class Piece:
         if(self.type=="Creature"):
             await self.do_auto_skills(game_ref)
         self.player.gain_fp()
-        options = self.generate_options()
-        options=await self.check_effects('before', 'command_setting', options, None)
+        self.current_actions = self.generate_commands()
+        #self.current_actions=await self.check_effects('before', 'command_setting', self.current_actions, None) #Check effects on self.
         my_turn = True
         await game_ref.send_announcement("{}'s turn".format(self.get_name()))
+        await self.check_effects('before', 'turn', {'this_piece':self}, game_ref)
         while my_turn:
             choices = []
-            for key, item in options.items():
+            for key, item in self.current_actions.items():
                 if item > 0:
                     choices.append(key)
             await self.player.send_embed_to_user()
@@ -150,13 +152,13 @@ class Piece:
             action = await self.player.select_command(choices)
             my_turn, completed = await self.process_option(game_ref, action)
             if (completed):
-                if action in options:
-                    options[action] = options[action] - 1
+                if action in self.current_actions:
+                    self.current_actions[action] = self.current_actions[action] - 1
             await game_ref.update_all()
 
         #await asyncio.sleep(0.1)
         await game_ref.send_announcement("Turn end.")
-        await self.check_effects('after', 'turn', {}, game_ref)
+        await self.check_effects('after', 'turn', {'this_piece':self}, game_ref)
         print("End OF TURN.")
         return None
         # universal options.
@@ -201,7 +203,10 @@ class Piece:
         return self.speed
 
     def set_image_by_url(self, url):
-        self.image = url_to_PIL_image(url)
+        url_new=url
+        if url_new=='':
+            url_new="""https://media.discordapp.net/attachments/780514923075469313/783759517070131200/default.png"""
+        self.image = url_to_PIL_image(url_new)
 
     def add_damage(self, damage_add=0):
         self.damage = self.damage + damage_add
@@ -282,11 +287,11 @@ class Creature(Piece):
     def get_card(self):
         return self.card
 
-    def generate_options(self, actions={}):
+    def generate_commands(self, actions={}):
         # creates a new dictionary of all options.
         # Universal opitons are: MOVE, ... END.
         actions["SKILL"] = 1
-        actions = super().generate_options(actions)
+        actions = super().generate_commands(actions)
         return actions
     async def do_auto_skills(self, game_ref):
         #This command is for auto skills if available
@@ -305,7 +310,8 @@ class Creature(Piece):
             if (self.skill_3.trigger == "auto"):
                 skill_list.append(self.skill_3)
         for skill in skill_list:
-            target_list, amount = match_with_target_data(skill.get_target_data(), self, game_ref)
+            target_list, amount, grouped = match_with_target_data(skill.get_target_data(), self, game_ref)
+            print("ADD LATER.")
             selected_targets = []
             get_targets=True
             if (len(target_list) <= amount):
@@ -330,13 +336,13 @@ class Creature(Piece):
         skill_list = []
         fp=self.player.get_fp()
         if (self.skill_1 != None):
-            if (self.skill_1.trigger == "command" and self.skill1.can_use(fp) ):
+            if (self.skill_1.trigger == "command" and self.skill_1.can_use(fp) ):
                 skill_list.append(self.skill_1.get_name())
         if (self.skill_2 != None):
-            if (self.skill_2.trigger == "command" and self.skill2.can_use(fp) ):
+            if (self.skill_2.trigger == "command" and self.skill_2.can_use(fp) ):
                 skill_list.append(self.skill_2.get_name())
         if (self.skill_3 != None):
-            if (self.skill_3.trigger == "command" and self.skill3.can_use(fp) ):
+            if (self.skill_3.trigger == "command" and self.skill_3.can_use(fp) ):
                 skill_list.append(self.skill_3.get_name())
 
         option = await self.player.select_option(skill_list, "Select a skill")
@@ -353,7 +359,12 @@ class Creature(Piece):
             if (option == self.skill_3.get_name()):
                 skill = self.skill_3
 
-        target_list, amount = match_with_target_data(skill.get_target_data(), self, game_ref)
+        matched_list, amount, grouped = match_with_target_data(skill.get_target_data(), self, game_ref)
+        target_list=matched_list
+        if grouped:
+            print("have player select group.")
+            #Select group.
+
         selected_targets = []
         get_targets=True
         if (len(target_list) <= amount):
@@ -429,6 +440,9 @@ class Leader(Piece):
         if self.player.get_PlayerType() == "Discord":
             url = self.player.get_avatar_url()
             self.image = url_to_PIL_image(url)
+        elif self.player.get_PlayerType() == "Test":
+            url = "https://media.discordapp.net/attachments/780514923075469313/783769376000049182/unknown.png"
+            self.image = url_to_PIL_image(url)
 
     def get_summon_spaces(self, grid):  # Wip function.
         """uses a modified version of the move style to get summon spaces."""
@@ -445,7 +459,7 @@ HOP X 1 Y 1"""
                 grid.get_all_movements_in_range(self.position, line))
         return summon_options
 
-    def generate_options(self, actions={}):
+    def generate_commands(self, actions={}):
         # creates a new dictionary of all options.
         # Universal opitons are: MOVE, ... END.
 
@@ -454,7 +468,7 @@ HOP X 1 Y 1"""
         actions["SUMMON"] = 1
         actions["FOCUS"] = 1
         #actions["END"] = 1
-        actions = super().generate_options(actions)
+        actions = super().generate_commands(actions)
         return actions
 
     async def process_option(self, game_ref, action):

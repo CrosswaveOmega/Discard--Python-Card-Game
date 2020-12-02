@@ -40,7 +40,8 @@ class Effect:
         if self.disable_condition == 'times_used':
             if self.times_used >= int(self.disable_arg):
                 return True
-        if self.disable_condition == 'turns_passed':
+        elif self.disable_condition == 'turns_passed':
+            print(self.disable_arg, self.turns)
             if self.turns >= int(self.disable_arg):
                 return True
         else:

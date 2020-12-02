@@ -62,14 +62,15 @@ class Player():
         self.summon_r = self.summon_r + 1
         self.summon_b = self.summon_b + 1
         self.summon_g = self.summon_g + 1
-        for i in range(0, 10):
-            val = random.randint(1, 3)
-            if val == 1:
-                self.summon_r = self.summon_r + 0.2
-            if val == 2:
-                self.summon_b = self.summon_b + 0.2
-            if val == 3:
-                self.summon_g = self.summon_g + 0.2
+
+        # for i in range(0, 10):
+        #     val = random.randint(1, 3)
+        #     if val == 1:
+        #         self.summon_r = self.summon_r + 0.2
+        #     if val == 2:
+        #         self.summon_b = self.summon_b + 0.2
+        #     if val == 3:
+        #         self.summon_g = self.summon_g + 0.2
 
     def set_leader(self, leader):
         self.leader = leader
@@ -120,6 +121,7 @@ class Player():
             self.summon_b = self.summon_b + 1.5
         if choice=="GREEN":
             self.summon_g = self.summon_g + 1.5
+        await game_ref.send_announcement("Focused {} extra {} mana".format(1.5, choice))
         return True
 
     async def get_summon_action(self, game_ref, summon_locations):
@@ -252,5 +254,67 @@ class DiscordPlayer(Player):
         embed = self.to_embed('self')
         await self.dpios.update_player_message(embed)
 
-    async def send_announcement(self, announce="blank."):
-        await self.dpios.send_announcement(announce)
+    async def send_announcement(self, announcement, sent=True):
+        await self.dpios.send_announcement(announcement, sent)
+
+class TestPlayer(Player):
+    def __init__(self, deck=[], team=1, dpios=None, name="TEST", command_series=[]):
+        player_type = "Test"
+        self.dpios = dpios
+        self.dpios.set_input_buffer(command_series)
+        super().__init__(player_type="Test", deck=deck, team=team, name=name)
+    def get_user_name(self):
+        return self.dpios.get_user_name()
+    def get_avatar_url(self):
+        return self.dpios.get_avatar_url()
+
+
+    def has_something_in_buffer(self):
+        return self.dpios.has_something_in_buffer()
+    def get_input(self):
+        return None
+
+    def get_dpios(self):
+        return self.dpios
+
+    async def local_commands(self, action, game_ref):
+        my_turn = True
+        print(action)
+        completed = False
+        if (action == "OVERVIEW"):
+            await self.dpios.send_order()
+        elif (action == "PLAYER"):
+            await self.dpios.send_order(p=True, i=False, c=False)
+        elif (action == "BOARD"):
+            await self.dpios.send_order(p=False, i=True, c=False)
+        elif (action == "CURRENT"):
+            await self.dpios.send_order(p=False, i=False, c=True)
+        elif (action == "QUIT"):
+            my_turn= False
+            self.set_status("QUIT")
+        return my_turn, completed
+    async def select_piece(self, options=[], prompt="Select a piece"):
+        option = await self.dpios.get_user_piece(options, prompt)
+        return option
+
+    async def select_command(self, options=[], prompt="Enter a command"):
+        # get input from dpios.
+        option = await self.dpios.get_user_command(options, prompt)
+        return option
+
+    async def select_option(self, options=[], prompt="Select a choice"):
+        # get input from dpios.
+        option = await self.dpios.get_user_choice(options, prompt)
+        return option
+
+    async def select_card(self, options=[], prompt="Select a card"):
+        # get input from dpios.
+        option = await self.dpios.get_user_card(options, prompt)
+        return option
+
+    async def send_embed_to_user(self):
+        embed = self.to_embed('self')
+        await self.dpios.update_player_message(embed)
+
+    async def send_announcement(self, announcement, sent=True):
+        await self.dpios.send_announcement(announcement, sent)

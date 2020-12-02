@@ -15,7 +15,7 @@ from ..main.target_maker import *
 class CardBase():  # Wip.
 
     def __init__(self, ID, name, icon, type,
-                 image="https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png"):
+                 image="https://media.discordapp.net/attachments/780514923075469313/783759517070131200/default.png"):
         self.ID = ID  # • ID- The internal ID of the card.
         # All cards have this, and they should all be unique.
         # consists of a five digit hexadecimal number
@@ -123,8 +123,8 @@ class Skill():
             *target)  # What the skill will target.  Split into Type, Distance, Scope, Amount, and Limit.  Stored as dictionary.
         self.type = type  # The type of skill.
         self.limit = ""  # When the skill can not be used.
-        self.cooldown_var = 1 #skill cooldown.
-        self.fp_cost=0 #FP Cost, if applicable
+        self.cooldown_var =  int(cooldown) #skill cooldown.
+        self.fp_cost=int(fp_cost) #FP Cost, if applicable
         self.description = description  # What the skill will say it does.  THIS IS IMPORTATNT
         self.cooldown = 0 #Internal cooldown.
 
@@ -132,7 +132,7 @@ class Skill():
     def get_name(self):
         return self.name
     def get_FP_cost(self):
-        return self.fp_cost
+        return int(self.fp_cost)
 
     def get_trigger(self):
         return self.trigger
@@ -190,8 +190,16 @@ class Skill():
         name = self.name
         target = self.make_target_string()
         desc = self.get_description()
+        fp=""
+        cool=""
         print(type, name, target, desc)
-        return trigger, type, name, target, desc
+        if self.get_FP_cost()>0:
+            fp="FP: {}".format(self.get_FP_cost())
+        if self.cooldown > 0:
+            cool="Cooling Down: {} turns left".format(self.cooldown)
+        elif self.cooldown_var >1:
+            cool="Cooldown: {} turns.".format(self.cooldown_var)
+        return trigger, type, name, target, desc, fp, cool
 
     async def doSkill(self, user, target, game_ref):
         # What the skill will actually do.
@@ -378,26 +386,26 @@ class CreatureCard(CardBase):
         embed.set_footer(
             text="Card Id:{card_id} - Custom ID:{custom_id}".format(card_id=id_hex, custom_id=self.custom))
         if (self.skill_1 != None):
-            trigger, type, name, target, desc = self.skill_1.get_text_tuple()
+            trigger, type, name, target, desc, fp, cool = self.skill_1.get_text_tuple()
             embed.add_field(
-                name="{trig}{skill_type}: {skill_name}".format(
-                    trig=trigger, skill_type=type, skill_name=name),
-                value="***target: {target_string_format}***\n{description}".format(target_string_format=target,
-                                                                                   description=desc), inline=False)
+                name="{trig}{skill_type}: {skill_name}   {fp}".format(
+                    trig=trigger, skill_type=type, skill_name=name, fp=fp),
+                value="***target: {target_string_format}***\n{description}\n{cool}".format(target_string_format=target,
+                                                                                   description=desc, cool=cool), inline=False)
         if (self.skill_2 != None):
-            trigger, type, name, target, desc = self.skill_2.get_text_tuple()
+            trigger, type, name, target, desc, fp, cool = self.skill_2.get_text_tuple()
             embed.add_field(
-                name="{trig}{skill_type}: {skill_name}".format(
-                    trig=trigger, skill_type=type, skill_name=name),
-                value="***target: {target_string_format}***\n{description}".format(target_string_format=target,
-                                                                                   description=desc), inline=False)
+                name="{trig}{skill_type}: {skill_name}   {fp}".format(
+                    trig=trigger, skill_type=type, skill_name=name, fp=fp),
+                value="***target: {target_string_format}***\n{description}\n{cool}".format(target_string_format=target,
+                                                                                   description=desc, cool=cool), inline=False)
         if (self.skill_3 != None):
-            trigger, type, name, target, desc = self.skill_3.get_text_tuple()
+            trigger, type, name, target, desc, fp, cool = self.skill_3.get_text_tuple()
             embed.add_field(
-                name="{trig}{skill_type}: {skill_name}".format(
-                    trig=trigger, skill_type=type, skill_name=name),
-                value="***target: {target_string_format}***\n{description}".format(target_string_format=target,
-                                                                                   description=desc), inline=False)
+                name="{trig}{skill_type}: {skill_name}   {fp}".format(
+                    trig=trigger, skill_type=type, skill_name=name, fp=fp),
+                value="***target: {target_string_format}***\n{description}\n{cool}".format(target_string_format=target,
+                                                                                   description=desc, cool=cool), inline=False)
         moveString = make_move_style_for_content(self.move_style)
         embed.add_field(name="Move Style", value=moveString, inline=True)
         embed.add_field(name="Summon_Cost",
