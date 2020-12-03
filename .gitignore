@@ -3,6 +3,7 @@ config.ini
 saveData/
 seguiemj.ttf
 bahnschrift.ttf
+messageConfirming.py
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
