@@ -234,7 +234,7 @@ class Piece:
         # Will need to optimize later.
         orig_img = self.get_image()
         icons=self.get_effect_icon_rep(sep="\n")
-        return make_card_grid_icon(orig_img, self.player.team, self.hp_fraction(), icons)
+        return make_card_grid_icon(orig_img, self.player.team, self.hp_fraction(), self.get_name())
 
     def get_image(self):
         return self.image

@@ -29,7 +29,7 @@ def make_card_grid_icon(pil_image, team=1, hp_float=1, name=""):
 
 
     newfont = ImageFont.truetype(fontname, 32)
-    other_font = ImageFont.truetype(fontname, 32)
+    otherfont = ImageFont.truetype(fontname, 28)
     d = ImageDraw.Draw(background)
     to_replace = (0,0,0)
     if team==1:
@@ -51,7 +51,7 @@ def make_card_grid_icon(pil_image, team=1, hp_float=1, name=""):
     background.paste(pil_image.resize((squaresize, squaresize)), (28, 28))
     d.text((64, 218), text=str(hp_float),
            anchor='ma', font=newfont, fill="black")
-    d.text((48, 0), text=str(name), font=iconfont, fill="black")
+    d.text((48, 0), text=str(name), font=otherfont, fill="black")
 
     return background
 
