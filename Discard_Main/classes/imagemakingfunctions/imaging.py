@@ -19,25 +19,40 @@ def url_to_PIL_image(image_url):
     return image
 
 
-def make_card_grid_icon(pil_image, team=1, hp_float=1, active=False):
+
+def make_card_grid_icon(pil_image, team=1, hp_float=1, name=""):
     squaresize = 188
     background = Image.open(
         """Discard_Main\classes\imagemakingfunctions\imageres\CardEX.png""")
     fontname = """Discard_Main\classes\imagemakingfunctions\imageres\{}""".format(
         'bahnschrift.ttf')
 
+
     newfont = ImageFont.truetype(fontname, 32)
+    other_font = ImageFont.truetype(fontname, 32)
     d = ImageDraw.Draw(background)
-
+    to_replace = (0,0,0)
+    if team==1:
+        to_replace=(255,0,0)
+    if team==2:
+        to_replace=(0,0,255)
     #background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+    new_image_data = []
+    datas = background.getdata()
+    for item in datas:
+        # change all white (also shades of whites) pixels to yellow
+        if item[0] in list(range(210, 256)):
+            new_image_data.append(to_replace)
+        else:
+            new_image_data.append(item)
 
+    # update image data
+    background.putdata(new_image_data)
     background.paste(pil_image.resize((squaresize, squaresize)), (28, 28))
     d.text((64, 218), text=str(hp_float),
            anchor='ma', font=newfont, fill="black")
-    if team==1:
-        d.rectangle([43, 0, 158,28], fill="red")
-    if team==2:
-        d.rectangle([43, 0, 158,28], fill="blue")
+    d.text((48, 0), text=str(name), font=iconfont, fill="black")
+
     return background
 
 

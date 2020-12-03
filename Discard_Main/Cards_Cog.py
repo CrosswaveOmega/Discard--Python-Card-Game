@@ -136,6 +136,8 @@ class CardCog(commands.Cog):
                 image_binary.seek(0)
                 await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
 
+
+
     @commands.command(pass_context=True)
     async def inventory(self, ctx):
         """Display all the cards in your inventory, as a list."""

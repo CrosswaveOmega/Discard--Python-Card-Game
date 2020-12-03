@@ -4,7 +4,7 @@ import asyncio
 
 class Effect:
     """Without This, there's no strategy!"""
-    def __init__(self, time, context, function, function_arg, disable_condition, disable_arg, level=0, description=""):
+    def __init__(self, time, context, function, function_arg, disable_condition, disable_arg, level=0, description="", icon="❗"):
         """
         time is when the Effect is triggered.  Can be "before", "during", or "after"
         context is where the skill will trigger.
@@ -24,6 +24,7 @@ class Effect:
         self.level=level
         self.disableprompt=" wore off"
         self.description=description
+        self.icon=icon
         self.turns=0
     def check_trigger(self, time, context):
         print("Checked Trigger.")
@@ -46,5 +47,15 @@ class Effect:
                 return True
         else:
             return False
+    def get_time_left(self):
+        if self.disable_condition == 'times_used':
+            return int(self.disable_arg)-self.times_used
+        elif self.disable_condition == 'turns_passed':
+            return int(self.disable_arg)- self.turns 
+        else:
+            return 0
+    def get_shorthand_rep(self):
+        string_res="`{}{}`".format(str(self.icon), str(self.get_time_left()))
+        return string_res
     def get_disableprompt(self):
         return self.disableprompt

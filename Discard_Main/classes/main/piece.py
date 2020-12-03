@@ -83,6 +83,13 @@ class Piece:
         for effect_name, effect in self.effects.items():
             effectlist=effectlist+effect_name+"\n"
         return effectlist
+    def get_effect_icon_rep(self, sep="|"):
+        effectlist=""
+        if(len(self.effects)<=0):
+            return "🆗|"
+        for effect_name, effect in self.effects.items():
+            effectlist=effectlist+effect.get_shorthand_rep()+sep
+        return effectlist
 
     def set_game_id(self, new_id):
         self.game_id = new_id
@@ -226,7 +233,8 @@ class Piece:
     def get_grid_card_icon(self):
         # Will need to optimize later.
         orig_img = self.get_image()
-        return make_card_grid_icon(orig_img, self.player.team, self.hp_fraction(), self.active)
+        icons=self.get_effect_icon_rep(sep="\n")
+        return make_card_grid_icon(orig_img, self.player.team, self.hp_fraction(), icons)
 
     def get_image(self):
         return self.image
@@ -244,7 +252,7 @@ class Piece:
         team=self.get_team()
         icons=['🟥', '🟦']
         icon=icons[team-1]
-        result = "[{}|{}|HP:{}|SPD:{}]".format(icon,self.name, self.hp_fraction(), self.get_speed())
+        result = "[{}|{}|HP:{}|SPD:{}|{}]".format(icon,self.name, self.hp_fraction(), self.get_speed(), self.get_effect_icon_rep())
         return result
 
     def get_position(self):
