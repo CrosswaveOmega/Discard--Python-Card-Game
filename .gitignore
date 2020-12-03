@@ -1,6 +1,8 @@
 .config.ini
 config.ini
 saveData/
+seguiemj.ttf
+bahnschrift.ttf
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
