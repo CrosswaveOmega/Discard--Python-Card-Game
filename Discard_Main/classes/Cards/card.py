@@ -297,9 +297,15 @@ class CreatureCard(CardBase):
     def get_summoncost_tuple(self):
         return self.summoncost_r, self.summoncost_b, self.summoncost_g
 
-    def can_activate(self, source_r, source_b, source_g):
+    def can_activate(self, source_r, source_b, source_g, source_u=0):
         r, b, g = self.get_summoncost_tuple()
+        sum = r + b + g
+        #if satisfied, d
+        diff_r, diff_b, diff_g = max(r-source_r, 0), max(b-source_b, 0), max(g-source_g, 0)
+        sum_remain = diff_r + diff_b + diff_g
         if ((source_r >= r) and (source_b >= b) and (source_g >= g)):
+            return True
+        if ((source_u >= sum_remain)): #universal cp.
             return True
         return False
 
@@ -321,19 +327,31 @@ class CreatureCard(CardBase):
                    "<:Summon_G_2:773564265286205450>",
                    "<:Summon_G_3:773564265079635999>",
                    "<:Summon_G_4:773564265252519986>",
-                   "<:Summon_G_5:773564265226960896>"]
+                   "<:Summon_G_5:773564265226960896>",
+                   "<:Summon_G_6:786615280272670760>",
+                   "<:Summon_G_7:786615280288923659>",
+                   "<:Summon_G_8:786615280427597914>",
+                   "<:Summon_G_9:786615280481599528>"]
 
         r_array = ["<:Summon_R_1:773564265201139712>",
                    "<:Summon_R_2:773564265214115871>",
                    "<:Summon_R_3:773564265193799710>",
                    "<:Summon_R_4:773564264857862175>",
-                   "<:Summon_R_5:773564265273622559>"]
+                   "<:Summon_R_5:773564265273622559>",
+                   "<:Summon_R_6:786615280540319744>",
+                   "<:Summon_R_7:786615280175677481>",
+                   "<:Summon_R_8:786615280515547227>",
+                   "<:Summon_R_9:786615280469278790>"]
 
         b_array = ["<:Summon_B_1:773564265117777960>",
                    "<:Summon_B_2:773564265131016203>",
                    "<:Summon_B_3:773564265230762024>",
                    "<:Summon_B_4:773564265202188388>",
-                   "<:Summon_B_5:773564265184755712>"]
+                   "<:Summon_B_5:773564265184755712>",
+                   "<:Summon_B_6:786615280146841633>",
+                   "<:Summon_B_7:786615280058761227>",
+                   "<:Summon_B_8:786615280259301376>",
+                   "<:Summon_B_9:786615280234921984>"]
 
         red_res = "🔳"
         blue_res = "🔳"
@@ -408,7 +426,7 @@ class CreatureCard(CardBase):
                                                                                    description=desc, cool=cool), inline=False)
         moveString = make_move_style_for_content(self.move_style)
         embed.add_field(name="Move Style", value=moveString, inline=True)
-        embed.add_field(name="Summon_Cost",
+        embed.add_field(name="Summon Cost",
                         value="Red= {Red}\nBlue = {Blue}\nGreen= {Green}".format(Red=self.summoncost_r,
                                                                                  Blue=self.summoncost_b,
                                                                                  Green=self.summoncost_g), inline=True)

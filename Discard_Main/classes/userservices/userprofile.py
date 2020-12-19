@@ -110,11 +110,13 @@ class UserProfile:
         # self.cardcount=0 #irrelivant.
         self.coins = 0
         self.stars = 0
+        self.tickets = 0
         self.decks = []  # Max 99.
         # To do: Work out saving/loading for decks. -DONE!
 
         self.primary_deck = ""
 
+        #From dictionary.
         if(dictionary_to_use != None):
             for i, v in dictionary_to_use.items():
                 if hasattr(self, i):
@@ -270,6 +272,9 @@ class UserProfile:
 
     def get_stars(self):
         return self.stars
+        
+    def get_tickets(self):
+        return self.tickets
 
     def card_name_list(self, custget=None):
         # returns a small list of card names.

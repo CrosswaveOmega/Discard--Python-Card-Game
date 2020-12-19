@@ -10,6 +10,7 @@ import datetime
 from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
+from pathlib import Path
 
 from ..discordhelper.tiebreaker import *
 
@@ -44,8 +45,27 @@ class DPIOS:
         self.emoji_pedia["SKILL"]="<:SKILL:782348097434943499>"
         self.emoji_pedia["SUMMON"]="<a:SUMMON:782367512599592960>"
 
+        self.space_emoji_pedia=self.get_content("spaceemojis")
+
         self.webhook_message=None
 
+    def get_content(self, id):
+        def get_file_from_directory(id):
+            # filename from json.
+            filename = str(id) + ".json"
+            file = Path("help" + "/" + filename)
+            if file.exists():  # check if this file exists.
+                return file
+            else:
+                return None
+        file = get_file_from_directory(id)
+        if(file != None):
+            f = file.open(mode='rb')
+            #string = f.read()
+            dicton=json.load(f)
+            f.close()
+            return dicton
+        return {}
     async def postMessageAsWebhook(self, message_content, display_username, avatar_url, embed=[]):
         """posts a message as a webhook
         :param message_content: content of message
@@ -85,6 +105,11 @@ class DPIOS:
             return self.emoji_pedia[name]
         return None
 
+    def get_space_emoji(self, name):
+        if name in self.space_emoji_pedia:
+            return self.space_emoji_pedia[name]
+        return None
+
 
 
 
@@ -104,6 +129,9 @@ class DPIOS:
             name = choice_list[i]
             namelist = [name]
             emoji = numberlist[i]
+            sp=self.get_space_emoji(str(name))
+            if(sp):
+                emoji=sp
             choices.append([choice_list[i], namelist, emoji])
             outputString = outputString + " {}[{}] ".format(emoji, name)
         messagecontent = "{}\n{}".format(prompt, outputString)

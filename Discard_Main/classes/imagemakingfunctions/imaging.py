@@ -28,8 +28,8 @@ def make_card_grid_icon(pil_image, team=1, hp_float=1, name=""):
         'bahnschrift.ttf')
 
 
-    newfont = ImageFont.truetype(fontname, 32)
-    otherfont = ImageFont.truetype(fontname, 28)
+    newfont = ImageFont.truetype(fontname, 28)
+    otherfont = ImageFont.truetype(fontname, 20)
     d = ImageDraw.Draw(background)
     to_replace = (0,0,0)
     if team==1:
@@ -49,13 +49,29 @@ def make_card_grid_icon(pil_image, team=1, hp_float=1, name=""):
     # update image data
     background.putdata(new_image_data)
     background.paste(pil_image.resize((squaresize, squaresize)), (28, 28))
-    d.text((64, 218), text=str(hp_float),
-           anchor='ma', font=newfont, fill="black")
-    d.text((48, 0), text=str(name), font=otherfont, fill="black")
+    d.text((64, 218), text=str(hp_float), font=newfont, fill="black")
+    d.text((30, 8), text=str(name), font=otherfont, fill="black")
 
     return background
 
+def make_space_emoji(space_notation):
+    squaresize = 80
+    width, height = squaresize, squaresize
+    pasteme = Image.open(
+        """Discard_Main\classes\imagemakingfunctions\imageres\EmojiBack.png""")
+    fontname = """Discard_Main\classes\imagemakingfunctions\imageres\{}""".format(
+        'bahnschrift.ttf')
+    newfont = ImageFont.truetype(fontname, 56)
 
+    background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
+    background.paste(pasteme, (0,0),pasteme)
+    d = ImageDraw.Draw(background)
+    x = 0 + squaresize // 2
+    y = 0 + squaresize // 2
+    d.text((x, y), text=space_notation, anchor='mm',
+           font=newfont, fill="White")
+
+    return background
 def make_image_from_grid(grid, col, row):
     squaresize = 256
     width, height = col * squaresize, row * squaresize
@@ -63,6 +79,7 @@ def make_image_from_grid(grid, col, row):
         """Discard_Main\classes\imagemakingfunctions\imageres\GridSquare.png""")
     fontname = """Discard_Main\classes\imagemakingfunctions\imageres\{}""".format(
         'bahnschrift.ttf')
+
     newfont = ImageFont.truetype(fontname, 72)
 
     background = Image.new('RGBA', (width, height), (0, 0, 0, 0))
@@ -199,6 +216,8 @@ def custom_image_scaling(scaled_width, scaled_height, offset_x, offset_y):
     print("range", range_x, range_y)
     print("")
 
+def card_to_image(cardobj):
+    pass
 
 # Driver Code.
 if __name__ == "__main__":

@@ -1,42 +1,101 @@
+from .GameEvaluator import *
+
 class Condition:
-    def __init__(self):
-        condition_list = []
+    def __init__(self, object="", property="", operator="",value=0, dictionary=None):
+        self.numberof=1
+        self.object=object #can be player game team _equal
+        self.property=property
+        self.operator=operator
+        self.value=value
+        if (dictionary !=None ):
+            self.from_dictionary(dictionary)
         print("TBD")
+    def evaluate_condition(self, to_find_from):
+        if self.object=="game":
+            return duel_evaluator(to_find_from, self.property, self.operator, self.value)
+        elif self.object=="team":
+            return False
+        elif self.object=="player":
+            return False
+        return False
+    def get_object(self):
+        return self.object
+
+    def from_dictionary(self, dictionary):
+        for i, v in dictionary.items():
+            if hasattr(self, i):
+                setattr(self, i, v)
+    def to_dictionary(self):
+        dictionary = vars(self).copy()
+        return dictionary
+
+
 
 
 class Settings:
-    def __init__(self):
+    def __init__(self, dictionary=None):
         # The columns and rows of the grid can be any value between 1-26, inclusive
-        self.grid_columns = 0
-        self.grid_rows = 0
+        self.grid_columns = 6
+        self.grid_rows = 5
 
         # What it takes to win, lose, and end the game
         # These conditions are a list
         self.win_condition = []
         self.lose_condition = []
-        self.end_condition = []
+        self.end_condition = [Condition("game", "active_teams", "<", 2)] #implimented
 
-        # That amount of creatures that can be summoned by a player at one time
-        self.creature_limit = 0
+        # That amount of creatures that can be controlled by a player
+        self.creature_limit = 5
 
         # The amount of creatures that can be summoned on the leader's turn
-        self.creatures_summonable_per_turn = 0
+        self.creatures_summonable_per_turn = 1 #implimented
 
         # Whether summoning creatures will require card points
-        self.card_point_summons = False
+        self.card_point_summons = True #implimented
 
         # If True, the game will use the 3 flavor system
         # If False, the game will use the 1 flavor system
-        self.card_point_flavors = False
+        self.card_point_flavors = True
 
         # If true, card points will be dropped onto the board at random points
         self.card_point_grid_drop = False
 
-        # How big each player's deck must be at the start of the game
+        self.requires_deck_size = False
+        # How big each player's deck must be at the start of the game.
+        # optional
         self.deck_size = 0
 
         # If True, the player will be eliminated upon decking out
         self.deck_out = False
+
+    def from_dictionary(self, dictionary):
+        for i, v in dictionary.items():
+            if hasattr(self, i):
+                if(i == "win_condition"):
+                    self.win_condition=[]
+                    for diction in v:
+                        self.win_condition.append(Condition(dictionary=diction))
+                elif(i == "lose_condition"):
+                    self.lose_condition=[]
+                    for diction in v:
+                        self.lose_condition.append(Condition(dictionary=diction))
+                elif(i == "end_condition"):
+                    self.end_condition=[]
+                    for diction in v:
+                        self.end_condition.append(Condition(dictionary=diction))
+                else:
+                    setattr(self, i, v)
+    def to_dictionary(self):
+        dictionary = vars(self).copy()
+        return dictionary
+
+    def check_setting(self, setting):
+        print(setting)
+        if hasattr(self, setting):
+            #print('found')
+            #print(getattr(self, setting))
+            return getattr(self, setting)
+        return None
 
     def set_grid_columns(self, columns):
         self.grid_columns = columns
@@ -97,6 +156,9 @@ class Settings:
 
     def get_card_point_drop(self):
         return self.card_point_drop
+
+    def set_requires_deck_size(self, requires_deck_size):
+        self.requires_deck_size=requires_deck_size
 
     def set_deck_size(self, size):
         self.deck_size = size

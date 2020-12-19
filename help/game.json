@@ -188,7 +188,11 @@
         {
           "name": "Protip.",
           "value": "If a **Creature's** HP is zero at the end of a round, they will be removed from the board, and the card used to summon them will be sent to their player's **graveyard.**"
-        }
+      },
+      {
+        "name": "Protip 2",
+        "value": "You can save a creature from removal by healing it before the end of a round."
+      }
       ],
       "footer": {
         "text": "how to play",
@@ -214,8 +218,8 @@
           "inline": true
         },
         {
-          "name": "Limit",
-          "value": "What limits the skill's activation. More TBD"
+          "name": "FP and Cooldown",
+          "value": "**FP**\n The FP cost of a skill.  \n**Cooldown**\nThe Turn Cooldown of the skill.  When you use a skill, you must wait this many turns before you can use this skill again."
         },
         {
           "name": "Type",

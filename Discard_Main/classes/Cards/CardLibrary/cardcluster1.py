@@ -1,4 +1,5 @@
 from .. import card
+from ..EnumuratedTerms import *
 from ..SkillLibrary.skillcluster import *
 
 
@@ -72,8 +73,8 @@ class TestCreatureAlpha(card.CreatureCard):
 
         # These are the creature's skills
         skill1 = MultiAttack(name="Multi Attacks", trigger="command", target=(
-            "Rectilinear", "Enemy", "x3"), type="attack", cooldown=1, fp_cost=0, damage=1, attacks=3, damage_tag="")
-        skill2 = BasicShield(name="Shield", shield_amount=2)
+            "Rectilinear", "Enemy", "x3"), type="attack", cooldown=1, fp_cost=0, damage=3, attacks=3, damage_tag=DTags.Slash)
+        skill2 = BasicShield(name="Shield", trigger="command", shield_amount=5, fp_cost=3, cooldown=4, target=("Rectilinear", "3", "Ally", "x3"))
         skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support",
                            heal_amount=5, fp_cost=4)
 
@@ -105,15 +106,15 @@ class TestCreatureBeta(card.CreatureCard):
         summong = 3
 
         # These are the creature's skills
-        skill1 = MultiAttack(name="Multi Attacks", trigger="command", target=(
-            "Rectilinear", "Enemy", "x3"), type="attack", cooldown=1, fp_cost=0, damage=4, attacks=3, damage_tag="")
-        skill2 = BasicShield(name="Shield", trigger="command", target=(
-            "Any", "Ally", "x1"), cooldown=1, fp_cost=0, description="description", shield_amount=2)
-        skill3 = BasicHeal(name="BasicHeal", trigger="command", target=(
-            "Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0, description="description", heal_amount=1)
+        skill1 = MultiAttack(name="Multi Attacks", trigger="command", target=( "Rectilinear", "Enemy", "x3"),
+         type="attack", cooldown=2, fp_cost=5, damage=4, attacks=3, damage_tag=DTags.Slash)
+        skill2 = BasicShield(name="Super Shield.", trigger="command", target=(
+            "Any", "Ally", "x1"), cooldown=1, fp_cost=8, description="description", shield_amount=8)
+        skill3 = BasicHeal(name="Super Heal", trigger="command", target=(
+            "Any", "Ally", "x1"), type="support", cooldown=5, fp_cost=10, heal_amount=9)
 
         # This defines the creature's move style
-        move_style = "SAME COLUMN LIMIT 3"
+        move_style = "SAME COLUMN LIMIT 2"
         movelimit = 1
 
         super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
@@ -140,12 +141,12 @@ class TestCreatureDelta(card.CreatureCard):
         summong = 1
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="type", cooldown=1, fp_cost=0,
-                             description="Type description here.", damage=5)
+        skill1 = BasicAttack(name="Bash", trigger="command", target=("Adjacent", "Enemy", "x1"),
+            type="type", cooldown=1, fp_cost=0, damage=5)
         skill2 = BasicShield(name="Shield", trigger="command", target=(
-            "Any", "Ally", "x1"), cooldown=1, fp_cost=0, description="description", shield_amount=2)
+            "Any", "Ally", "x1"), cooldown=1, fp_cost=3, shield_amount=5)
         skill3 = BasicHeal(name="BasicHeal", trigger="command", target=(
-            "Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0, description="description", heal_amount=1)
+            "Any", "Ally", "x1"), type="support", cooldown=3, fp_cost=0, description="description", heal_amount=4)
 
         # This defines the creature's move style
         move_style = "SAME DIAGONAL LIMIT 2"
@@ -178,7 +179,7 @@ class TestCreature2(card.CreatureCard):
         skill1 = BasicAttack(name="Bash", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack",
                              cooldown=1, damage=6)
         skill2 = BasicShield(name="Shield", trigger="command", target=("Any", "Ally", "x1"),
-                             type="passive",  shield_amount=1)
+                             type="passive",  shield_amount=8)
         skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"),
                            heal_amount=2)
 
@@ -210,20 +211,20 @@ class TestCreature3(card.CreatureCard):
         summong = 3
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,
-                             description="deal damage", damage=8)
+        skill1 = BasicAttack(name="Firebrand", trigger="command", target=("Adjacent", "Enemy", "x1"),
+            type="attack", cooldown=1, fp_cost=0,  description="deal damage", damage=8, damage_tag=DTags.Fire)
 
-        skill2 = BasicShield(name="Shield", trigger="command", target=("This", "Self",
-                                                                       "x1"), cooldown=1, fp_cost=0, description="description", shield_amount=1)
-        skill3 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0, description="description",
-                           heal_amount=3)
+        skill2 = BoostAttack(name="Heat Up.", trigger="command", target=("Rectilinear", "Ally", "x1", "3"),
+            type="buff", cooldown=4, boost_amount=8, boost_tag=DTags.Fire)
+        skill3 = Warp(name="Warp")
+         #type="support", cooldown=1, fp_cost=0, heal_amount=3)
 
         # This defines the creature's move style
         move_style = """STEP 2"""
         movelimit = 1
 
-        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
-                         summoncost_b=summonb, summoncost_g=summong,
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed,
+                         summoncost_r=summonr, summoncost_b=summonb, summoncost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 
@@ -245,13 +246,13 @@ class TestCreature4(card.CreatureCard):
         summong = 4
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Custom Name 1", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,
-                             description="deal damage", damage=8)
+        skill1 = BasicAttack(name="Slash", trigger="command", target=("Adjacent", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,
+                             description="deal damage", damage=8, damage_tag=DTags.Slash)
 
         skill2 = BasicHeal(name="BasicHeal", trigger="command", target=("Any", "Ally", "x1"), type="support", cooldown=1, fp_cost=0, description="description",
                            heal_amount=2)
-        skill3 = BoostAttack(name="Attack Boost", trigger="auto", target=("This", "Self", "x1"), type="other", cooldown=1, fp_cost=0,
-                             description="", boost_amount=1)
+        skill3 = BoostAttack(name="Attack Boost", trigger="auto", target=("This", "Self", "x1"), type="other", cooldown=5, fp_cost=0,
+                             description="", boost_amount=4, boost_tag=DTags.Slash)
 
         # This defines the creature's move style
         move_style = """STEP 2"""
@@ -281,12 +282,12 @@ class Sharpshooter(card.CreatureCard):
 
         # These are the creature's skills
         skill1 = BasicAttack(name="Snipe", trigger="command", target=("Rectilinear", "Enemy", "x1", "4"), type="attack", cooldown=1, fp_cost=0,
-                             description="deal damage", damage=8, damage_tag="bullet")
+                             description="deal damage", damage=8, damage_tag=DTags.Gun, effect_str="Ka-Click.  Bang!")
 
-        skill2 = BasicAttack(name="Showdown", trigger="command", target=("Rectilinear", "Enemy", "x9", "4"), type="attack", cooldown=1, fp_cost=0,
-                             description="deal damage to group.", damage=2, damage_tag="bullet")
+        skill2 = BasicAttack(name="Showdown", trigger="command", target=("Rectilinear", "Enemy", "x9", "4"), type="attack", cooldown=3, fp_cost=0,
+                             description="deal damage to group.", damage=2, damage_tag=DTags.Gun)
         skill3 = BoostAttack(name="Attack Boost", trigger="auto", target=("This", "Self", "x1"), type="other", cooldown=1, fp_cost=0,
-                             description="", boost_amount=1)
+                             description="", boost_amount=1, boost_tag=DTags.Gun)
 
         # This defines the creature's move style
         move_style = """STEP 2"""
@@ -316,7 +317,7 @@ class Spiney(card.CreatureCard):
 
         # These are the creature's skills
         skill1 = BasicAttack(name="Bash", trigger="command", target=("Rectilinear", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,
-                             description="deal damage", damage=1, damage_tag="spike")
+                             description="deal damage", damage=1, damage_tag=DTags.Gun)
         skill2 = Spike(name="Spikes", trigger="auto", target=("This", "Self", "x1"), type="other", cooldown=1, fp_cost=0,
                        description="", damage_returned=4)
         skill3 = None
@@ -348,14 +349,47 @@ class Seven(card.CreatureCard):
         summong = 2
 
         # These are the creature's skills
-        skill1 = BasicAttack(name="Bash", trigger="command", target=("Rectilinear", "Enemy", "x1"), type="attack", cooldown=1, fp_cost=0,
-                             description="deal damage", damage=1, damage_tag="physical")
-        skill2 = FreezeAttack(name="Chill", target=(
-            "Rectilinear", "3", "Enemy", "x1"), cooldown=3, fp_cost=3, damage=3, time_frozen=3)
+        skill1 = BasicAttack(name="Chill", trigger="command", target=("Rectilinear", "Enemy", "x1"),
+            type="attack", cooldown=1, fp_cost=0, damage=5, damage_tag=DTags.Ice)
+        skill2 = FreezeAttack(name="Freeze", target=("Rectilinear", "3", "Enemy", "x1"),
+            cooldown=3, fp_cost=3, damage=3, time_frozen=3)
         skill3 = None
 
         # This defines the creature's move style
         move_style = """SAME DIAGONAL LIMIT 2"""
+        movelimit = 1
+
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
+                         summoncost_b=summonb, summoncost_g=summong,
+                         skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
+
+class Magnetism(card.CreatureCard):
+    ID = 0x00015
+
+    def __init__(self):
+        self.ID = 0x00015
+        name = "Magnetism Man"
+        icon = "🐻"
+        image = ""
+        type = ""
+        hp = 14
+        speed = 13
+
+        # The summoning cost of this creature
+        summonr = 2
+        summonb = 1
+        summong = 0
+
+        # These are the creature's skills
+        skill1 = BasicAttack(name="Thunder", trigger="command", target=("Rectilinear", "Enemy", "x1", "5"),
+            type="attack", cooldown=1, fp_cost=0, damage=5, damage_tag=DTags.Elec)
+        skill2 = BoostAttack(name="Boost Attack", trigger="command", target=("Rectilinear", "3", "Ally", "x1"),
+            cooldown=3, fp_cost=3, boost_amount=3)
+        skill3 = BasicAttack(name="Magnets", trigger="command", target=("Rectilinear", "Enemy", "x1", "2"),
+            type="attack", cooldown=1, fp_cost=0, damage=5, damage_tag=DTags.Mag)
+
+        # This defines the creature's move style
+        move_style = """STEP 2"""
         movelimit = 1
 
         super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,

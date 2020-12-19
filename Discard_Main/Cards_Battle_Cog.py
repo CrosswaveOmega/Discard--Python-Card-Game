@@ -74,7 +74,7 @@ battles=1
 
 class CardCogBattle(commands.Cog):
     """Commands for battle system goes here."""
-    @commands.command()
+    @commands.command(aliases=["duel"])
     async def request_duel(self, ctx, *args):
         avgspeed=CardRetrievalClass().getMeanSpeed()
         """Start a duel with another person!"""
@@ -169,7 +169,7 @@ class CardCogBattle(commands.Cog):
         thisDuel.add_piece(testPiece)
         thisDuel.add_piece(testPiece2)
 
-        winner=await thisDuel.start_game()
+        winner=await thisDuel.start_game(shuffle=True)
         battles=battles-1
         await user1.remove_roles(rolea)
         await user2.remove_roles(rolea)
@@ -309,13 +309,13 @@ class CardCogBattle(commands.Cog):
         profile1 = SingleUser.getByID(author.id)
 
 
-        deck1=[ '0000A','00006', '00001', '00004', '0000B','00005','00007']
+        deck1=[ '0000A','00006', '00001','00003', '00004', '0000B','00005','00007']
         commandA=["DRAW", "MOVE", "D2", "FOCUS", "GREEN", "END", "DRAW", "FOCUS", "GREEN", "SUMMON", "Sharpshooter", "E2", "MOVE", "D3", "SKILL", "Showdown", "DRAW", "FOCUS", "BLUE", "END", "MOVE", "E3", "SKILL", "Snipe", "Seven", "SKILL", "Snipe", "Leader2"]
         #deck1=['00007', '00005', '00006', '00001', '00004', '0000A', '0000B']
         commandB=["DRAW","MOVE", "C4", "FOCUS", "BLUE", "END", "DRAW", "FOCUS", "BLUE", "SUMMON", "Seven", "B3", "DRAW", "FOCUS", "GREEN", "MOVE", "C5", "END", "MOVE", "C2", "SKILL", "Chill", "Leader1", "DRAW", "MOVE", "C4", "FOCUS", "BLUE", "SUMMON", "Beta", "D3"]
         profile1, player1 = await get_everything_for_test_user(bot, author, channel, team=1, deck=deck1, name="Test 1", commands=commandA)
         profile2, player2 = await get_everything_for_test_user(bot, author, channel, team=2, deck=deck1, name="Test 2", commands=commandB)
-        thisDuel = Card_Duel(bot)
+        thisDuel = Card_Duel(bot, send_images=True)
         thisDuel.addPlayer(player1)
         thisDuel.addPlayer(player2)
         testPiece = Leader(player1, "Leader1", position_notation="D1", speed=9)

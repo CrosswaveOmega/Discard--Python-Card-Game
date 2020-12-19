@@ -29,13 +29,14 @@ class Player():
         self.hand = []  # Cards in hand.
         self.graveyard = []  # All cards in the graveyard.
         self.team = team  # The team the player is on.
+        self.active= True
 
         self.leader = None  # The leader piece of the user.
 
-        self.summon_r = 0.0
-        self.summon_b = 0.0
-        self.summon_g = 0.0
-        self.summon_u = 0.0 #universal mana.
+        self.summon_r = 1.0
+        self.summon_b = 1.0
+        self.summon_g = 1.0
+        self.summon_u = 1.0 #universal mana.
 
         self.fp = 0 #Flower points.
         self.max_fp = 20
@@ -59,6 +60,7 @@ class Player():
     def gain_summon_points(self):
         # exactly how to gain Summon points, I still have no idea.
         # this will give points randomly.
+        self.summon_u = self.summon_u + 1
         self.summon_r = self.summon_r + 1
         self.summon_b = self.summon_b + 1
         self.summon_g = self.summon_g + 1
@@ -126,9 +128,12 @@ class Player():
 
     async def get_summon_action(self, game_ref, summon_locations):
         valid_options = []
+        #1: Check if within creature limit, if
+        #2: check if you need card points to summon
+        #3: check if you need separate flavors to summon.
         for card in self.hand:
             if card.get_type() == "Creature":
-                if (card.can_activate(self.summon_r, self.summon_b, self.summon_g)):
+                if (card.can_activate(self.summon_r, self.summon_b, self.summon_g, self.summon_u) or game_ref.check_setting('card_point_summons')==False):
                     valid_options.append(card)
         card = await self.select_card(valid_options, "select a card.")
         if (card == 'back' or card == 'timeout' or card=="invalidmessage"):
@@ -145,9 +150,19 @@ class Player():
 
             r, b, g = card.get_summoncost_tuple()
             await game_ref.send_announcement("{} Summoned to {}".format(card.get_name(), position_not))
-            self.summon_r = self.summon_r - r
-            self.summon_b = self.summon_b - b
-            self.summon_g = self.summon_g - g
+            if game_ref.check_setting('card_point_summons'):
+                self.summon_r = self.summon_r - r
+                self.summon_b = self.summon_b - b
+                self.summon_g = self.summon_g - g
+                if self.summon_r < 0:
+                    self.summon_u = self.summon_u - abs(self.summon_r)
+                    self.summon_r=0
+                if self.summon_b < 0:
+                    self.summon_u = self.summon_u - abs(self.summon_b)
+                    self.summon_b=0
+                if self.summon_g < 0:
+                    self.summon_u = self.summon_u - abs(self.summon_g)
+                    self.summon_g=0
             return True
         return False
 
@@ -180,8 +195,8 @@ class Player():
 
         embed = discord.Embed(title="Player", colour=discord.Colour(0xce48e9), description="{}".format(hand_disp),
                               timestamp=datetime.datetime.now())
-        mana = " Red= {}\n Blue= {}\n Green= {}".format(str(round(self.summon_r, 2)), str(round(self.summon_b, 2)),
-                                                        str(round(self.summon_g, 2)))
+        mana = " Red= {}\n Blue= {}\n Green= {}\n Universal= {}".format(str(round(self.summon_r, 2)), str(round(self.summon_b, 2)),
+                                                        str(round(self.summon_g, 2)), str(round(self.summon_u, 2)))
         deckgrave="**Deck:**{}\n\n**Graveyard**:{}".format(len(self.deck), len(self.graveyard))
         embed.add_field(name="Leader", value=self.leader.string_status(), inline=True)
         embed.add_field(name="Mana", value=mana, inline=True)
@@ -217,7 +232,6 @@ class DiscordPlayer(Player):
 
     async def local_commands(self, action, game_ref):
         my_turn = True
-        print(action)
         completed = False
         if (action == "OVERVIEW"):
             await self.dpios.send_order()
@@ -228,8 +242,10 @@ class DiscordPlayer(Player):
         elif (action == "CURRENT"):
             await self.dpios.send_order(p=False, i=False, c=True)
         elif (action == "QUIT"):
-            my_turn= False
+            print("LOCAL COMMAND: QUIT DETECTED.")
+            game_ref.force_check()
             self.set_status("QUIT")
+            my_turn= False
         return my_turn, completed
     async def select_piece(self, options=[], prompt="Select a piece"):
         option = await self.dpios.get_user_piece(options, prompt)
@@ -279,7 +295,6 @@ class TestPlayer(Player):
 
     async def local_commands(self, action, game_ref):
         my_turn = True
-        print(action)
         completed = False
         if (action == "OVERVIEW"):
             await self.dpios.send_order()
@@ -290,9 +305,12 @@ class TestPlayer(Player):
         elif (action == "CURRENT"):
             await self.dpios.send_order(p=False, i=False, c=True)
         elif (action == "QUIT"):
-            my_turn= False
+            print("LOCAL COMMAND: QUIT DETECTED.")
+            game_ref.force_check()
             self.set_status("QUIT")
+            my_turn= False
         return my_turn, completed
+
     async def select_piece(self, options=[], prompt="Select a piece"):
         option = await self.dpios.get_user_piece(options, prompt)
         return option

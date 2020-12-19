@@ -83,8 +83,43 @@ class DebugCog(commands.Cog):
 
         await author.remove_roles(role)
 
+    @commands.command(pass_context=True, hidden=True)
+    async def make_space_emojis(self, ctx, *args):
+        bot = ctx.bot
+        auth = ctx.message.author
+        channel = ctx.message.channel
+        guild = channel.guild
+        leng = len(args)
+        number = None
+        letters=["A","B","C","D","E","F","G"]
+        numbers= ["1","2","3","4","5","6","7"]
+        for l in letters:
+            for n in numbers:
+                number="{}{}".format(l,n)
+                if (number != None):
+                    with io.BytesIO() as image_binary:
+                        # Returns pil object.
+                        make_space_emoji(number).save(image_binary, 'PNG')
+                        image_binary.seek(0)
+                        await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
+                        image_binary.seek(0)
+                        byte=image_binary.read()
+                        print(byte)
+                        await guild.create_custom_emoji(name=number, image=byte)
 
-
+    @commands.command()
+    async def getemojis(self, ctx):  # A example command.
+        """Command to ensure user data is saved."""
+        bot=ctx.bot
+        channel=ctx.message.channel
+     #   print(str(val))
+        emoji=await ctx.message.guild.fetch_emojis()
+        diction={}
+        for emoj in emoji:
+            print(str(emoj))
+            diction[emoj.name]=str(emoj)
+        dump=json.dumps(diction)
+        print(dump)
 
     @commands.command()
     async def save(self, ctx):  # A example command.

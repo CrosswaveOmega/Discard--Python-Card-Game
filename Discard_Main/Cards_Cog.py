@@ -136,6 +136,26 @@ class CardCog(commands.Cog):
                 image_binary.seek(0)
                 await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
 
+    @commands.command(pass_context=True, hidden=True)
+    async def make_space_emoji(self, ctx, *args):
+        bot = ctx.bot
+        auth = ctx.message.author
+        channel = ctx.message.channel
+        guild = channel.guild
+        leng = len(args)
+        number = None
+        if (leng == 1):
+            number = args[0]
+        if (number != None):
+            with io.BytesIO() as image_binary:
+                # Returns pil object.
+                make_space_emoji(number).save(image_binary, 'PNG')
+                image_binary.seek(0)
+                await channel.send(file=discord.File(fp=image_binary, filename='image.png'))
+                image_binary.seek(0)
+                byte=image_binary.read()
+                print(byte)
+                await guild.create_custom_emoji(name=number, image=byte)
 
 
     @commands.command(pass_context=True)
@@ -240,8 +260,8 @@ class CardCog(commands.Cog):
             profile.get_coins()), inline=True)
         embed.add_field(name="Stars", value=str(
             profile.get_stars()), inline=True)
-        embed.add_field(name="TBD", value=str(
-            profile.get_stars()), inline=True)
+        embed.add_field(name="Tickets", value=str(
+            profile.get_tickets()), inline=True)
         # embed.add_field(name="custom", value="Custom was applied.",)
         embed.add_field(name="Exp", value=str(profile.get_exp()), inline=True)
         embed.add_field(name="Level", value=str(
@@ -292,7 +312,7 @@ class CardCog(commands.Cog):
                 newcard.apply_custom(custom=customobject)
                 embed = newcard.to_DiscordEmbed()
                 await channel.send(content=str(newcard), embed=embed)
-        if (len(result) == 0):
+        if (len(result) == 1):
             embed = newcard.to_DiscordEmbed()
             await channel.send(content=str(newcard), embed=embed)
 

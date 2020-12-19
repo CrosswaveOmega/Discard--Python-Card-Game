@@ -15,7 +15,7 @@ optionsDictionary = {
     "dist": "",  # jUST A NUMBER
     "scope": ["Enemy", "Ally", "Both", "Self", "Else"],
     "amount": ["Single", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "All"],
-    "limit": ["None"]
+    "limit": ["noself"]
 }
 amount_dictionary = {
     "Single": 1,
@@ -86,6 +86,20 @@ def match_with_target_data(targetdata, user, game_ref):
     # get_number_of_entities
     number = match_amount(targetdata["amount"])
 
-    # get_limits... IRRELEVANT FOR NOW.
-    final_pass = shape_pass
+    # get_limits...
+    limit_dict={}
+    for lim in targetdata["limit"]:
+         if lim == "noself":
+             limit_dict["noself"]=True
+
+    elimination_pass = []
+
+    for piece in shape_pass:
+        if "noself" in limit_dict:
+            if piece.get_game_id() != user.get_game_id():
+                elimination_pass.append(piece)
+        else:
+            elimination_pass.append(piece)
+
+    final_pass = elimination_pass
     return final_pass, number, grouped

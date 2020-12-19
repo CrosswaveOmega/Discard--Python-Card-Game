@@ -16,7 +16,7 @@ optionsDictionary = {
     "dist": "",  # jUST A NUMBER
     "scope": ["Enemy", "Ally", "Both", "Self", "Else", "Board"],
     "amount": ["Single", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "All"],
-    "limit": ["None"]
+    "limit": ["noself"]
 }
 
 
@@ -34,6 +34,7 @@ def Args_To_Target(*args):
     distmatch = False
     scopematch = False
     amountmatch = False
+    limitmatch = False
     print(args)
     for element in args:
         print(element)

@@ -4,7 +4,7 @@ import asyncio
 
 class Effect:
     """Without This, there's no strategy!"""
-    def __init__(self, time, context, function, function_arg, disable_condition, disable_arg, level=0, description="", icon="❗"):
+    def __init__(self, time, context, function, function_arg, disable_condition, disable_arg, level=0, description="", icon="❗", function_arg_2=None):
         """
         time is when the Effect is triggered.  Can be "before", "during", or "after"
         context is where the skill will trigger.
@@ -18,6 +18,7 @@ class Effect:
         self.context=context
         self.function=function
         self.arg=function_arg
+        self.arg2=function_arg_2
         #list = re.findall(r'(?:[^\s,"]|"(?:\\.|[^"])*")+', result)
         self.disable_condition=disable_condition
         self.disable_arg=disable_arg
@@ -32,7 +33,7 @@ class Effect:
             return True
         return False
     async def execute(self, dictionary, game_ref):
-        diction=await self.function(dictionary, game_ref, self.arg)
+        diction=await self.function(dictionary, game_ref, self.arg, self.arg2)
         self.times_used = self.times_used + 1
         return diction
     def add_turn(self):
@@ -51,7 +52,7 @@ class Effect:
         if self.disable_condition == 'times_used':
             return int(self.disable_arg)-self.times_used
         elif self.disable_condition == 'turns_passed':
-            return int(self.disable_arg)- self.turns 
+            return int(self.disable_arg)- self.turns
         else:
             return 0
     def get_shorthand_rep(self):

@@ -31,6 +31,8 @@ from Discard_Main import Cards_Custom_Cog
 from Discard_Main import Cards_Debug_Cog
 from Discard_Main import Cards_Battle_Cog
 from Discard_Main import Cards_Deckbuilding_Cog
+from Discard_Main import Cards_Deckbuilding_Cog
+from Discard_Main import Shop_Cog
 
 from Discard_Main.classes.discordhelper.customhelp import Chelp
 #from Discard_Main.classes.main.GridClass import Grid
@@ -76,6 +78,7 @@ bot.add_cog(Cards_Battle_Cog.CardCogBattle())
 bot.add_cog(Cards_Deckbuilding_Cog.DeckCog())
 bot.add_cog(Cards_Debug_Cog.DebugCog())
 bot.add_cog(Cards_Custom_Cog.CustomsCog())
+bot.add_cog(Shop_Cog.ShopCog())
 configur = ConfigParser()
 configur.read('config.ini')
 print(configur)

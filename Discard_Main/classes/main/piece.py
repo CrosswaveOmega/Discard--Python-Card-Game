@@ -59,16 +59,17 @@ class Piece:
         self.effects[effect_name]=effect
 
     async def check_effects(self, time, context, dictionary, game_ref):
-        dicton=dictionary
         to_disable=[]
         for effect_name, effect in self.effects.items():
             if effect.check_trigger(time, context):
-                dictionary=await effect.execute(dictionary, game_ref)
+                if not effect.disable_check():
+                    dictionary=await effect.execute(dictionary, game_ref)
             if (time == 'after' and context=='turn'):
+                #Effects are removed at the end of the turn.
                 effect.add_turn()
-            if effect.disable_check():
-                to_disable.append(effect_name)
-                await game_ref.send_announcement("{} wore off.".format(effect_name))
+                if effect.disable_check():
+                    to_disable.append(effect_name)
+                    await game_ref.send_announcement("{} wore off.".format(effect_name))
             #print("Ok")
         #print("ok")
         for effect_name in to_disable:
@@ -99,7 +100,7 @@ class Piece:
     def get_name(self):
         return self.name
 
-    def generate_commands(self, actions={}):
+    def generate_commands(self, actions={}, game=None):
         # creates a new dictionary of all action options.
         # Universal opitons are: MOVE, ... END.
         actions["MOVE"] = self.move_limit
@@ -110,7 +111,7 @@ class Piece:
 
 
     async def do_move(self, game_ref):
-        move_options = self.get_move_options(game_ref.get_grid())
+        move_options = self.get_move_options(game_ref.get_grid(), self.move_style)
 
         buffer = self.player.has_something_in_buffer()
         sent_mess = None
@@ -144,7 +145,7 @@ class Piece:
         if(self.type=="Creature"):
             await self.do_auto_skills(game_ref)
         self.player.gain_fp()
-        self.current_actions = self.generate_commands()
+        self.current_actions = self.generate_commands(game= game_ref)
         #self.current_actions=await self.check_effects('before', 'command_setting', self.current_actions, None) #Check effects on self.
         my_turn = True
         await game_ref.send_announcement("{}'s turn".format(self.get_name()))
@@ -152,6 +153,7 @@ class Piece:
         while my_turn:
             choices = []
             for key, item in self.current_actions.items():
+                print(key)
                 if item > 0:
                     choices.append(key)
             await self.player.send_embed_to_user()
@@ -189,9 +191,10 @@ class Piece:
             my_turn, completed=await self.player.local_commands(action, game_ref)
         return my_turn, completed
 
-    def get_move_options(self, grid):  # Wip function.
+    def get_move_options(self, grid, movestyle):  # Wip function.
         """supposed to split move style into list line by line."""
-        lines = self.move_style.splitlines()
+        newstyle=movestyle.replace("|","\n")
+        lines = newstyle.splitlines()
         move_options = []
         for line in lines:
             move_options.extend(
@@ -295,11 +298,11 @@ class Creature(Piece):
     def get_card(self):
         return self.card
 
-    def generate_commands(self, actions={}):
+    def generate_commands(self, actions={}, game=None):
         # creates a new dictionary of all options.
         # Universal opitons are: MOVE, ... END.
         actions["SKILL"] = 1
-        actions = super().generate_commands(actions)
+        actions = super().generate_commands(actions, game)
         return actions
     async def do_auto_skills(self, game_ref):
         #This command is for auto skills if available
@@ -330,7 +333,7 @@ class Creature(Piece):
             if(get_targets):
                 for i in range(0, amount):
                     target = await self.player.select_piece(target_list, "Select a target for {}.".format(skill.get_name()))
-                    if (target == "back" or target == "timeout" or option=="invalidmessage"):
+                    if (target == "back" or target == "timeout" or target=="invalidmessage"):
                         break
                     selected_targets.append(target)
             await skill.doSkill(self, selected_targets, game_ref)
@@ -467,16 +470,19 @@ HOP X 1 Y 1"""
                 grid.get_all_movements_in_range(self.position, line))
         return summon_options
 
-    def generate_commands(self, actions={}):
+    def generate_commands(self, actions={}, game=None):
         # creates a new dictionary of all options.
         # Universal opitons are: MOVE, ... END.
 
         #actions["MOVE"] = self.move_limit
         actions["DRAW"] = 1
         actions["SUMMON"] = 1
+        if game!=None:
+            #print( game.check_setting('creatures_summonable_per_turn'))
+            actions["SUMMON"]= game.check_setting('creatures_summonable_per_turn')
         actions["FOCUS"] = 1
         #actions["END"] = 1
-        actions = super().generate_commands(actions)
+        actions = super().generate_commands(actions, game)
         return actions
 
     async def process_option(self, game_ref, action):
