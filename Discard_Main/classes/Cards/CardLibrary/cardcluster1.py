@@ -48,7 +48,7 @@ HOP X -2 Y -1
 
         super().__init__(self.ID, name, icon, image=image,
                          hp=hp, speed=2,
-                         summoncost_r=summonr, summoncost_b=summonb, summoncost_g=summong,
+                         cost_r=summonr, cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3,
                          movestyle=movestyle, movelimit=movelimit)
 
@@ -82,8 +82,8 @@ class TestCreatureAlpha(card.CreatureCard):
         move_style = "STEP 1"
         movelimit = 1
 
-        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
-                         summoncost_b=summonb, summoncost_g=summong,
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, cost_r=summonr,
+                         cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 
@@ -117,8 +117,8 @@ class TestCreatureBeta(card.CreatureCard):
         move_style = "SAME COLUMN LIMIT 2"
         movelimit = 1
 
-        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
-                         summoncost_b=summonb, summoncost_g=summong,
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, cost_r=summonr,
+                         cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 
@@ -152,8 +152,8 @@ class TestCreatureDelta(card.CreatureCard):
         move_style = "SAME DIAGONAL LIMIT 2"
         movelimit = 1
 
-        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
-                         summoncost_b=summonb, summoncost_g=summong,
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, cost_r=summonr,
+                         cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 
@@ -187,8 +187,8 @@ class TestCreature2(card.CreatureCard):
         move_style = "STEP 2"
         movelimit = 1
 
-        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
-                         summoncost_b=summonb, summoncost_g=summong,
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, cost_r=summonr,
+                         cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 
@@ -224,7 +224,7 @@ class TestCreature3(card.CreatureCard):
         movelimit = 1
 
         super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed,
-                         summoncost_r=summonr, summoncost_b=summonb, summoncost_g=summong,
+                         cost_r=summonr, cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 
@@ -258,8 +258,8 @@ class TestCreature4(card.CreatureCard):
         move_style = """STEP 2"""
         movelimit = 1
 
-        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
-                         summoncost_b=summonb, summoncost_g=summong,
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, cost_r=summonr,
+                         cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 
@@ -294,7 +294,7 @@ class Sharpshooter(card.CreatureCard):
         movelimit = 1
 
         super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed,
-                         summoncost_r=summonr, summoncost_b=summonb, summoncost_g=summong,
+                         cost_r=summonr, cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 
@@ -326,8 +326,8 @@ class Spiney(card.CreatureCard):
         move_style = """STEP 1"""
         movelimit = 1
 
-        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
-                         summoncost_b=summonb, summoncost_g=summong,
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, cost_r=summonr,
+                         cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 
@@ -359,8 +359,8 @@ class Seven(card.CreatureCard):
         move_style = """SAME DIAGONAL LIMIT 2"""
         movelimit = 1
 
-        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
-                         summoncost_b=summonb, summoncost_g=summong,
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, cost_r=summonr,
+                         cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)
 
 class Magnetism(card.CreatureCard):
@@ -392,6 +392,6 @@ class Magnetism(card.CreatureCard):
         move_style = """STEP 2"""
         movelimit = 1
 
-        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, summoncost_r=summonr,
-                         summoncost_b=summonb, summoncost_g=summong,
+        super().__init__(self.ID, name, icon, image=image, hp=hp, speed=speed, cost_r=summonr,
+                         cost_b=summonb, cost_g=summong,
                          skill_1=skill1, skill_2=skill2, skill_3=skill3, movestyle=move_style, movelimit=movelimit)

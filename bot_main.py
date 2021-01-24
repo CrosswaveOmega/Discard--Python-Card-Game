@@ -16,9 +16,6 @@ from collections import OrderedDict
 from configparser import ConfigParser
 
 
-import messageConfirming as messageIOfunctions
-import discord
-
 from discord.ext import commands, tasks
 from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter

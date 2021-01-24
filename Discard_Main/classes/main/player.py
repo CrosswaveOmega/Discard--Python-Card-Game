@@ -28,6 +28,8 @@ class Player():
         self.deck = deck  # Should be a list of cards. Initalization prior might be useful.
         self.hand = []  # Cards in hand.
         self.graveyard = []  # All cards in the graveyard.
+        self.spell_slots = {} #the spell slots currently set.
+
         self.team = team  # The team the player is on.
         self.active= True
 
@@ -126,6 +128,24 @@ class Player():
         await game_ref.send_announcement("Focused {} extra {} mana".format(1.5, choice))
         return True
 
+    async def get_set_action(self, game_ref):
+        #Set a spell card.
+        print("TBD")
+        valid_options=[]
+        for card in self.hand:
+            if card.get_type() == "Spell":
+                if (card.can_set(self)):
+                    valid_options.append(card)
+        card = await self.select_card(valid_options, "select a spell card to set.")
+        if (card == 'back' or card == 'timeout' or card=="invalidmessage"):
+            if(card=="invalidmessage"):
+                await self.send_announcement("unrecognized string was sent in.")
+            return False
+        self.spell_slots.append(card)
+        self.hand.remove(card)
+        card.set_spell()
+
+
     async def get_summon_action(self, game_ref, summon_locations):
         valid_options = []
         #1: Check if within creature limit, if
@@ -148,7 +168,7 @@ class Player():
             game_ref.add_creature(new_creature)
             await game_ref.send_user_updates()
 
-            r, b, g = card.get_summoncost_tuple()
+            r, b, g = card.get_cost_tuple()
             await game_ref.send_announcement("{} Summoned to {}".format(card.get_name(), position_not))
             if game_ref.check_setting('card_point_summons'):
                 self.summon_r = self.summon_r - r

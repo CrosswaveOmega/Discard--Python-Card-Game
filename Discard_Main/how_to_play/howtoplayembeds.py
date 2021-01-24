@@ -30,6 +30,7 @@ def get_file_from_directory(id):
     else:
         return None
 def get_content(id):
+    """gets dictonary from JSON file."""
     file = get_file_from_directory(id)
     if(file != None):
         f = file.open(mode='rb')
@@ -38,6 +39,7 @@ def get_content(id):
         f.close()
         return dicton
 def make_how_to_play_embeds():
+    """returns a list of Discord Embed objects."""
     J="""{"color": 7506394, "type": "rich", "description": "**Description**  AS **Cards** DF", "title": "This is a name."}"""
     embeds=get_content("how")
     lis=get_content("game")

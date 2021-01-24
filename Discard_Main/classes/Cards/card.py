@@ -9,6 +9,7 @@ from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 
 from .CardLibrary.cardcluster1 import *
+from .EnumuratedTerms import *
 from ..main.target_maker import *
 
 
@@ -241,7 +242,7 @@ class CreatureCard(CardBase):
 
     def __init__(self, ID, name="Default Name", icon="🐻",
                  image="https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png",
-                 hp=0, speed=0, summoncost_r=0, summoncost_b=0, summoncost_g=0,
+                 hp=0, speed=0, cost_r=0, cost_b=0, cost_g=0,
                  skill_1=None, skill_2=None, skill_3=None,
                  movestyle="", movelimit=1):
         self.ID = ID  # • ID- The internal ID of the card.
@@ -255,9 +256,9 @@ class CreatureCard(CardBase):
         type = "Creature"
         self.hp = hp
         self.speed = speed
-        self.summoncost_r = summoncost_r
-        self.summoncost_b = summoncost_b
-        self.summoncost_g = summoncost_g
+        self.cost_r = cost_r
+        self.cost_b = cost_b
+        self.cost_g = cost_g
 
         self.skill_1 = skill_1
         self.skill_2 = skill_2
@@ -285,20 +286,20 @@ class CreatureCard(CardBase):
     def get_speed(self):
         return self.speed
 
-    def get_summoncost_r(self):
-        return self.summoncost_r
+    def get_cost_r(self):
+        return self.cost_r
 
-    def get_summoncost_g(self):
-        return self.summoncost_g
+    def get_cost_g(self):
+        return self.cost_g
 
-    def get_summoncost_b(self):
-        return self.summoncost_b
+    def get_cost_b(self):
+        return self.cost_b
 
-    def get_summoncost_tuple(self):
-        return self.summoncost_r, self.summoncost_b, self.summoncost_g
+    def get_cost_tuple(self):
+        return self.cost_r, self.cost_b, self.cost_g
 
     def can_activate(self, source_r, source_b, source_g, source_u=0):
-        r, b, g = self.get_summoncost_tuple()
+        r, b, g = self.get_cost_tuple()
         sum = r + b + g
         #if satisfied, d
         diff_r, diff_b, diff_g = max(r-source_r, 0), max(b-source_b, 0), max(g-source_g, 0)
@@ -356,12 +357,12 @@ class CreatureCard(CardBase):
         red_res = "🔳"
         blue_res = "🔳"
         green_res = "🔳"
-        if (self.summoncost_r > 0):
-            red_res = r_array[self.summoncost_r - 1]
-        if (self.summoncost_b > 0):
-            blue_res = b_array[self.summoncost_b - 1]
-        if (self.summoncost_g > 0):
-            green_res = g_array[self.summoncost_g - 1]
+        if (self.cost_r > 0):
+            red_res = r_array[self.cost_r - 1]
+        if (self.cost_b > 0):
+            blue_res = b_array[self.cost_b - 1]
+        if (self.cost_g > 0):
+            green_res = g_array[self.cost_g - 1]
         return red_res, blue_res, green_res
 
     def get_move_limit(self):
@@ -427,7 +428,54 @@ class CreatureCard(CardBase):
         moveString = make_move_style_for_content(self.move_style)
         embed.add_field(name="Move Style", value=moveString, inline=True)
         embed.add_field(name="Summon Cost",
-                        value="Red= {Red}\nBlue = {Blue}\nGreen= {Green}".format(Red=self.summoncost_r,
-                                                                                 Blue=self.summoncost_b,
-                                                                                 Green=self.summoncost_g), inline=True)
+                        value="Red= {Red}\nBlue = {Blue}\nGreen= {Green}".format(Red=self.cost_r,
+                                                                                 Blue=self.cost_b,
+                                                                                 Green=self.cost_g), inline=True)
         return embed
+
+class SpellCard(CardBase):
+
+    def __init__(self, ID, name="Default Spell Name", icon="🎴",
+                     image="https://media.discordapp.net/attachments/749673596514730055/772497364816101376/unknown.png",
+                     subtype=None, fp_cost=0, cost_r=0, cost_b=0, cost_g=0, bp=10, set_time=0
+                     ):
+        self.ID = ID  # • ID- The internal ID of the card.
+        # All cards have this, and they should all be unique.
+        # consists of a five digit hexadecimal number
+        # Cards should be referenced by this ID, not their name.
+        # (00000  to FFFFF, makes maximum of 1,048,576 cards.
+        # name="Test Name"
+        # icon="<:thonkang:219069250692841473>"
+        # image="NA"
+        type = "Spell"
+        self.spell_state=SpellState.Dormant
+        self.fp_cost=fp_cost
+        self.cost_r=cost_r
+        self.cost_b=cost_b
+        self.cost_g=cost_g
+        self.base_bp=bp
+        self.set_time=0
+
+        super().__init__(self.ID, name, icon, type, image)
+
+    def can_activate(self, user, game_ref=None):
+        #user is source piece
+        #by default, will use fp, r mana, b mana, and g mana
+        return True
+    def sub_spell_cost(self, user, game_ref=None):
+        """decrement the spell activation cost here."""
+
+    def can_set(self, user):
+        return True
+    def set_spell(self):
+        self.spell_state=SpellState.Dormant
+    async def set_effect(self, slot):
+        """Do the set effect at the start of each turn."""
+        #the set effect.
+        print("TBD.")
+    async def activate_spell(self, slot, user, game_ref=None):
+        """Activate the spell card."""
+        """Will return a SpellResult enum."""
+        """user is the player's Leader piece."""
+
+        return SpellResult.Finished

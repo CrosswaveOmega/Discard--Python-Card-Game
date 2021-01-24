@@ -21,7 +21,21 @@ class DCategory(enum.Enum):
         elif self.value==2:
             return DCategory.Polarity
 
+class SpellState(enum.Enum):
+    "All states a spell card can be in."
+    Dormant = 0
+    Set = 1
+    Active = 2
+    def __str__(self):
+        return '{}'.format(self.name)
 
+class SpellResult(enum.Enum):
+    "All return statuses for a Activated Spell Card."
+    Finished = 0
+    Cancelled = 1
+    Interrupt = 2
+    def __str__(self):
+        return '{}'.format(self.name)
 class DTags(enum.Enum):
     """Short for Damage Tags.  All the Types of damage there are."""
     Absolute = 0

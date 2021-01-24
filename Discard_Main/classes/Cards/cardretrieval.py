@@ -6,7 +6,7 @@ from discord.utils import find
 from discord import Webhook, AsyncWebhookAdapter
 
 import inspect
-from .CardLibrary import cardcluster1
+from .CardLibrary import cardcluster1, cardcluster2
 
 from .card import *
 
@@ -26,15 +26,18 @@ class CardRetrievalSingleton:
             self.internal_Dictionary = {}
             self.setAll()
 
-        def setAll(self):
+        def setCardCluster(self, cardclust):
             # Update for all new cardclusters.
-            lista = [m[0] for m in inspect.getmembers(cardcluster1, inspect.isclass) if
-                     m[1].__module__ == cardcluster1.__name__]
+            lista = [m[0] for m in inspect.getmembers(cardclust, inspect.isclass) if
+                     m[1].__module__ == cardclust.__name__]
             for x in lista:
                 print(x)
-                id = vars(getattr(cardcluster1, x))["ID"]
-                self.internal_Dictionary[str(id)] = getattr(cardcluster1, x)
+                id = vars(getattr(cardclust, x))["ID"]
+                self.internal_Dictionary[str(id)] = getattr(cardclust, x)
                 print(str(id))
+
+        def setAll(self):
+            self.setCardCluster(cardcluster1)
 
         def __str__(self):
             return repr(self) + self.current_status
